@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상세페이지</title>
+  <link href="auction.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <div class="container" id="scroll">
+    <!--판매자 페이지-->
+    <div class="product-details3">
+      <div class="product-details">
+        <img src="1.jpg" alt="Slide 1" width="200" height="200">
+        <p>판매자닉네임</p>
+        <p>판매자 온도</p>
+        <p>판매자지역:종로구</p>
+      </div>
+    </div>
+    <!--경매시작가+타임-->
+    <div class="product-details4">
+      <div class="product-details1">
+        <p>시작가:<p>
+        <p>입찰가:</p>
+      </div>
+    </div>
+    <!--이미지표출 슬라이더-->
+    <div class="product-details5">
+      <div class="slider-container">
+        <div class="slider">
+          <div class="slide-wrapper">
+            <div class="slide">
+              <img src="1.jpg" alt="Slide 1" width="500" height="400">
+            </div>
+            <div class="slide">
+              <img src="2.jpg" alt="Slide 2" width="500" height="400">
+            </div>
+            <div class="slide">
+              <img src="3.jpg" alt="Slide 3" width="500" height="400">
+            </div>
+            <!-- 추가 이미지 경로 추가 가능 -->
+          </div>
+        </div>
+        <button class="slider-button" onclick="prevSlide()">이전</button>
+        <button class="slider-button" onclick="nextSlide()">다음</button>
+      </div>
+    </div>
+    <!--경매시작을 보여주는 화면-->
+    <div class="product-details6">
+      <div class="product-details">
+        <h1>경매 시작</h1>
+        <p class="description">
+        </p>
+        <p class="price">1.000님: 21000원 입찰</p>
+        <p class="price">2.000님: 25000원 입찰</p>
+        <p class="price">3.555님: 35000원 입찰</p>
+        <p class="price">4.555님: 45000원 입찰</p>
+        <p class="price">5.555님: 5000원 입찰</p>
+        <p class="price">6.555님: 6000원 입찰</p>
+        <p class="price">7.555님: 65000원 입찰</p>
+        <div class="mid_wrapper">
+          <!--1:1 채팅버튼-->
+          <button class="button" onclick="button">1:1 채팅</button>
+          <!--검색창-->
+          <input type="text" id="" autocomplete="off" size="50">
+          <!--검색버튼-->
+          <input type="button" id="submit_button" value="검색">
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <script>
+      let currentIndex = 0;
+
+      function nextSlide() {
+        const slides = document.querySelectorAll('.slide');
+        if (currentIndex < slides.length - 1) {
+          currentIndex++;
+        } else {
+          currentIndex = 0;
+        }
+        const slideWidth = slides[currentIndex].clientWidth;
+        document.querySelector('.slide-wrapper').style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+      }
+
+      function prevSlide() {
+        const slides = document.querySelectorAll('.slide');
+        if (currentIndex > 0) {
+          currentIndex--;
+        } else {
+          currentIndex = slides.length - 1;
+        }
+        const slideWidth = slides[currentIndex].clientWidth;
+        document.querySelector('.slide-wrapper').style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+      }
+
+    </script>
+</body>
+
+</html>
