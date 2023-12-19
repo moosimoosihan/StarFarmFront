@@ -1,10 +1,8 @@
 <template>
     <div>
-        <p>헤더</p>
+        <p>메인</p>
     </div>
 </template>
 <script>
-export default ({
-    name: 'header'
-})
+
 </script>
