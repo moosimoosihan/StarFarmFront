@@ -118,6 +118,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     box-sizing: border-box;
+    
   }
 
   .slider {
@@ -139,3 +140,88 @@
   .slider-button {
     margin-bottom: 10px;
   }
+  #searchInput {
+    width: 200px; /* 너비 조절 */
+    height: 40px; /* 높이 조절 */
+    /* 다른 스타일링을 추가하고 싶다면 여기에 작성하세요 */
+  }
+  #submit_button{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+  }
+
+  .mypage_topbar_container {
+    width: 350px;
+    height: 200px;
+    margin: 0 auto;
+    border: 2px solid black;
+}
+.profile_lapper {
+  margin-left: 20px;
+  float: left;
+}
+.profile_box {
+  width: 90px;
+  height: 100px;
+  text-align: center;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: red;
+  float: left;
+}
+.profile_img_box {
+  width: 80px;
+  height: 80px; 
+  border-radius: 30%;
+  overflow: hidden;
+  
+}
+.friendly_box {
+  width: 200px;
+  height: 50px;
+  float: left;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+.profile_img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#me {
+  text-align: end;
+}
+
+.bid_container{
+  overflow-y:scroll;
+  background-color: #ffffff;
+  height: 200px;
+}
+
+.dot-navigation {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #fff; /* 도트 색상 */
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.slide img {
+  max-width: 100%; /* 이미지가 부모 요소를 넘어가지 않도록 최대 너비 설정 */
+  max-height: 100%; /* 이미지가 부모 요소를 넘어가지 않도록 최대 높이 설정 */
+  display: block; /* 이미지 간격을 없애기 위해 inline 속성 제거 */
+  margin: auto; /* 가운데 정렬을 위한 마진 설정 */
+}
+
