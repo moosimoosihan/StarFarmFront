@@ -1,0 +1,87 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.container {
+    width: 100%;
+    height: 100%;
+}
+
+/* ------------------------------------------------------------- */
+
+.report_wrapper {
+    width: 60%;
+    height: 800px;
+    margin:0 auto;
+}
+h1 {
+    font-size: 30px;
+    font-weight: 200;
+    margin-bottom: 30px;
+}
+.report_user_box {
+    width:100%;
+    height: 80px;
+}
+.report_user p {
+    margin-top: 10px;
+    font-size: 20px;
+    float: left;
+}
+.report_nick {
+    width: 100px;
+    height: 50px;
+    float: left;
+    margin-left: 40px;
+    border: none;
+}
+.report_title_box {
+    width:100%;
+    height: 50px;
+}
+.report_category {
+    width: 80px;
+    height: 30px;
+    text-align: center;
+    float: left;
+}
+.report_title {
+    float:left;
+    margin-left: 20px;
+    width: 70%;
+    resize: none;
+    border: none;
+    border-bottom: 1px solid black;
+}
+.report_file_box {
+    width: 100%;
+    height: 50px;
+}
+.report_upload_file {
+    width: 100px;
+    height: 40px;
+    float: right;
+}
+.report_file_name {
+    width: 100px;
+    height: 40px;
+    float: right;
+    padding-top: 10px;
+}
+.report_content {
+    width: 100%;
+    height: 400px;
+    resize: none;
+    margin: 30px 0;
+}
+.report_submit_btn {
+    width: 100px;
+    height: 50px;
+    float: right;
+    border: none;
+    background:none;
+    background-color: aqua;
+    margin-left: 20px;
+    border-radius: 10px;
+}
