@@ -149,13 +149,14 @@ a {
 }
 
 .menu {
-    width: 100%;
+    width: 80%;
     overflow: hidden;
     margin: auto;
     justify-content:space-between;
+    margin-left: 10%;
   }
   .menu > li {
-    width: 16.666%;
+    width: 255px;
     float: left;
     text-align: center;
     line-height: 40px;
