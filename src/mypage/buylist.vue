@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="mypage_buylist.css" rel="stylesheet" type="text/css">
-</head>
-
-<body>
+<template>
     <div class="container" id="scroll">
         <div>
             <div class="buylist_title">
@@ -139,6 +129,100 @@
             </div>
         </div>
     </div>
-</body>
+</template>
+<script>
+    export default {
+        name: "buylist",
+        data() {
+            return {
+                buylist: [],
+            }
+        },
+        methods: {
+            // getBuylist() {
+            //     this.$axios.get('/buylist')
+            //         .then((res) => {
+            //             this.buylist = res.data;
+            //         })
+            //         .catch((err) => {
+            //             console.log(err);
+            //         })
+            // }
+        },
+        mounted() {
+            // this.getBuylist();
+        }
+    }
+</script>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.container {
+    width: 100%;
+    height: 100%;
+}
+#scroll {
+    overflow: scroll;
+}
+/* -------------------- */
 
-</html>
+.buylist_container {
+    width: 800px;
+    height: 100px;
+    text-align: center;
+    margin-top: 20px;
+    margin-left: 10%;
+}
+
+#completed {
+    background-color: #f5f5f5;
+}
+#buying {
+    background-color:darkgray;
+}
+#biding {
+    background-color: #c1a3a3;
+}
+
+.buylist_goods_img {
+    width: 90px;
+    height: 90px;
+    float: left;
+    margin-top: 5px;
+    margin-left: 20px;
+    background-color: red;
+}
+.buylist_goodsdetails_container{
+    width: 300px;
+    height: 80%;
+    float: left;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.buylist_buttons_container {
+    width: 300px;
+    height: 80%;
+    float: left;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.buylist_buttons_container button {
+    width: 100px;
+    height: 30px;
+    margin-top: 10px;
+    margin-left: 20px;
+    float: left;
+    background-color: #f5f5f5;
+    border: 1px solid black;
+}
+
+.buylist_title {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+</style>

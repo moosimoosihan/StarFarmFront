@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="mypage_chat.css" rel="stylesheet" type="text/css">
-</head>
-<body>
+<template>
     <div class="container" id="scroll">
         <div>
             <div class="chat_title">
@@ -64,5 +56,63 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+</template>
+<script>
+    export default {
+        name: 'mychat'
+    }
+</script>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.container {
+    width: 100%;
+    height: 100%;
+}
+#scroll {
+    overflow: scroll;
+}
+/* -------------------- */
+
+.chat_title {
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 20px;
+}
+
+.chatroom_container {
+    width: 800px;
+    height: 100px;
+    margin-top: 20px;
+    margin-left: 10%;
+    background-color: #f5f5f5;
+}
+
+.chat_profile_img {
+    width: 90px;
+    height: 90px;
+    float: left;
+    margin-top: 5px;
+    margin-left: 20px;
+    background-color: red;
+}
+
+.chatroomdetails_container {
+    width: 500px;
+    height: 80%;
+    float: left;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+.exit_button_img {
+    width: 90px;
+    height: 90px;
+    float: left;
+    margin-top: 5px;
+    margin-left: 20px;
+    background-color: red;
+}
+</style>
