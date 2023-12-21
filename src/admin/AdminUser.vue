@@ -1,45 +1,31 @@
 <template>
-<div id="app">
-     <link href="AdminReport.css" rel="stylesheet">
-        <div class="report-section">
-            <div class="menu-container">
-            <div class="management-box ">
-              <h3>회원관리</h3>
-              <!-- 추가할 회원관리 내용 -->
-            </div>
-            <div class="management-box ">
-              <h3>거래관리</h3>
-              <!-- 추가할 거래관리 내용 -->
-            </div>
-            <div class="management-box ">
-              <h3>신고관리</h3>
-              <!-- 추가할 신고관리 내용 -->
-            </div>
-          </div>
-          <div id="scroll">
+  <div>
+    <div class="report-section">
+      <div id="scroll">
         <h2>거래 관리</h2>
-            <table class="report-table">
-                <thead>
-                   <tr>
-                    <th>No</th>
-                    <th>닉네임(이메일)</th>
-                    <th>계정상태</th>
-                    <th>신고당한횟수</th>
-                    <th>가입일시</th>
-                    <th>보기</th>
-                  </tr>
-                </thead>
-                <tbody>
-          <tr v-for="(report, index) in reports" :key="index">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>닉네임(이메일)</th>
+              <th>계정상태</th>
+              <th>신고당한횟수</th>
+              <th>가입일시</th>
+              <th>보기</th>
+              <th>정지</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in items" :key="index">
               <td>{{ index + 1 }}</td>
-              <td>{{ nickname.Email }}</td>
+              <td>닉네임 란</td>
               <td>{{ item.userState }}</td>
               <td>{{ item.reportNum}}</td>
               <td>{{ item.date }}</td>
               <td>{{ item.look }}</td>
               <td><button class="view-button" @click="handleButtonClick(index, item.userState)">{{ item.userState === '정지' ? '해제' : '정지' }}
                 </button>
-            </td>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -47,9 +33,8 @@
     </div>
   </div>
 </template>
-
-      <script>
-        export default{
+<script>
+  export default {
             data() {
             return {
              items: [
@@ -94,3 +79,39 @@
   },
 };
 </script>
+<style scoped>
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.report-section {
+    display: flex;
+    background-color: #ffffff;
+    height: 100vh;
+    width:1000px;
+}
+
+#scroll {
+    overflow-y: auto;
+    padding: 20px;
+    width: calc(100% - 290px);
+}
+
+.report-table {
+    width: 95%;
+    border-collapse: collapse;
+    margin-top: 40px;
+}
+
+.report-table th,
+.report-table td {
+    border: 1px solid #000000;
+    padding: 10px;
+    text-align: center;
+}
+
+.view-button {
+    cursor: pointer;
+}
+</style>

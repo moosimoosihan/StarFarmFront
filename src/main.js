@@ -4,12 +4,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 // 레이아웃
 import defaultLayout from './layouts/defaultLayout.vue'
-// import adminLayout from './layouts/adminLayout.vue'
+import adminLayout from './layouts/adminLayout.vue'
 import mypageLayout from './layouts/mypageLayout.vue'
 import emptyLayout from './layouts/emptyLayout.vue'
 
 // 메인 페이지
 import MainPage from './views/MainPage.vue'
+import login from './views/login.vue'
+import signup from './views/signup.vue'
 
 // 마이 페이지
 import buylist from './mypage/buylist.vue'
@@ -21,11 +23,9 @@ import myChat from './mypage/mychat.vue'
 import myPage from './mypage/mypage.vue'
 
 // 관리자 페이지
-
-import login from './views/login.vue'
-import signup from './views/signup.vue'
-
-
+import adminDeal from './admin/AdminDeal.vue'
+import adminReport from './admin/AdminReport.vue'
+import adminUser from './admin/AdminUser.vue'
 
 const routes = [
   {
@@ -87,6 +87,25 @@ const routes = [
         {
           path: 'signup',
           component: signup,
+        }
+      ]
+    },
+    {
+      path:'/admin/',
+      name: 'adminLayout',
+      component: adminLayout,
+      children: [
+        {
+          path: '',
+          component: adminUser,
+        },
+        {
+          path: 'report',
+          component: adminReport,
+        },
+        {
+          path: 'deal',
+          component: adminDeal,
         }
       ]
     }
