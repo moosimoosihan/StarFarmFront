@@ -16,6 +16,7 @@ import likeList from './mypage/likelist.vue'
 import userEdit from './mypage/mypageeditUser.vue'
 import myReview from './mypage/myreview.vue'
 import myChat from './mypage/mychat.vue'
+import myPage from './mypage/mypage.vue'
 
 // 관리자 페이지
 
@@ -32,12 +33,17 @@ const routes = [
         name: 'MainPage',
         component: MainPage
       }
-    ]},
-    {
+    ]
+  },
+  {
       path: '/mypage/',
       name: 'mypageLayout',
       component: mypageLayout,
       children: [
+        {
+          path: '',
+          component: myPage,
+        },
         {
           path: 'buylist',
           component: buylist,

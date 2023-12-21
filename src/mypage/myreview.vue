@@ -2,7 +2,7 @@
     <div class="container" id="scroll">
         <div>
             <div class="review_title">
-                <span>입찰 상품 이력</span>
+                <span>내가 쓴 리뷰</span>
             </div>
             <div class="review_container">
                 <img class="review_goods_img" src="" alt="상품 이미지">
@@ -116,20 +116,7 @@
         name: 'myreview'
     }
 </script>
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-.container {
-    width: 100%;
-    height: 100%;
-}
-#scroll {
-    overflow: scroll;
-}
-/* -------------------- */
+<style scoped>
 
 .review_container {
     width: 800px;

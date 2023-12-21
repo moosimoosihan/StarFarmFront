@@ -2,7 +2,7 @@
 <template>
     <div>
       <Header />
-      <div class="content">
+      <div class="default_content">
         <router-view />
       </div>
       <Footer />
@@ -21,8 +21,8 @@
   }
   </script>
   
-  <style>
-  .content {
+  <style scoped>
+  .default_content {
     padding-top: 150px;
     margin: auto;
     height: 100%;
@@ -36,11 +36,6 @@
     /* 인터넷 익스플로러 */
     scrollbar-width: none;
     /* 파이어폭스 */
-  }
-  
-  body::-webkit-scrollbar {
-    display: none;
-    /* 크롬, 사파리, 오페라, 엣지 */
   }
   
   Footer {
