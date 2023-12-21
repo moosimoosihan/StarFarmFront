@@ -81,7 +81,7 @@
 
 .chatroom_container {
     width: 800px;
-    height: 550px;
+    height: 560px;
     background-color: grey;
 }
 .chatroom_title {

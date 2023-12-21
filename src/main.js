@@ -13,6 +13,10 @@ import MainPage from './views/MainPage.vue'
 import login from './views/login.vue'
 import signup from './views/signup.vue'
 import product from './views/auction.vue'
+import payment from './views/payment.vue'
+import review from './views/review.vue'
+import storeUpload from './views/store_upload.vue'
+import userpage from './views/userpage.vue'
 
 // 마이 페이지
 import buylist from './mypage/buylist.vue'
@@ -46,6 +50,26 @@ const routes = [
         path: '/product/:id',
         name: 'product',
         component: product
+      },
+      {
+        path: '/payment',
+        name: 'payment',
+        component: payment
+      },
+      {
+        path: '/review',
+        name: 'review',
+        component: review
+      },
+      {
+        path: '/store_upload',
+        name: 'store_upload',
+        component: storeUpload
+      },
+      {
+        path: '/userpage/:id',
+        name: 'userpage',
+        component: userpage
       }
     ]
   },
