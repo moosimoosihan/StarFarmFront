@@ -1,4 +1,3 @@
-<!-- TODO : 카테고리 네비 및 로그인 검색 버튼 -->
 <template>
     <div class="header_wrapper">
       <div class="navbar_top">
