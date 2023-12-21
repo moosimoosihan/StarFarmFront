@@ -149,7 +149,7 @@ const routes = [
     }
   ]
 
-// window.Kakao.init('카카오 앱 키');
+window.Kakao.init('cbecce5f9f0a0deb9e593b0f1ca564f0');
 
 const router = createRouter({
   history: createWebHistory(),

@@ -8,8 +8,8 @@
             <input type="text" name="username" id="username-field" class="login-form-field" placeholder="ID(이메일)">
             <input type="password" name="password" id="password-field" class="login-form-field" placeholder="PW">
             <input type="submit" value="Login" id="login-form-submit">
-            <input type="submit" value="카카오" id="kakao-form-submit">
-            <input type="submit" value="네이버" id="naver-form-submit">
+            <input type="submit" value="카카오" id="kakao-form-submit" @click="kakaoLogin">
+            <input type="submit" value="네이버" id="naver-form-submit" @click="naverlogin">
             <input type="submit" value="회원가입" id="join-form-submit" @click="gotoSignUp()"><br>
             <input type="submit" value="아이디찾기" id="findid-form-submit">
             <input type="submit" value="비밀번호찾기" id="findpw-form-submit">
@@ -22,9 +22,151 @@
     methods: {
       gotoSignUp() {
         this.$router.push('/login/signup')
-      }
-    }
-  }
+      },
+      mounted() {
+        console.log(this.naverLogin.user);
+        this.naverLogin = new window.naver.LoginWithNaverId({
+            clientId: "rjOA5xnnAw_fpgrQhrPY",
+            callbackUrl: "DTZs9Sc_PhmpMYxpkUfD",
+            isPopup: false,
+        });
+        this.$store.commit("naverLogin", this.naverLogin);
+
+        this.naverLogin.init();
+
+        this.naverLogin.getLoginStatus((status) => {
+            if (status) {
+                console.log(status);
+                console.log(this.naverLogin.user.nickname);
+
+                const email = this.naverLogin.user.email;
+                const id = this.naverLogin.user.id;
+                const nick = this.naverLogin.user.nickname;
+
+                this.naver_id = id;
+                console.log(email)
+                console.log(nick)
+
+            } else {
+                console.log("callback처리 실패");
+            }
+        });
+      },
+      
+      //카카오 로그인
+      kakaoLogin() {
+
+        window.Kakao.Auth.login({
+            scope: "profile_nickname, account_email",
+            success: this.getKakaoAccount,
+        });
+        },
+        getKakaoAccount() {
+        window.Kakao.API.request({
+            url: "/v2/user/me",
+            success: (res) => {
+                const kakao_account = res.kakao_account;
+                const email = kakao_account.email; //카카오 이메일
+                const nickname = kakao_account.profile.nickname;
+                // this.user_id = email
+
+                axios({
+                    url: "http://localhost:3000/auth/kakaoLoginProcess",
+                    method: "POST",
+                    data: {
+                        user_id: email,
+                        user_nick: nickname
+                    },
+                }).then(res => {
+                    if (res.data.message == '저장완료') {
+
+                        this.$swal({
+                            position: 'top',
+                            icon: 'success',
+                            title: '회원가입 성공!',
+                            showConfirmButton: false,
+                            timer: 1000
+                        })
+
+                    }
+                    else {
+                        this.$store.commit("user", { user_id: email, user_no: res.data.message })
+                        this.$swal({
+                            position: 'top',
+                            icon: 'success',
+                            title: '로그인 성공!',
+                            showConfirmButton: false,
+                            timer: 1000
+
+
+                        }).then(() => {
+                            window.location.href = "http://localhost:8080";
+                        })
+
+                    }
+                })
+                    .catch(err => {
+                        console.log(err);
+                    })
+
+
+            },
+            fail: (error) => {
+                // this.$router.push("/errorPage");
+                console.log(error);
+            },
+        });
+        },
+
+        //네이버
+        naverlogin() {
+            console.log("로그인함수 실행됨")
+            axios({
+                url: "http://localhost:3000/auth/naverlogin",
+                method: "POST",
+                data: {
+                    // naverlogin: this.naverLogin.accessToken.accessToken,
+                    naverlogin: this.naverLogin.user,
+
+                },
+            })
+                .then(res => {
+
+                    if (res.data.message == '저장완료') {
+
+                        this.$swal({
+                            position: 'top',
+                            icon: 'success',
+                            title: '회원가입 성공!',
+                            showConfirmButton: false,
+                            timer: 1000
+                        });
+
+
+
+                    } else {
+                        this.$store.commit("user", { user_id: this.naver_id, user_no: res.data.message })
+
+                        this.$swal({
+                            position: 'top',
+                            icon: 'success',
+                            title: '로그인 성공!',
+                            showConfirmButton: false,
+                            timer: 1000,
+
+                        }).then(() => {
+                            window.location.href = "http://localhost:8080";
+                        })
+
+
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        },
+    },
+};
 </script>
 <style scoped>
 /*로그인
