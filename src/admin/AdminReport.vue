@@ -29,10 +29,10 @@
         </table>
       </div>
     </div>
-  </div>
-</template>
+   </div>
+ </template>
 <script>
-  export default {
+            export default {
             data() {
             return {
               reports: [
@@ -56,8 +56,8 @@
                 }
             }
         }
-</script>
-<style scoped>
+     </script>
+    <style scoped>
 body {
     margin: 0;
     padding: 0;
@@ -67,7 +67,8 @@ body {
     display: flex;
     background-color: #ffffff;
     height: 100vh;
-    width:1000px;
+    width:1700px;
+    border: 1px solid #000000;
 }
 
 #scroll {

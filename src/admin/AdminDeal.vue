@@ -109,7 +109,8 @@ body {
     display: flex;
     background-color: #ffffff;
     height: 100vh;
-    width:1000px;
+    width:1700px;
+    border: 1px solid #000000;
 }
 
 #scroll {
