@@ -126,20 +126,7 @@
         name: 'salelist'
     }
 </script>
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-.container {
-    width: 100%;
-    height: 100%;
-}
-#scroll {
-    overflow: scroll;
-}
-/* -------------------- */
+<style scoped>
 
 .salelist_container {
     width: 800px;

@@ -5,7 +5,10 @@
                 <!-- 프로필 사진, 닉네임 -->
                 <div class="profile_box">
                     <div class="profile_img_box">
-                        <img class="profile_img" src="" alt="프로플 사진">
+                        <div class="profile-icon">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <img id="photo-preview" :src="photoPreview" alt="프로필 사진 미리보기" style="display: none;">
                     </div>
                     <span class="profile_nick">닉네임</span>
                 </div>
@@ -17,7 +20,7 @@
                     <span class="friendly_text">친밀도</span>
                     <div class="friendly_img_box">
                         <progress value="50" max="100"></progress>
-                        <span>50점</span>
+                        <span class="friendly_score">50점</span>
                     </div>
                 </div>
             </div>
@@ -29,40 +32,44 @@
                 </div>
             </div>
         </div>
+        <div class="myinfo">
+            <p>내 정보</p>
+            <p>닉네임 : 닉네임이당</p>
+            <p>휴대전화번호 : 010-0000-0000</p>
+            <p>주소 : 서울시 강남구</p>
+            <p>상세주소 : 123-456</p>
+        </div>
     </div>
 </template>
 <script>
     export default {
-        name : 'mypageTopBar'
+        name : 'mypage',
+        data() {
+            return {
+                photoPreview: '#'
+            }
+        }
     }
 </script>
-<style>
+<style scoped>
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 .container {
-    width: 100%;
+    width: 80%;
     height: 100%;
-}
-.mypage-bar {
-overflow-y: scroll;
--ms-overflow-style: none; /* 인터넷 익스플로러 */
-scrollbar-width: none; /* 파이어폭스 */
-}
-.mypage-bar::-webkit-scrollbar {
-    display: none; /* 크롬, 사파리, 오페라, 엣지 */
 }
 
 /* -------------------- */
 
-
-.profile_img_box {
+#photo-preview {
     width: 150px;
-    height: 150px;
+    height: 150px; 
     border-radius: 70%;
     overflow: hidden;
+
 }
 .profile_img {
     width: 100%;
@@ -94,15 +101,10 @@ scrollbar-width: none; /* 파이어폭스 */
     margin-top: 50px;
 }
 .mypage_topbar_container {
-    -ms-overflow-style: none; /* 인터넷 익스플로러 */
-    scrollbar-width: none; /* 파이어폭스 */
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    height: 200px;
     margin: 0 auto;
     border: 2px solid black;
-}
-.mypage_topbar_container::-webkit-scrollbar {
-    display: none; /* 크롬, 사파리, 오페라, 엣지 */
 }
 .logout_lapper {
     margin-top: 10px;
@@ -111,5 +113,14 @@ scrollbar-width: none; /* 파이어폭스 */
 }
 .friendly_lapper {
     float :left;
+}
+.friendly_score {
+    margin-left: 10px;
+}
+.profile-icon {
+    font-size: 130px;
+}
+.myinfo {
+    margin-left: 20px;
 }
 </style>

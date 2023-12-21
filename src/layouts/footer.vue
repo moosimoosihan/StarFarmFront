@@ -15,12 +15,12 @@ export default ({
 })
 </script>
 
-<style>
-  body{
+<style scoped>
+* {
     margin: 0;
     padding: 0;
-  }
-  
+    box-sizing: border-box;
+}
 .form{
     margin: 0;
     padding: 0;
