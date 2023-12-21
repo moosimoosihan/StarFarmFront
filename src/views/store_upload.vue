@@ -83,189 +83,136 @@
     box-sizing: border-box;
 }
 .container {
-    width: 2000px;
+    width: 100%;
     height: 100%;
 }
 /* ------------------------------------------------------------- */
 
-/* 유저 페이지 상단 */
-progress {
-    width: 200px;
-    height: 50px;
+p {
+    float: left;
+    width: 150px;
+    height: 30px;
 }
-#userpage_wrapper {
+select {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    color: #444;
+    padding: 0.8em 2em;
+    border-radius: 5px;
+}
+#store_upload_wrapper {
     width: 60%;
     height: 800px;
     margin: 0 auto;
 }
-#userpage_profile {
+#store_product_img {
     width: 100%;
-    height: 200px;
-    border: 1px solid black;
-}
-#userpage_profile a {
-    display: block;
-    width: 50px;
-    height: 30px;
-    background-color: red;
-    float: right;
-    margin: 10px 10px;
-    line-height: 30px;
-    padding-left: 10px;
-    border-radius: 10px;
-    text-decoration: none;
-}
-#userpage_profile a:first-child {
-    width: 100px;
-    height: 50px;
-}
-#userpage_profile_box {
-    width: 200px;
-    height: 100%;
-    float: left;
-}
-#userpage_profile_box span {
-    margin-left: 35%;
-    margin-top: 10px;
-    float: left;
-}
-#userpage_profile_img {
-    width: 150px;
-    height: 75%;
-    border-radius: 100%;
-    margin: 0 auto;
+    height: 230px;
+    line-height: 200px;
+    border-bottom: 1px solid black;
     overflow: hidden;
+    padding-bottom: 30px;
 }
-#userpage_profile_img img {
-    width: 150px;
-    height: 100%;
-    object-fit: cover;
-}
-#userpage_friendly {
-    width: 400px;
-    height: 100%;
+#store_product_img div {
+    width: 170px;
+    height: 200px;
+    background-color: black;
     float: left;
-}
-#userpage_friendly span {
-    float: left;
-    line-height: 80px;
-}
-#userpage_friendly progress {
-    float: left;
-    margin-top: 15px;
     margin-left: 20px;
 }
-#userpage_friendly a {
-    display: block;
-    width: 100px;
-    height: 40px;
-    background-color:aliceblue;
-    line-height: 40px;
-    padding-left: 10px;
-    border-radius: 10px;
-    float: left;
-    margin-top: 80px;
-    text-decoration: none;
-}
-#userpage_tab {
-    width: 100%;
-    height: 100px;
-}
-.tab-link {
-    width: 50%;
-    height: 70px;
+#store_product_img button {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: -92px;
+    right: -150px;
+    background: none;
+    border-radius: 100%;
     background-color: red;
-    float: left;
-    list-style: none;
-    line-height: 70px;
 }
-#userpage_tab li:first-child {
-    background-color: pink;
+#store_product_name {
+    width: 100%;
+    height: 120px;
+    line-height: 120px;
+    white-space: nowrap;
 }
-.tab-link a {
-    display: block;
-    padding-left: 40%;
-    text-decoration: none;
-    color: black;
+#store_product_name input {
+    width: 40%;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid black;
 }
-/* 유저 페이지 상단 끝 */
-
-/* 판매자 리뷰 */
-#userpage_review_list {
-    width: 80%;
-    height: 130px;
-    background-color: beige;
-    margin: 0 auto;
-    border-radius: 20px;
+#store_product_category1 {
+    width: 100%;
+    height: 80px;
+    line-height: 80px;
 }
-#userpage_review_user {
+#store_product_category2 {
+    width: 100%;
+    height: 80px;
+    line-height: 80px;
+}
+#store_price_trade {
+    width: 100%;
+    height: 80px;
+    line-height: 80px;
+}
+#store_price_trade input {
     width: 200px;
-    height: 100%;
-    padding-left: 20px;
-    padding-top: 10px;
+    height: 40px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+#store_price_trade div {
     float: left;
 }
-#userpage_review_list div h1 {
-    font-size: 20px;
-}
-#userpage_review_list div p {
-    font-size: 12px;
-    margin: 30px auto;
-}
-#userpage_product_review_img {
-    width: 200px;
-    height: 100%;
-    background-color: slateblue;
-    float: left;
-}
-#userpage_review_content {
-    width: 300px;
-    height: 100%;
-    float: left;
-}
-#userpage_review_img {
-    width: 70px;
-    height: 70px;
-    margin-top: 30px;
-    margin-left: 40px;
-}
-#userpage_review_date {
+#store_price_trade div:last-child {
+    width: 330px;
+    height: 50px;
     float: right;
-    margin-right: 20px;
-    line-height: 130px;
 }
-/* 판매자 리뷰 끝 */
-
-/* 판매자 상품 리스트 */
-
-#userpage_product_list {
+#store_timer_deliv {
     width: 100%;
-    height: 800px;
+    height: 80px;
+    line-height: 80px;
 }
-.userpage_product {
-    width: 200px;
-    height: 250px;
-    background-color: brown;
+#store_timer_deliv div {
     float: left;
-    margin-right: 100px;
-    margin-top: 50px;
-    border-radius: 10px;
 }
-.userpage_product:nth-child(4n) {
-    margin-right: 0;
+#store_timer_deliv div:last-child {
+    width: 330px;
+    height: 50px;
+    float: right;
 }
-.userpage_product:nth-child(4n+1) {
-    margin-left: 50px;
+#store_timer_deliv input {
+    width: 150px;
+    height: 40px;
+    border: 1px solid black;
+    border-radius: 5px;
 }
-.userpage_product_img {
+#store_product_content p {
+    margin-bottom: 10px;
+}
+#store_product_content textarea {
     width: 100%;
-    height: 70%;
+    height: 300px;
+    resize: none;
+    text-align: center;
+    font-size: large;
+    border-radius: 5px;
+    padding-top: 50px;
 }
-.userpage_product_name {
-    font-size: 20px;
-    line-height: 70px;
-    margin-left: 55px;
+#store_submit {
+    float: right;
+    margin: 10px 0;
 }
-
-/* 판매자 상품 리스트 끝 */
+#store_submit input {
+    margin-left: 20px;
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    background-color: aqua;
+    border-radius: 5px;
+}
 </style>
