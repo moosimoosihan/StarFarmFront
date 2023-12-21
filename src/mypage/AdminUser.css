@@ -1,0 +1,52 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.report-section {
+    display: flex;
+    background-color: #ffffff;
+    height: 100vh;
+}
+
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    padding: 20px;
+    border: 1px solid #000000; /* 검은선 */
+}
+
+.management-box {
+    background-color: #f57575;
+    padding:3px;
+    margin-bottom: 90px;
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgba(50, 255, 118, 0.1);
+    text-align: center;
+    
+  
+}
+
+#scroll {
+    overflow-y: auto;
+    padding: 20px;
+    width: calc(100% - 290px);
+}
+
+.report-table {
+    width: 95%;
+    border-collapse: collapse;
+    margin-top: 40px;
+}
+
+.report-table th,
+.report-table td {
+    border: 1px solid #000000;
+    padding: 10px;
+    text-align: center;
+}
+
+.view-button {
+    cursor: pointer;
+}
