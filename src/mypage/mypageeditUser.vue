@@ -1,7 +1,5 @@
 <template>
     <div id="app"> <!-- Vue 인스턴스의 마운트 지점 -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-    <link href="http://postcode.map.daum.net/code/jsonp.js" rel="javascript">
         <div class="container">
             <div class="profile-section">
                 <div class="profile-icon">
@@ -47,21 +45,17 @@
     </div>
 </template>
     
-    <style>
+<style scoped>
         body {
             font-family: Arial, sans-serif;
             background-color: #ffffff;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
             align-items: center;
             height: 100vh;
         }
 
         .container {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
             background-color: #fff;
             border-radius: 8px;
@@ -96,7 +90,7 @@
         input, textarea {
             width: 100%;
             padding: 8px;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
             box-sizing: border-box;
         }
 
