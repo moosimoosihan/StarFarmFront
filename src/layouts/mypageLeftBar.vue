@@ -97,7 +97,7 @@ Footer {
 .mypage-bar a {
   display: block;
   text-align: center;
-  height: 58px;
+  height: 14.28%;
   padding-top: 10px;
   transition: all 0.3s ease;
   text-decoration: none;

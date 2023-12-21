@@ -1,3 +1,33 @@
+<template>
+    <div class="container">
+        <div class="review_wrapper">
+            <h1>리뷰 작성</h1>
+            <div class="review_product_name">
+                <img src="" class="review_product_img">
+                <h2>상품명</h2>
+                <div class="review_user">
+                <img src="" class="review_user_img">
+                <span class="review_user_nick">판매자 닉네임</span>
+                </div>
+            </div>
+            <p>리뷰 평가</p>
+            <div class="review_rating">
+                <button><img src="../assets/smile.png"></button>
+                <button><img src="../assets/normal.png"></button>
+                <button><img src="../assets/bad.png"></button>
+            </div>
+            <form>
+                <textarea></textarea>
+                <input type="submit" value="확인">
+                <input type="button" value="취소">
+            </form>
+        </div>
+    </div>
+</template>
+<script>
+
+</script>
+<style scoped>
 * {
     margin: 0;
     padding: 0;
@@ -102,3 +132,4 @@ form input {
     margin-left: 20px;
     border-radius: 10px;
 }
+</style>

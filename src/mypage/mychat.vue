@@ -62,7 +62,11 @@
         name: 'mychat',
         methods: {
             gotoChatRoom(index) {
-                window.open(`/chatroom/${index}`, '_blank', 'width=800, height=550, left=100, top=50');
+                let popupWindow = window.open(`/chatroom/${index}`, '_blank', 'width=800', 'height=620', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
+                popupWindow.resizeTo(800, 620)
+                popupWindow.onresize = (_=>{
+                    popupWindow.resizeTo(800, 620)
+                })
             }
         }
     }

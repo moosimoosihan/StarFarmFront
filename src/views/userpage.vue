@@ -1,3 +1,67 @@
+<template>
+    <div class="container">
+        <div id="userpage_wrapper">
+            <div id="userpage_profile">
+                <div id="userpage_profile_box">
+                    <div id="userpage_profile_img">
+                        <img src="../assets/profile.png">
+                    </div>
+                    <span>닉네임</span>
+                </div>
+                <div id="userpage_friendly">
+                    <span>닉네임의 친밀도</span>
+                    <progress value="70" max="100"></progress>
+                    <a href="">1대1 채팅</a>
+                </div>
+                <a href="" id="userpage_report">신고</a>
+            </div>
+            <div id="userpage_tab">
+                <ul class="userpage_tabs">
+                    <li class="tab-link current" data-tab="tab-1"><a href="">판매 리스트</a></li>
+                    <li class="tab-link" data-tab="tab-2"><a href="">판매자 리뷰</a></li>
+                </ul>
+                <div id="tab-1" class="tab-content current"></div>
+                <div id="tab-2" class="tab-content"></div>
+            </div>
+            <div id="userpage_review_list">
+                <div id="userpage_review_user">
+                    <h1>구매한 물건</h1>
+                    <p>구매자 닉네임</p>
+                </div>
+                <img src="" id="userpage_product_review_img">
+                <div id="userpage_review_content"><p>리뷰 내용 ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ</p></div>
+                <img src="../assets/smile.png" id="userpage_review_img">
+                <p id="userpage_review_date">2023-12-11</p>
+            </div>
+            <div id="userpage_product_list">
+                <div class="userpage_product">
+                    <img src="" class="userpage_product_img">
+                    <h1 class="userpage_product_name">상품 이름</h1>
+                </div>
+                <div class="userpage_product">
+                    <img src="" class="userpage_product_img">
+                    <h1 class="userpage_product_name">상품 이름</h1>
+                </div>
+                <div class="userpage_product">
+                    <img src="" class="userpage_product_img">
+                    <h1 class="userpage_product_name">상품 이름</h1>
+                </div>
+                <div class="userpage_product">
+                    <img src="" class="userpage_product_img">
+                    <h1 class="userpage_product_name">상품 이름</h1>
+                </div>
+                <div class="userpage_product">
+                    <img src="" class="userpage_product_img">
+                    <h1 class="userpage_product_name">상품 이름</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+
+</script>
+<style scoped>
 * {
     margin: 0;
     padding: 0;
@@ -189,3 +253,4 @@ progress {
 }
 
 /* 판매자 상품 리스트 끝 */
+</style>

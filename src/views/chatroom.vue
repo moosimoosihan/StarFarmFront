@@ -70,6 +70,7 @@
 .container {
     width: 100%;
     height: 100%;
+    overflow-block: hidden;
 }
 
 #scroll {
@@ -80,7 +81,7 @@
 
 .chatroom_container {
     width: 800px;
-    height: 550px;
+    height: 560px;
     background-color: grey;
 }
 .chatroom_title {
