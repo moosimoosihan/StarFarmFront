@@ -1,31 +1,31 @@
 <template>
     <div class="container">
-        <div class="report_wrapper">
-            <h1>회원 신고</h1>
-            <div class="report_user">
-                <div class="report_user_box">
-                    <p>신고 할 유저 :</p>
-                    <input type="text" placeholder="닉네임(이메일)" class="report_nick">
-                </div>
-                <div class="report_title_box">
-                    <select class="report_category">
-                        <option>상품신고</option>
-                        <option>판매자 신고</option>
-                        <option>구매자 신고</option>
-                    </select>
-                    <textarea placeholder="글 제목" class="report_title"></textarea>
-                </div>
-                <div class="report_file_box">
+    <div class="report_wrapper">
+        <h1>회원 신고</h1>
+    <div class="report_user">
+    <div class="report_user_box">
+        <p>신고 할 유저 :</p>
+        <input type="text" placeholder="닉네임(이메일)" class="report_nick">
+    </div>
+    <div class="report_title_box">
+        <select class="report_category">
+        <option>상품신고</option>
+        <option>판매자 신고</option>
+        <option>구매자 신고</option>
+        </select>
+        <textarea placeholder="글 제목" class="report_title"></textarea>
+    </div>
+    <div class="report_file_box">
                     <input type="button" value="파일 업로드" class="report_upload_file">
-                    <div class="report_file_name">파일 제목</div>
-                </div>
-            </div>
-            <form class="report_submit">
-                <textarea class="report_content"></textarea>
-                <input type="submit" value="신고하기" class="report_submit_btn">
-                <input type="button" value="취소" class="report_submit_btn">
-            </form>
-        </div>
+    <div class="report_file_name">파일 제목</div>
+    </div>
+    </div>
+        <form class="report_submit">
+        <textarea class="report_content"></textarea>
+        <input type="submit" value="신고하기" class="report_submit_btn">
+        <input type="button" value="취소" class="report_submit_btn">
+        </form>
+    </div>
     </div>
 </template>
 <script>
