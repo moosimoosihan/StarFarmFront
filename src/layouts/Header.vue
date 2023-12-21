@@ -27,53 +27,53 @@
       <div>
             <ul class="menu">
               <li>
-                <a href="#">MENU1</a>
+                <a href="#">의류</a>
                 <ul class="submenu">
-                  <li><a href="#">submenu01</a></li>
-                  <li><a href="#">submenu02</a></li>
-                  <li><a href="#">submenu03</a></li>
-                  <li><a href="#">submenu04</a></li>
-                  <li><a href="#">submenu05</a></li>
+                  <li><a href="#">상의</a></li>
+                  <li><a href="#">하의</a></li>
+                  <li><a href="#">신발</a></li>
+                  <li><a href="#">외투</a></li>
+                  <li><a href="#">가방</a></li>
                 </ul>
               </li>
               <li>
-                <a href="#">MENU2</a>
+                <a href="#">뷰티</a>
                 <ul class="submenu">
-                  <li><a href="#">submenu01</a></li>
-                  <li><a href="#">submenu02</a></li>
-                  <li><a href="#">submenu03</a></li>
-                  <li><a href="#">submenu04</a></li>
-                  <li><a href="#">submenu05</a></li>
+                  <li><a href="#">악세사리</a></li>
+                  <li><a href="#">화장품</a></li>
+                  <li><a href="#">향수</a></li>
+                  <li><a href="#">&nbsp;</a></li>
+                  <li><a href="#">&nbsp;</a></li>
                 </ul>
               </li>
               <li>
-                <a href="#">MENU3</a>
+                <a href="#">생활/가전</a>
                 <ul class="submenu">
-                  <li><a href="#">submenu01</a></li>
-                  <li><a href="#">submenu02</a></li>
-                  <li><a href="#">submenu03</a></li>
-                  <li><a href="#">submenu04</a></li>
-                  <li><a href="#">submenu05</a></li>
+                  <li><a href="#">주방용품</a></li>
+                  <li><a href="#">가전제품</a></li>
+                  <li><a href="#">자동차용품</a></li>
+                  <li><a href="#">생필품</a></li>
+                  <li><a href="#">&nbsp;</a></li>
                 </ul>
               </li>
               <li>
-                <a href="#">MENU4</a>
+                <a href="#">취미</a>
                 <ul class="submenu">
-                  <li><a href="#">submenu01</a></li>
-                  <li><a href="#">submenu02</a></li>
-                  <li><a href="#">submenu03</a></li>
-                  <li><a href="#">submenu04</a></li>
-                  <li><a href="#">submenu05</a></li>
+                  <li><a href="#">스포츠</a></li>
+                  <li><a href="#">게임</a></li>
+                  <li><a href="#">음악</a></li>
+                  <li><a href="#">미술</a></li>
+                  <li><a href="#">&nbsp;</a></li>
                 </ul>
               </li>
               <li>
-                <a href="#">MENU5</a>
+                <a href="#">기타</a>
                 <ul class="submenu">
-                  <li><a href="#">submenu01</a></li>
-                  <li><a href="#">submenu02</a></li>
-                  <li><a href="#">submenu03</a></li>
-                  <li><a href="#">submenu04</a></li>
-                  <li><a href="#">submenu05</a></li>
+                  <li><a href="#">&nbsp;</a></li>
+                  <li><a href="#">&nbsp;</a></li>
+                  <li><a href="#">&nbsp;</a></li>
+                  <li><a href="#">&nbsp;</a></li>
+                  <li><a href="#">&nbsp;</a></li>
                 </ul>
               </li>
               <li>
@@ -95,12 +95,11 @@ export default ({
     name: 'header',
     methods: {
         gotoMain () {
-            window.location.href = `http://localhost:8080/`
+          this.$router.push('/')
         },
         gotoLogin () {
-             window.location.href = `http://localhost:8080/`
+          this.$router.push('/login')
         },
-
     }
 })
 </script>

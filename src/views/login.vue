@@ -10,14 +10,21 @@
             <input type="submit" value="Login" id="login-form-submit">
             <input type="submit" value="카카오" id="kakao-form-submit">
             <input type="submit" value="네이버" id="naver-form-submit">
-            <input type="submit" value="회원가입" id="join-form-submit"><br>
+            <input type="submit" value="회원가입" id="join-form-submit" @click="gotoSignUp()"><br>
             <input type="submit" value="아이디찾기" id="findid-form-submit">
             <input type="submit" value="비밀번호찾기" id="findpw-form-submit">
           </form>
           </main>
 </template>
 <script>
-
+  export default {
+    name: 'login',
+    methods: {
+      gotoSignUp() {
+        this.$router.push('/login/signup')
+      }
+    }
+  }
 </script>
 <style scoped>
 /*로그인
