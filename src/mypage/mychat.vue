@@ -4,7 +4,7 @@
             <div class="chat_title">
                 <span>나의 채팅방</span>
             </div>
-            <div class="chatroom_container">
+            <div class="chatroom_container" @click="gotoChatRoom(0)">
                 <img class="chat_profile_img" src="" alt="프로필 이미지">
                 <div class="chatroomdetails_container">
                     <span>유저 이름</span><br>
@@ -59,7 +59,12 @@
 </template>
 <script>
     export default {
-        name: 'mychat'
+        name: 'mychat',
+        methods: {
+            gotoChatRoom(index) {
+                window.open(`/chatroom/${index}`, '_blank', 'width=800, height=550, left=100, top=50');
+            }
+        }
     }
 </script>
 <style scoped>

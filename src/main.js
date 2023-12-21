@@ -12,6 +12,7 @@ import emptyLayout from './layouts/emptyLayout.vue'
 import MainPage from './views/MainPage.vue'
 import login from './views/login.vue'
 import signup from './views/signup.vue'
+import product from './views/auction.vue'
 
 // 마이 페이지
 import buylist from './mypage/buylist.vue'
@@ -27,6 +28,9 @@ import adminDeal from './admin/AdminDeal.vue'
 import adminReport from './admin/AdminReport.vue'
 import adminUser from './admin/AdminUser.vue'
 
+// 채팅 페이지
+import chatroom from './views/chatroom.vue'
+
 const routes = [
   {
     path: '/',
@@ -37,6 +41,11 @@ const routes = [
         path: '/',
         name: 'MainPage',
         component: MainPage
+      },
+      {
+        path: '/product/:id',
+        name: 'product',
+        component: product
       }
     ]
   },
@@ -87,6 +96,11 @@ const routes = [
         {
           path: 'signup',
           component: signup,
+        },
+        {
+          path: '/chatroom/:id',
+          name: 'chatroom',
+          component: chatroom
         }
       ]
     },
