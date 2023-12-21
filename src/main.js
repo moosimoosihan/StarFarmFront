@@ -6,8 +6,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import defaultLayout from './layouts/defaultLayout.vue'
 // import adminLayout from './layouts/adminLayout.vue'
 import mypageLayout from './layouts/mypageLayout.vue'
+import emptyLayout from './layouts/emptyLayout.vue'
 
 // 메인 페이지
+import MainPage from './views/MainPage.vue'
 
 // 마이 페이지
 import buylist from './mypage/buylist.vue'
@@ -20,7 +22,10 @@ import myPage from './mypage/mypage.vue'
 
 // 관리자 페이지
 
-import MainPage from './views/MainPage.vue'
+import login from './views/login.vue'
+import signup from './views/signup.vue'
+
+
 
 const routes = [
   {
@@ -67,6 +72,21 @@ const routes = [
         {
           path: 'mychat',
           component: myChat,
+        }
+      ]
+    },
+    {
+      path:'/login/',
+      name: 'emptyLayout',
+      component: emptyLayout,
+      children: [
+        {
+          path: '',
+          component: login,
+        },
+        {
+          path: 'signup',
+          component: signup,
         }
       ]
     }

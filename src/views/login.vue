@@ -19,7 +19,7 @@
 <script>
 
 </script>
-<style>
+<style scoped>
 /*로그인
 */
 html {
