@@ -41,7 +41,7 @@
 
 .review_wrapper {
     width: 60%;
-    height: 800px;
+    height: 1050px;
     margin: 0 auto;
 }
 .review_wrapper h1 {
