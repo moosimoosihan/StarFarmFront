@@ -94,12 +94,11 @@ Footer {
   .content{
     margin: auto;
   }
-  .mypage-bar a {
+.mypage-bar a {
   display: block;
   text-align: center;
-  height: 22px;
-  padding-top: 17px;
-  padding-bottom: 18px;
+  height: 58px;
+  padding-top: 10px;
   transition: all 0.3s ease;
   text-decoration: none;
 }
