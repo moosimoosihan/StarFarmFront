@@ -1,1 +1,7 @@
-<!-- 로그인 화면에서 사용 -->
+<template>
+    <router-view></router-view>
+</template>
+
+<script>
+
+</script>
