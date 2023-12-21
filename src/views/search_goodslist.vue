@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link type="text/css" rel="stylesheet" href="/src/mypage/search_goodslist.css">
-</head>
-<body>
+<template>
     <div class="container" id="scroll">
         <div class="search_title">
             <span class="search_bigcate">대분류</span>
@@ -84,5 +76,49 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+</template>
+<script>
+    export default {
+        name : 'search_goodslist'
+    }
+</script>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.container {
+    width: 100%;
+    height: 100%;
+}
+#scroll {
+    overflow: scroll;
+}
+/* -------------------- */
+
+.search_goods {
+    width: 150px;
+    height: 200px;
+    text-align: center;
+    margin-top: 20px;
+    margin-left: 10%;
+    background-color: #f5f5f5;
+    float : left;
+}
+
+.search_goods_img {
+    width: 100px;
+    height: 100px;
+    margin-top: 5px;
+    margin-left: 20px;
+    background-color: red;
+}
+.search_bigcate {
+    font-size: 25px;
+}
+.search_title {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+</style>

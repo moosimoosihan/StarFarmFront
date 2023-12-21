@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="/src/mypage/mypage_myreviewlist.css" rel="stylesheet" type="text/css">
-</head>
-
-<body>
+<template>
     <div class="container" id="scroll">
         <div>
             <div class="review_title">
@@ -120,6 +110,79 @@
             </div>
         </div>
     </div>
-</body>
+</template>
+<script>
+    export default {
+        name: 'myreview'
+    }
+</script>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.container {
+    width: 100%;
+    height: 100%;
+}
+#scroll {
+    overflow: scroll;
+}
+/* -------------------- */
 
-</html>
+.review_container {
+    width: 800px;
+    height: 100px;
+    text-align: center;
+    margin-top: 20px;
+    margin-left: 10%;
+    background-color: #f5f5f5;
+}
+
+.review_goods_img {
+    width: 90px;
+    height: 90px;
+    float: left;
+    margin-top: 5px;
+    margin-left: 20px;
+    background-color: red;
+}
+
+.review_details_container{
+    width: 300px;
+    height: 80%;
+    float: left;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.review_details_container p {
+    width: 100%;
+    height: 60px;
+    margin-top: 5px;
+    overflow: hidden;
+    word-wrap : brek-word;
+    display : -webkit-box;
+    -webkit-line-clamp : 3;
+    -webkit-box-orient: vertical;
+}
+
+.review_icon {
+    float : left;
+    margin-left: 10px;
+    margin-top: 50px;
+    background-color: red;
+}
+
+.review_date {
+    float: right;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.review_title {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+</style>
