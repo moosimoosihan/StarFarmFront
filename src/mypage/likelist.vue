@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link type="text/css" rel="stylesheet" href="/src/mypage/mypage_likelist.css">
-</head>
-<body>
+<template>
     <div class="container" id="scroll">
         <div>
             <div class="likelist_title">
@@ -102,5 +94,44 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+</template>
+<script>
+    export default {
+        name: 'likelist'
+    }
+</script>
+<style scoped>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.container {
+    width: 100%;
+    height: 100%;
+}
+#scroll {
+    overflow: scroll;
+}
+/* -------------------- */
+
+.likelist_container {
+    width: 150px;
+    height: 200px;
+    text-align: center;
+    margin-top: 20px;
+    margin-left: 10%;
+    background-color: #f5f5f5;
+    float : left;
+}
+.likelist_goods_img {
+    width: 100px;
+    height: 100px;
+    margin-top: 5px;
+    margin-left: 20px;
+    background-color: red;
+}
+.price {
+    font-size: 18px;
+}
+</style>
