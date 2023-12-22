@@ -2,7 +2,7 @@
   <div>
     <div class="report-section">
       <div id="scroll">
-        <h2>거래 관리</h2>
+        <h2>회원 관리</h2>
         <table class="report-table">
           <thead>
             <tr>
@@ -12,7 +12,6 @@
               <th>신고당한횟수</th>
               <th>가입일시</th>
               <th>보기</th>
-              <th>정지</th>
             </tr>
           </thead>
           <tbody>
@@ -22,7 +21,7 @@
               <td>{{ item.userState }}</td>
               <td>{{ item.reportNum}}</td>
               <td>{{ item.date }}</td>
-              <td>{{ item.look }}</td>
+            
               <td><button class="view-button" @click="handleButtonClick(index, item.userState)">{{ item.userState === '정지' ? '해제' : '정지' }}
                 </button>
               </td>
@@ -34,7 +33,7 @@
   </div>
 </template>
 <script>
-  export default {
+         export default {
             data() {
             return {
              items: [
@@ -89,7 +88,8 @@ body {
     display: flex;
     background-color: #ffffff;
     height: 100vh;
-    width:1000px;
+    width:1700px;
+    border: 1px solid #000000;
 }
 
 #scroll {
@@ -99,7 +99,7 @@ body {
 }
 
 .report-table {
-    width: 95%;
+    width: 100%;
     border-collapse: collapse;
     margin-top: 40px;
 }
