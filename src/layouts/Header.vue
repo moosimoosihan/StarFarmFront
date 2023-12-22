@@ -6,11 +6,14 @@
             </div>
             
             <div class="navbar_icons">
-                <!-- 미 로그인 시 -->
+              <div v-if="user.user_no==''">
                 <button @click="gotoLogin()" class="login_btn">로그인</button>
-                <!-- 로그인 시 -->
-                <!-- <button class="chat_btn">1:1채팅</button>
-                <img class="myPage" src="" alt="프로필 사진"> -->
+              </div>
+              <div v-else>
+                <button class="chat_btn" @click="gotoMyChat()">1:1채팅</button>
+                <img class="myPage" src="" alt="프로필 사진" @click="gotoMypage()">
+                <button @click="gotoUpload()" class="storeupload_btn">상품등록</button>
+              </div>
             </div>
 
             <div class="navbar_search">
@@ -92,6 +95,21 @@
 <script>
 export default ({
     name: 'header',
+    data() {
+      return {
+        // loginUser: {user_id:'abc',user_no:1},
+        loginUser: {},
+      }
+    },
+    computed: {
+      user() {
+        return this.$store.state.user;
+        // return this.loginUser
+      }
+    },
+    created() {
+      this.getUser();
+    },
     methods: {
         gotoMain () {
           this.$router.push('/')
@@ -99,7 +117,24 @@ export default ({
         gotoLogin () {
           this.$router.push('/login')
         },
-    }
+        gotoUpload () {
+          this.$router.push('/store_upload')
+        },
+        gotoMyChat() {
+          this.$router.push('/mypage/mychat')
+        },
+        gotoMypage() {
+          this.$router.push('/mypage')
+        },
+      async getUser() {
+        try {
+          const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
+          this.loginUser = response.data[0];
+        } catch (error) {
+          console.error(error);
+        }
+      },
+    },
 })
 </script>
 <style scoped>
@@ -213,6 +248,14 @@ input::placeholder {
 }
 
 .login_btn {
+  width: 80px;
+  height: 40px;
+  float: right;
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+.storeupload_btn {
   width: 80px;
   height: 40px;
   float: right;
