@@ -1,13 +1,14 @@
-import {
-    createStore
-} from 'vuex'
+import { createStore } from 'vuex'
 
 import persistedstate from 'vuex-persistedstate'
 
 const store = createStore({
     state() {
         return {
-            user: {}
+            user: {
+                user_id: '',
+                user_no: '',
+            }
         }
     },
     mutations: {
@@ -22,4 +23,4 @@ const store = createStore({
     ]
 })
 
-export default store
+export default store;
