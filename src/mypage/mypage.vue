@@ -10,7 +10,7 @@
                         </div>
                         <img id="photo-preview" :src="photoPreview" alt="프로필 사진 미리보기" style="display: none;">
                     </div>
-                    <span class="profile_nick">닉네임</span>
+                    <span class="profile_nick">{{ loginUser.user_nick }}</span>
                 </div>
             </div>
 
@@ -19,8 +19,10 @@
                 <div class="friendly_box">
                     <span class="friendly_text">친밀도</span>
                     <div class="friendly_img_box">
-                        <progress value="50" max="100"></progress>
-                        <span class="friendly_score">50점</span>
+                        <div class="progressBar">
+                            <div id="bar" class="innerbar"></div>
+                        </div>
+                        <span class="friendly_score">{{ loginUser.user_fr }}점</span>
                     </div>
                 </div>
             </div>
@@ -33,11 +35,19 @@
             </div>
         </div>
         <div class="myinfo">
-            <p>내 정보</p>
-            <p>닉네임 : 닉네임이당</p>
-            <p>휴대전화번호 : 010-0000-0000</p>
-            <p>주소 : 서울시 강남구</p>
-            <p>상세주소 : 123-456</p>
+            <div>
+                <h2>내 정보</h2>
+            </div>
+            <div class="my">
+                <div class="detail">
+                    <p>ID : {{ loginUser.user_id }}</p>
+                    <p>휴대전화번호 : {{ loginUser.user_mobile }}</p>
+                    <p>주소</p>
+                    <p>{{ loginUser.user_zipcode }}</p>
+                    <p>{{ loginUser.user_adr1 }}</p>
+                    <p>{{ loginUser.user_adr2 }}</p>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -46,8 +56,38 @@
         name : 'mypage',
         data() {
             return {
-                photoPreview: '#'
+                loginUser: {},
             }
+        },
+        computed: {
+            user() {
+                return this.$store.state.user
+            }
+        },
+        created() {
+            this.getUser()
+        },
+        methods: {
+            updateProgressbar() {
+                var currentFr = this.loginUser.user_fr
+                let time = 100 - currentFr;
+                let el = document.getElementById("bar");
+                let width = (time / 100) * 100 + "%";
+                width = parseFloat(width).toFixed(2);
+                if (width > 100) width = 100;
+
+                //console.log("width" + width);
+                let widthStr = width + "%";
+                el.style.width = widthStr;
+            },
+            async getUser() {
+                try {
+                    const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
+                    this.loginUser = response.data[0];
+                } catch (error) {
+                    console.error(error);
+                }
+            },
         }
     }
 </script>
@@ -122,5 +162,25 @@
 }
 .myinfo {
     margin-left: 20px;
+}
+.progressBar {
+  max-width: 330px;
+  width: 90%;
+  margin: 10px auto;
+  margin-top: 100px;
+  height: 8px;
+
+  border-radius: 3px;
+  background: linear-gradient(#6fa6d66c, #7db1df54);
+}
+
+.innerbar {
+  max-width: 330px;
+  height: 100%;
+  text-align: right;
+  height: 8px; /* same as #progressBar height if we want text middle aligned */
+  width: 30%;
+  border-radius: 3px;
+  background: linear-gradient(#5be6ba, #5ed1ad);
 }
 </style>
