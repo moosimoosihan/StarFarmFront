@@ -1,6 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+import store from './store'
 
 // 레이아웃
 import defaultLayout from './layouts/defaultLayout.vue'
@@ -12,6 +15,7 @@ import emptyLayout from './layouts/emptyLayout.vue'
 import MainPage from './views/MainPage.vue'
 import login from './views/login.vue'
 import signup from './views/signup.vue'
+import FindPage from './views/find.vue'
 import product from './views/auction.vue'
 import payment from './views/payment.vue'
 import report from './views/report.vue'
@@ -131,7 +135,11 @@ const routes = [
           path: '/chatroom/:id',
           name: 'chatroom',
           component: chatroom
-        }
+        },
+        {
+          path: 'find',
+          component: FindPage,
+        },
       ]
     },
     {
@@ -155,7 +163,7 @@ const routes = [
     }
   ]
 
-// window.Kakao.init('카카오 앱 키');
+window.Kakao.init('cbecce5f9f0a0deb9e593b0f1ca564f0');
 
 const router = createRouter({
   history: createWebHistory(),
@@ -164,4 +172,6 @@ const router = createRouter({
 
 const app = createApp(App)
 app.use(router)
+app.use(store)
+app.use(VueSweetalert2)
 app.mount('#app')
