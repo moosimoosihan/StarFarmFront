@@ -8,7 +8,12 @@
                         <div class="profile-icon">
                             <i class="fas fa-user-circle"></i>
                         </div>
-                        <img id="photo-preview" :src="photoPreview" alt="프로필 사진 미리보기" style="display: none;">
+                        <!-- <img :width="70" style="border-radius: 10px;"
+                            :src="loginUser.USER_IMG ? require(`../../../StarFarmBack/uploads/user_img/${loginUser.USER_IMG}`) : '../assets/profile.png'"
+                            alt="프로필 사진 미리보기" /> -->
+                        <img id="photo-preview" :width="70" style="border-radius: 10px; display: none;"
+                            src="../assets/profile.png"
+                            alt="프로필 사진 미리보기" />
                     </div>
                     <span class="profile_nick">{{ loginUser.user_nick }}</span>
                 </div>
@@ -30,7 +35,7 @@
             <div class="logout_lapper">
                 <!-- 로그아웃 버튼 -->
                 <div class="logout_box">
-                    <button class="logout_btn">로그아웃</button>
+                    <button class="logout_btn" @click="logout()">로그아웃</button>
                 </div>
             </div>
         </div>
@@ -88,6 +93,29 @@
                     console.error(error);
                 }
             },
+            logout() {
+                if(this.loginUser.user_social_tp==1){
+                    window.Kakao.API.request({
+                        url: '/v1/user/unlink',
+                        success: function (response) {
+                            console.log(response);
+                        },
+                        fail: function (error) {
+                            console.log(error);
+                        },
+                    })
+                }
+                this.$store.commit("user", {})
+                this.$swal({
+                    position: 'top',
+                    icon: 'success',
+                    title: '로그아웃 성공!',
+                    showConfirmButton: false,
+                    timer: 1000
+                    }).then(() => {
+                        window.location.href="http://localhost:8080";
+                    })
+            }
         }
     }
 </script>

@@ -23,7 +23,7 @@
                                         :src="salelist.items[0].GOODS_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${salelist.items[0].GOODS_IMG}`) : '../assets/2-1.png'"
                                         alt="상품 이미지" /> -->
                                     <img :width="70" style="border-radius: 10px;"
-                                        :src="'../assets/2-1.png'"
+                                        src="../assets/2-1.png"
                                         alt="상품 이미지" />
                                 </td>
                                 <td @click="gotoProduct(salelist.items[0].GOODS_NO)">
@@ -75,7 +75,25 @@
         computed: {
             user() {
                 return this.$store.state.user;
-            }
+            },
+            salelistList() {
+                const uniqueOrders = [];
+                const tradeNos = [];
+
+                for (const order of this.saleList) {
+                    if (!tradeNos.includes(order.ORDER_TRADE_NO)) {
+                        uniqueOrders.push({
+                            ORDER_TRADE_NO: order.ORDER_TRADE_NO,
+                            items: [order],
+                        });
+                        tradeNos.push(order.ORDER_TRADE_NO);
+                    } else {
+                        const index = uniqueOrders.findIndex((o) => o.ORDER_TRADE_NO === order.ORDER_TRADE_NO);
+                        uniqueOrders[index].items.push(order);
+                    }
+                }
+                return uniqueOrders;
+            },
         },
         methods: {
             async getUser() {
