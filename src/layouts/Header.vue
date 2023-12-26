@@ -6,12 +6,17 @@
             </div>
             
             <div class="navbar_icons">
-              <div v-if="user.user_no==''">
+              <div v-if="user.user_id==''">
                 <button @click="gotoLogin()" class="login_btn">로그인</button>
               </div>
               <div v-else>
                 <button class="chat_btn" @click="gotoMyChat()">1:1채팅</button>
-                <img class="myPage" src="" alt="프로필 사진" @click="gotoMypage()">
+                <!-- <img :width="70" style="border-radius: 10px;"
+                  :src="chatroom.items[0].CHATROOM_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${chatroom.CHATROOM_IMG}`) : '../assets/profile.png'"
+                  alt="프로필 이미지" /> -->
+                <img class="myPage" :width="70" style="border-radius: 10px;"
+                  src="../assets/profile.png" @click="gotoMypage()"
+                  alt="프로필 이미지" />
                 <button @click="gotoUpload()" class="storeupload_btn">상품등록</button>
               </div>
             </div>
@@ -93,7 +98,7 @@
         </div>
 </template>
 <script>
-export default ({
+export default {
     name: 'header',
     data() {
       return {
@@ -107,8 +112,15 @@ export default ({
         // return this.loginUser
       }
     },
+    mounted() {
+      if(this.user.user_id==''){
+        // 로그인 체크
+      } else {
+        // 어드민 체크
+      }
+    },
     created() {
-      this.getUser();
+      console.log(this.user);
     },
     methods: {
         gotoMain () {
@@ -126,16 +138,8 @@ export default ({
         gotoMypage() {
           this.$router.push('/mypage')
         },
-      async getUser() {
-        try {
-          const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
-          this.loginUser = response.data[0];
-        } catch (error) {
-          console.error(error);
-        }
-      },
     },
-})
+}
 </script>
 <style scoped>
 .title {
