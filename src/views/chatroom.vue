@@ -38,39 +38,9 @@
                         </div>
                     </div>
                 </div>
-                <div>
+                <!-- <div>
                     <hr id="left"><span class="hr_text"> 어제 </span><hr id="right">
-                </div>
-                <div class="chat_you">
-                    <img class="chat_profile_img" src="" alt="프로필 사진">
-                    <div class="chat_container">
-                        <p class="chat_name">ㅇㅇㅇ</p>
-                        <div class="chat_content_container">
-                            <p class="chat_content">안녕하세요! 2트</p>
-                            <span class="chat_time">16:30</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="chat_me">
-                    <div class="chat_container">
-                        <p class="chat_name">ㅁㅁㅁ</p>
-                        <div class="chat_content_container">
-                            <p class="chat_content">싸게주세요!</p>
-                            <span class="chat_time">16:31</span>
-                        </div>
-                    </div>
-                    <img class="chat_profile_img" src="" alt="프로필 사진">
-                </div>
-                <div class="chat_me">
-                    <div class="chat_container">
-                        <p class="chat_name">ㅁㅁㅁ</p>
-                        <div class="chat_content_container">
-                            <p class="chat_content">제발요!</p>
-                            <span class="chat_time">16:33</span>
-                        </div>
-                    </div>
-                    <img class="chat_profile_img" src="" alt="프로필 사진">
-                </div>
+                </div> -->
             </div>
             <div class="chat_input_container">
                 <input class="chat_input" type="text" placeholder="메세지를 입력하세요.">

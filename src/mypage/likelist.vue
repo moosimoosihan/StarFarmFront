@@ -6,7 +6,7 @@
                     <span>관심 상품</span>
                 </div>
                 <div class="likegoods">
-                    <table class="table" style="width: 100%%">
+                    <table class="table" style="width: 100%;">
                         <thead>
                             <tr>
                                 <th>상품 이미지</th>
@@ -22,7 +22,7 @@
                                         :src="likegoods.items[0].GOODS_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${likegoods.GOODS_IMG}`) : '../assets/2-1.png'"
                                         alt="상품 이미지" /> -->
                                     <img :width="70" style="border-radius: 10px;"
-                                        :src="'../assets/2-1.png'"
+                                        src="../assets/2-1.png"
                                         alt="상품 이미지" />
                                 </td>
                                 <td>
@@ -93,9 +93,9 @@
                     console.error(error);
                 }
             },
-            async getOrderList() {
+            async getLikeGoods() {
                 try {
-                    const response = await axios.get(`http://localhost:3000/goods/orderlist/${this.user.user_no}`);
+                    const response = await axios.get(`http://localhost:3000/goods/likelist/${this.user.user_no}`);
                     this.likegoods = response.data;
                 } catch (error) {
                     console.error(error);
@@ -108,7 +108,6 @@
                 }
                 return "";
             },
-            // 
             formatDateTime(dateTime) {
                 const date = new Date(dateTime);
                 const options = {
@@ -119,22 +118,6 @@
                 const formattedDateTime = date.toLocaleDateString("ko-KR", options);
                 return formattedDateTime;
             },
-            getOrderStatusText(status) {
-                switch (status) {
-                    case 0:
-                        return "경매 중";
-                    case 1:
-                        return "거래 중";
-                    case 2:
-                        return "거래 완료";
-                    case 3:
-                        return "유찰";
-                    case 4:
-                        return "삭제";
-                    default:
-                        return "";
-                }
-            },
         }
     }
 </script>
@@ -142,11 +125,10 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    border-spacing: 0px;
 }
 .container {
-    width: 100%;
-    height: 100%;
+    margin: 40px 30px;
 }
 .myinfo{
     margin-top: 30px;

@@ -1,18 +1,18 @@
 <template>
-            <main id="main-holder">
-          <h1 id="login-header" @click="gotoMain()">로고</h1>
-          <form id="login-form">
-            <input type="text" name="username" id="username-field" class="login-form-field" placeholder="ID(이메일)">
-            <input type="password" name="password" id="password-field" class="login-form-field" placeholder="PW">
-            <input type="submit" value="Login" id="login-form-submit">
-            <input type="submit" value="카카오" id="kakao-form-submit" @click="kakaoLogin()">
-            <input type="submit" value="네이버" id="naver-form-submit" @click="naverlogin()">
-            <input type="submit" value="회원가입" id="join-form-submit" @click="gotoSignUp()"><br>
-            <input type="submit" value="아이디 / 비밀번호 찾기" id="find" @click="goToFind()">
-          </form>
-          </main>
+  <main id="main-holder">
+    <h1 id="login-header" @click="gotoMain()">로고</h1>
+    <input type="text" name="username" id="username-field" class="login-form-field" placeholder="ID" v-model="user_id">
+    <input type="password" name="password" id="password-field" class="login-form-field" placeholder="PW" v-model="user_pw">
+    <input type="submit" value="Login" id="login-form-submit" @click="localLogin()">
+    <input type="submit" value="카카오" id="kakao-form-submit" @click="kakaoLogin()">
+    <input type="submit" value="네이버" id="naver-form-submit" @click="naverlogin()">
+    <input type="submit" value="회원가입" id="join-form-submit" @click="gotoSignUp()"><br>
+    <input type="submit" value="아이디 / 비밀번호 찾기" id="find" @click="goToFind()">
+  </main>
 </template>
 <script>
+import axios from 'axios'
+
   export default {
     name: 'login',
     data() {
@@ -30,15 +30,46 @@
       goToFind() {
             this.$router.push({ path: '/login/find' });
       },
+      // 로컬 로그인
+      localLogin() {
+        axios({
+          url: "http://localhost:3000/auth/login_process",
+          method: "POST",
+          data: {
+            user_id: this.user_id,
+            user_pw: this.user_pw
+          },
+        })
+          .then(res => {
+            if (res.data.message == 'undefined_id') {
+              this.$swal("존재하지 않는 아이디입니다.")
+            } else if (res.data.message == 'incorrect_pw'){
+              this.$swal("비밀번호가 일치하지 않습니다.")
+            } else {
+              this.$store.commit("user", { user_id: this.user_id, user_no: res.data.message })
+              this.$swal({
+                position: 'top',
+                icon: 'success',
+                title: '로그인 성공!',
+                showConfirmButton: false,
+                timer: 1000
+                }).then(() => {
+                  this.$router.push({ path : '/'});
+                })
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            })
+      },
       //카카오 로그인
       kakaoLogin() {
-
         window.Kakao.Auth.login({
             scope: "profile_nickname, account_email",
-            success: this.getKakaoAccount(),
+            success: this.getKakaoAccount,
         });
-        },
-        getKakaoAccount() {
+      },
+      getKakaoAccount() {
         window.Kakao.API.request({
             url: "/v2/user/me",
             success: (res) => {
@@ -48,44 +79,41 @@
 
                 console.log(kakao_account, email, nickname)
 
-                // axios({
-                //     url: "http://localhost:3000/auth/kakaoLoginProcess",
-                //     method: "POST",
-                //     data: {
-                //         user_id: email,
-                //         user_nick: nickname
-                //     },
-                // }).then(res => {
-                //     if (res.data.message == '저장완료') {
+                axios({
+                    url: "http://localhost:3000/auth/kakaoLoginProcess",
+                    method: "POST",
+                    data: {
+                        user_id: email,
+                        user_nick: nickname,
+                        accesstoken: res.kakao_account,
+                    },
+                }).then(res => {
+                    if (res.data.message == '저장완료') {
+                        this.$swal({
+                            position: 'top',
+                            icon: 'success',
+                            title: '회원가입 성공!',
+                            showConfirmButton: false,
+                            timer: 1000
+                        })
+                    }
+                    else {
+                        this.$store.commit("user", { user_id: email, user_no: res.data.message })
+                        this.$swal({
+                            position: 'top',
+                            icon: 'success',
+                            title: '로그인 성공!',
+                            showConfirmButton: false,
+                            timer: 1000
+                        }).then(() => {
+                            window.location.href = "http://localhost:8080";
+                        })
 
-                //         this.$swal({
-                //             position: 'top',
-                //             icon: 'success',
-                //             title: '회원가입 성공!',
-                //             showConfirmButton: false,
-                //             timer: 1000
-                //         })
-
-                //     }
-                //     else {
-                //         this.$store.commit("user", { user_id: email, user_no: res.data.message })
-                //         this.$swal({
-                //             position: 'top',
-                //             icon: 'success',
-                //             title: '로그인 성공!',
-                //             showConfirmButton: false,
-                //             timer: 1000
-
-
-                //         }).then(() => {
-                //             window.location.href = "http://localhost:8080";
-                //         })
-
-                //     }
-                // })
-                //     .catch(err => {
-                //         console.log(err);
-                //     })
+                    }
+                })
+                    .catch(err => {
+                        console.log(err);
+                    })
 
 
             },
@@ -155,8 +183,8 @@
     mounted() {
         console.log(this.naverLogin.user);
         this.naverLogin = new window.naver.LoginWithNaverId({
-            clientId: "rjOA5xnnAw_fpgrQhrPY",
-            callbackUrl: "DTZs9Sc_PhmpMYxpkUfD",
+            clientId: "DTZs9Sc_PhmpMYxpkUfD",
+            callbackUrl: "http://localhost:8080",
             isPopup: false,
         });
         this.$store.commit("naverLogin", this.naverLogin);
@@ -191,6 +219,8 @@ html {
   }
 
 #login-header{
+  margin-left: 30%;
+  width: 40%;
   text-align: center;
   margin-top: 50px;
 }
@@ -272,9 +302,8 @@ html {
   }
   
   #find {
-    width: 100px;
+    width: 100%;
     text-align: center;
-    margin-left: 145px;
     border: none;
     background: none;
     color: rgb(136, 136, 136);

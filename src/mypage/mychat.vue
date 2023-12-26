@@ -19,10 +19,10 @@
                             <td>{{ chatroom.CHATROOM_NO }}</td>
                             <td>
                                 <!-- <img :width="70" style="border-radius: 10px;"
-                                    :src="chatroom.items[0].CHATROOM_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${chatroom.CHATROOM_IMG}`) : '../assets/profile.png'"
+                                    :src="chatroom.items[0].CHATROOM_IMG ? require(`../../../StarFarmBack/uploads/user_img/${chatroom.CHATROOM_IMG}`) : '../assets/profile.png'"
                                     alt="프로필 이미지" /> -->
                                 <img :width="70" style="border-radius: 10px;"
-                                    :src="'../assets/profile.png'"
+                                    src="../assets/profile.png"
                                     alt="프로필 이미지" />
                             </td>
                             <td>
@@ -37,6 +37,9 @@
                                 </div>
                             </td>
                         </tr>
+                        <tr v-if="chatroomList.length === 0">
+                            <td colspan="4">채팅방이 없습니다.</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -50,6 +53,7 @@
             return {
                 loginUser: {},
                 roomList: [],
+                commentList: [],
             }
         },
         computed: {
@@ -78,6 +82,7 @@
         created() {
             this.getUser();
             this.getRoomList();
+            this.getComment();
         },
         methods: {
             gotoChatRoom(index) {
@@ -106,7 +111,7 @@
             async getComment(index) {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/chatroomcomment/${index}`);
-                    this.roomList = response.data;
+                    this.commentList = response.data;
                 } catch (error) {
                     console.error(error);
                 }
@@ -118,29 +123,28 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    border-spacing: 0px;
 }
 .container {
-    width: 100%;
-    height: 100%;
+    margin: 40px 30px;
 }
 .myinfo{
     margin-top: 30px;
 }
 
-.likegoods .table {
+.chats .table {
     max-width: 1200px;
     text-align: center;
     background-color: #f9f9f9;
     border-radius: 10px;
 }
 
-.likegoods .table th {
+.chats .table th {
     text-align: center;
     padding: 20px 0;
 }
 
-.likegoods p {
+.chats p {
     width: 120px;
     font-size: 1rem;
     display: inline-block;
@@ -151,7 +155,7 @@
     /* border: 1px solid red; */
 }
 
-.likegoods .detail {
+.chats .detail {
     display: flex;
 }
 

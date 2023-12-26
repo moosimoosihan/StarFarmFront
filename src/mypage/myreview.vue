@@ -17,13 +17,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(review,i) in reviewList" :key="i">
+                            <tr v-for="(review,i) in uniqueReviewList" :key="i">
                                 <td>
                                     <!-- <img :width="70" style="border-radius: 10px;"
                                         :src="review.items[0].ORDER_GOODS_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${review.items[0].ORDER_GOODS_IMG}`) : '../assets/2-1.png'"
                                         alt="상품 이미지" /> -->
                                     <img :width="70" style="border-radius: 10px;"
-                                        :src="'../assets/2-1.png'"
+                                        src="../assets/2-1.png"
                                         alt="상품 이미지" />
                                 </td>
                                 <td @click="gotoProduct(review.items[0].GOODS_NO)">
@@ -50,6 +50,9 @@
                                     <p>{{ formatDateTime(review.items[0].REVIEW_DATE) }}</p>
                                 </td>
                             </tr>
+                            <tr v-if="reviewList.length === 0">
+                                <td colspan="5">리뷰가 없습니다.</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -60,7 +63,63 @@
 <script>
     export default {
         name: 'myreview',
+        data() {
+            return {
+                loginUser: {},
+                reviewList: [],
+            }
+        },
+        computed: {
+            user() {
+                return this.$store.state.user;
+            },
+            uniqueReviewList() {
+                const uniqueOrders = [];
+                const tradeNos = [];
+
+                for (const order of this.reviewList) {
+                    if (!tradeNos.includes(order.ORDER_TRADE_NO)) {
+                        uniqueOrders.push({
+                            ORDER_TRADE_NO: order.ORDER_TRADE_NO,
+                            items: [order],
+                        });
+                        tradeNos.push(order.ORDER_TRADE_NO);
+                    } else {
+                        const index = uniqueOrders.findIndex((o) => o.ORDER_TRADE_NO === order.ORDER_TRADE_NO);
+                        uniqueOrders[index].items.push(order);
+                    }
+                }
+                return uniqueOrders;
+            }
+        },
+        created() {
+            this.getUser();
+            this.getReviewList();
+        },
         methods: {
+            async getUser() {
+                try {
+                    const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
+                    this.loginUser = response.data[0];
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+            async getReviewList() {
+                try {
+                    const response = await axios.get(`http://localhost:3000/goods/reviewlist/${this.user.user_no}`);
+                    this.reviewList = response.data;
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+            formatPrice(price) {
+                if (price !== undefined) {
+                    const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    return `${formattedPrice} 원`;
+                }
+                return "";
+            },
             formatDateTime(dateTime) {
                 const date = new Date(dateTime);
                 const options = {
