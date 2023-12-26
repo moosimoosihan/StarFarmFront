@@ -89,7 +89,7 @@
           <!--입찰버튼-->
           <!-- <input type="button" id="submit_button" value="입찰">-->
             <input type="button" id="submit_button" value="입찰" @click="handleBid">
-        </div>1233
+        </div>
       </div>
     </div>
   </div>
