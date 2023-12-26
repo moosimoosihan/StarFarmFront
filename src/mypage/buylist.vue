@@ -22,8 +22,11 @@
                             <tr v-for="(order, i) in uniqueOrderList" :key="i">
                                 <td>{{ order.ORDER_TRADE_NO }}</td>
                                 <td>
-                                    <img :width="70" style="border-radius: 10px;"
+                                    <!-- <img :width="70" style="border-radius: 10px;"
                                         :src="order.items[0].ORDER_GOODS_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${order.items[0].ORDER_GOODS_IMG}`) : '../assets/2-1.png'"
+                                        alt="상품 이미지" /> -->
+                                        <img :width="70" style="border-radius: 10px;"
+                                        :src="'../assets/2-1.png'"
                                         alt="상품 이미지" />
                                 </td>
                                 <td @click="gotoProduct(order.items[0].GOODS_NO)">

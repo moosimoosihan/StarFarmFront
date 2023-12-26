@@ -26,7 +26,9 @@
                     <textarea placeholder="배송 요청사항을 입력해주세요"></textarea>
                 </div>
                 <div id="payment_submit">
-                    <a href="">취소</a>
+                    <div id="payment_pay_btn">
+                        <a href="" style="text-decoration:none;color:black">취소</a>
+                    </div>
                     <input type="submit" value="결제" id="payment_pay_btn">
                 </div>
             </form>
@@ -43,16 +45,16 @@
     box-sizing: border-box;
 }
 .container {
-    width: 2000px;
+    width: 1900px;
     height: 100%;
 }
 /* ------------------------------------------------------------- */
 
 #payment_wrapper {
-    width: 60%;
-    height: 800px;
-    margin: 0 auto;
-    padding-top: 30px;
+    width: 55%;
+    height: 1000px;
+    margin:  auto;
+    padding-top: 2px;
 }
 #payment_form h1 {
     margin-bottom: 20px;
@@ -138,22 +140,22 @@
     height: 300px;
     resize: none;
     font-size: 15px;
-    line-height: 200px;
-    padding-left: 40%;
+    line-height: 100px;
+    padding-left: 20%;
 }
-#payment_submit a {
-    display: box;
-    width: 60px;
-    height: 40px;
-    border: 0;
-    background-color: aqua;
-    text-decoration: none;
-}
+
 #payment_pay_btn {
-    width: 60px;
-    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 35px;
     background: none;
+    float: right;
     border: 0;
-    background-color: aqua;
+    background-color: bisque;
+    margin-left: 30px;
+    text-align: center;
+    font-size:17px
 }
 </style>

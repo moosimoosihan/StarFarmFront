@@ -18,6 +18,7 @@ import signup from './views/signup.vue'
 import FindPage from './views/find.vue'
 import product from './views/auction.vue'
 import payment from './views/payment.vue'
+import report from './views/report.vue'
 import review from './views/review.vue'
 import storeUpload from './views/store_upload.vue'
 import userpage from './views/userpage.vue'
@@ -59,6 +60,11 @@ const routes = [
         path: '/payment',
         name: 'payment',
         component: payment
+      },
+      {
+        path: '/report',
+        name: 'report',
+        component: report
       },
       {
         path: '/review',

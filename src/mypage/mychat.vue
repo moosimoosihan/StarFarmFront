@@ -18,8 +18,11 @@
                         <tr v-for="(chatroom, i) in chatroomList" :key="i" @click="gotoChatRoom(chatroom.CHATROOM_NO)">
                             <td>{{ chatroom.CHATROOM_NO }}</td>
                             <td>
-                                <img :width="70" style="border-radius: 10px;"
+                                <!-- <img :width="70" style="border-radius: 10px;"
                                     :src="chatroom.items[0].CHATROOM_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${chatroom.CHATROOM_IMG}`) : '../assets/profile.png'"
+                                    alt="프로필 이미지" /> -->
+                                <img :width="70" style="border-radius: 10px;"
+                                    :src="'../assets/profile.png'"
                                     alt="프로필 이미지" />
                             </td>
                             <td>

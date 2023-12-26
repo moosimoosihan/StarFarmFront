@@ -40,10 +40,10 @@
                     <button type="button" @click="saveChanges">수정</button>
                     <button type="button" @click="cancelChanges">취소</button>
                 </form>
-            </div>
-        </div>
-    </div>
-</template>
+                </div>
+                </div>
+                </div>
+               </template>
     
 <style scoped>
         body {

@@ -69,7 +69,7 @@
 }
 .container {
     width: 2000px;
-    height: 100%;
+    height: 1260px;
 }
 /* ------------------------------------------------------------- */
 
@@ -86,7 +86,7 @@ progress {
 #userpage_profile {
     width: 100%;
     height: 200px;
-    border: 1px solid black;
+    border: 1px solid rgb(227, 208, 208);
 }
 #userpage_profile a {
     display: block;
@@ -155,11 +155,12 @@ progress {
 #userpage_tab {
     width: 100%;
     height: 100px;
+    margin-top: 19px;
 }
 .tab-link {
     width: 50%;
     height: 70px;
-    background-color: red;
+    background-color: rgb(201, 34, 129);
     float: left;
     list-style: none;
     line-height: 70px;
@@ -177,30 +178,30 @@ progress {
 
 /* 판매자 리뷰 */
 #userpage_review_list {
-    width: 80%;
-    height: 130px;
+    width: 100%;
+    height: 40%;
     background-color: beige;
     margin: 0 auto;
     border-radius: 20px;
 }
 #userpage_review_user {
-    width: 200px;
-    height: 100%;
-    padding-left: 20px;
-    padding-top: 10px;
+    width: 153px;
+    height: 60%;
+    padding-left: 22px;
+    padding-top: 16px;
     float: left;
 }
 #userpage_review_list div h1 {
     font-size: 20px;
 }
 #userpage_review_list div p {
-    font-size: 12px;
-    margin: 30px auto;
+    font-size: 14px;
+    margin: 34px auto;
 }
 #userpage_product_review_img {
     width: 200px;
     height: 100%;
-    background-color: slateblue;
+    background-color: rgb(198, 247, 222);
     float: left;
 }
 #userpage_review_content {
@@ -216,8 +217,8 @@ progress {
 }
 #userpage_review_date {
     float: right;
-    margin-right: 20px;
-    line-height: 130px;
+    margin-right: 46px;
+    line-height: 160px;
 }
 /* 판매자 리뷰 끝 */
 
@@ -230,7 +231,7 @@ progress {
 .userpage_product {
     width: 200px;
     height: 250px;
-    background-color: brown;
+    background-color: rgb(246, 244, 198);
     float: left;
     margin-right: 100px;
     margin-top: 50px;

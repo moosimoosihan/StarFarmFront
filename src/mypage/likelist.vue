@@ -18,8 +18,11 @@
                         <tbody>
                             <tr v-for="(likegoods, i) in likegoodsList" :key="i">
                                 <td>
-                                    <img :width="70" style="border-radius: 10px;"
+                                    <!-- <img :width="70" style="border-radius: 10px;"
                                         :src="likegoods.items[0].GOODS_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${likegoods.GOODS_IMG}`) : '../assets/2-1.png'"
+                                        alt="상품 이미지" /> -->
+                                    <img :width="70" style="border-radius: 10px;"
+                                        :src="'../assets/2-1.png'"
                                         alt="상품 이미지" />
                                 </td>
                                 <td>

@@ -19,8 +19,11 @@
                         <tbody>
                             <tr v-for="(salelist,i) in salelistList" :key="i">
                                 <td>
-                                    <img :width="70" style="border-radius: 10px;"
+                                    <!-- <img :width="70" style="border-radius: 10px;"
                                         :src="salelist.items[0].GOODS_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${salelist.items[0].GOODS_IMG}`) : '../assets/2-1.png'"
+                                        alt="상품 이미지" /> -->
+                                    <img :width="70" style="border-radius: 10px;"
+                                        :src="'../assets/2-1.png'"
                                         alt="상품 이미지" />
                                 </td>
                                 <td @click="gotoProduct(salelist.items[0].GOODS_NO)">

@@ -54,7 +54,7 @@
           bidPrice: '2000\\',
           salesStatus: '거래중',
           deadline: '2023-01-01',
-          category: '의류>외투',
+          category: '악세서리',
           seller: '빵빵',
           winner: '',
           },    
@@ -64,7 +64,7 @@
           bidPrice: '2000\\',
           salesStatus: '거래중',
           deadline: '2023-01-01',
-          category: '의류>외투',
+          category: '게임',
           seller: '통통',
           winner: '꿀꿀이',
           },    
@@ -74,7 +74,7 @@
           bidPrice: '2000\\',
           salesStatus: '거래중',
           deadline: '2023-01-01',
-          category: '의류>외투',
+          category: '주방용품',
           seller: '빵상',
           winner: '',
           },    
@@ -84,7 +84,7 @@
           bidPrice: '2000\\',
           salesStatus: '거래중',
           deadline: '2023-01-01',
-          category: '의류>외투',
+          category: '기타',
           seller: '오킹',
           winner: '',
           },    
@@ -109,7 +109,8 @@ body {
     display: flex;
     background-color: #ffffff;
     height: 100vh;
-    width:1000px;
+    width:1700px;
+    border: 1px solid #000000;
 }
 
 #scroll {

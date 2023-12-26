@@ -19,8 +19,11 @@
                         <tbody>
                             <tr v-for="(review,i) in reviewList" :key="i">
                                 <td>
-                                    <img :width="70" style="border-radius: 10px;"
+                                    <!-- <img :width="70" style="border-radius: 10px;"
                                         :src="review.items[0].ORDER_GOODS_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${review.items[0].ORDER_GOODS_IMG}`) : '../assets/2-1.png'"
+                                        alt="상품 이미지" /> -->
+                                    <img :width="70" style="border-radius: 10px;"
+                                        :src="'../assets/2-1.png'"
                                         alt="상품 이미지" />
                                 </td>
                                 <td @click="gotoProduct(review.items[0].GOODS_NO)">
