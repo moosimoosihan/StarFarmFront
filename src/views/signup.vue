@@ -3,58 +3,60 @@
     <div class="title">
       <h1 style="font-size: 21px;">회원가입</h1>
     </div>
-    <div id="box1">
-      <div class="id">
-        <input id="id" type="text" v-model="user_id" placeholder="id를 입력해 주세요.">
-        <button>중복확인</button>
-      </div>
-      <div class="nickName">
-        <input id="nickName" type="text" v-model="user_nick" placeholder="닉네임을 입력해 주세요.">
-      </div>
-      <div class="email">
-        <input id="email" type="text"  v-model="user_email" placeholder="이메일을 입력해 주세요.">
-      </div>
-      <div class="password">
-        <input id="password" type="password"  v-model="user_pw" placeholder="비밀번호를 입력해 주세요.">
-      </div>
-      <div class="passwordCheck">
-        <input id="passwordCheck" type="password"  v-model="user_pw_ck" placeholder="비밀번호를 다시 입력해 주세요.">
-      </div>
-      <div class="phone">
-        <input id="phone" type="text" placeholder="-를 뺀 전화번호를 입력해 주세요." v-model="user_mobile" maxlength="11" @input="validatePhoneNumber()"> 
-      </div>
-      <div class="address">
-        <span v-show="zipinput" class="addinput1">{{ user_zipcode }}</span>
-        <span v-show="zipinput" class="addinput2">{{ user_adr1 }}</span>
-        <button id="addressButton" v-on:click="zipload()">주소찾기</button>
-        <div>
-          <input id="addressDetail" type="text" placeholder="상세주소를 입력해 주세요." v-model="user_adr2"> 
+      <div id="box1">
+        <div class="id">
+          <input id="id" type="text" v-model="user_id" placeholder="id를 입력해 주세요.">
+          <button>중복확인</button>
+        </div>
+        <div class="nickName">
+          <input id="nickName" type="text" v-model="user_nick" placeholder="닉네임을 입력해 주세요.">
+        </div>
+        <div class="email">
+          <input id="email" type="text"  v-model="user_email" placeholder="이메일을 입력해 주세요.">
+        </div>
+        <div class="password">
+          <input id="password" type="password"  v-model="user_pw" placeholder="비밀번호를 입력해 주세요.">
+        </div>
+        <div class="passwordCheck">
+          <input id="passwordCheck" type="password"  v-model="user_pw_ck" placeholder="비밀번호를 다시 입력해 주세요.">
+        </div>
+        <div class="phone">
+          <input id="phone" type="text" placeholder="-를 뺀 전화번호를 입력해 주세요." v-model="user_mobile" maxlength="11" @input="validatePhoneNumber()"> 
+        </div>
+        <div class="address">
+          <span v-show="zipinput" class="addinput1">{{ user_zipcode }}</span>
+          <span v-show="zipinput" class="addinput2">{{ user_adr1 }}</span>
+          <button id="addressButton" v-on:click="zipload()">주소찾기</button>
+          <div>
+            <input id="addressDetail" type="text" placeholder="상세주소를 입력해 주세요." v-model="user_adr2"> 
+          </div>
         </div>
       </div>
-    </div>
-    
-    <div id="box2">
-      <div class="profile-upload-content upload-img">
-        <div class="img-preview">
-          <img id="img-preview" src="" style="display: none" width="250" alt="미리보기" />
-          <input id="img-url" type="hidden" name="url" />
+      
+      <div id="box2">
+        <div class="profile-upload-content upload-img">
+          <div class="img-preview">
+            <img id="img-preview" src="" style="display: none" width="250" alt="미리보기" />
+            <input id="img-url" type="hidden" name="url" />
+          </div>
+        </div>
+        <div class="profile-img">
+          <input id="profile-img" type="text" placeholder="이미지" v-model="user_img"><br><br>
+          <button class="imgButton">사진등록</button>
         </div>
       </div>
-      <div class="profile-img">
-        <input id="profile-img" type="text" placeholder="이미지" v-model="user_img"><br><br>
-        <button class="imgButton">사진등록</button>
-      </div>
-    </div>
 
-    <div id="box3">
-      <div class="signUp">
-        <button class="cancelButton" @click="gotoLogin()">취소하기</button>
-        <button class="signUpButton" @click="onSubmitForm()">가입하기</button>
+      <div id="box3">
+        <div class="signUp">
+          <button class="cancelButton" @click="gotoLogin()">취소하기</button>
+          <input type="submit" class="signUpButton" @click="onSubmitForm()" value="가입하기">
+        </div>
       </div>
-    </div>
   </div>
 </template>
 <script>
+import axios from 'axios';
+
 export default {
   data () {
     return{
@@ -77,47 +79,46 @@ export default {
             if (!this.validationCheck()) {
                 return;
             }
-            console.log(this.user_id)
-            this.$router.push({ path: '/login' }); // 로그인 화면으로 이동
-            // axios({
-            //     url: "http://localhost:3000/auth/join_process",
-            //     method: "POST",
-            //     data: {
-            //         user_id: this.user_id,
-            //         user_email: this.user_email,
-            //         user_nick: this.user_nick,
-            //         user_pw: this.user_pw,
-            //         user_img: this.user_img,
-            //         user_social_tp: 0,
-            //         user_accesstoken: '',
-            //         user_tp: 0,
-            //         user_mobile: this.user_mobile,
-            //         user_zipcode: this.user_zipcode,
-            //         user_adr1: this.user_adr1,
-            //         user_adr2: this.user_adr2,
-            //     },
-            // })
-            //     .then(res => {
-            //         if (res.data.message == 'already_exist_id') {
-            //             this.$swal("이미 존재하는 아이디입니다.")
-            //         }
-            //         else if (res.data.message == 'DB_error') {
-            //             this.$swal("DB 에러 발생")
-            //         }
-            //         else {
-            //             this.$swal({
-            //                 position: 'top',
-            //                 icon: 'success',
-            //                 title: '회원가입이 완료되었습니다!',
-            //                 showConfirmButton: false,
-            //                 timer: 1500
-            //             })
-            //             this.$router.push({ path: '/login' }); // 로그인 화면으로 이동
-            //         }
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     })
+            console.log(this.user_id, this.user_email, this.user_nick, this.user_pw, this.user_mobile, this.user_zipcode, this.user_adr1, this.user_adr2);
+            axios({
+                url: "http://localhost:3000/auth/join_process/",
+                method: "POST",
+                data: {
+                    user_id: this.user_id,
+                    user_email: this.user_email,
+                    user_nick: this.user_nick,
+                    user_pw: this.user_pw,
+                    // user_img: this.user_img,
+                    // user_social_tp: 0,
+                    // user_accesstoken: '',
+                    // user_tp: 0,
+                    user_mobile: this.user_mobile,
+                    user_zipcode: this.user_zipcode,
+                    user_adr1: this.user_adr1,
+                    user_adr2: this.user_adr2,
+                },
+            })
+                .then(res => {
+                    if (res.data.message == 'already_exist_id') {
+                        this.$swal("이미 존재하는 아이디입니다.")
+                    }
+                    else if (res.data.message == 'DB_error') {
+                        this.$swal("DB 에러 발생")
+                    }
+                    else {
+                        this.$swal({
+                            position: 'top',
+                            icon: 'success',
+                            title: '회원가입이 완료되었습니다!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        this.$router.push({ path: '/login' }); // 로그인 화면으로 이동
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
         },
         zipload() {
             new window.daum.Postcode({

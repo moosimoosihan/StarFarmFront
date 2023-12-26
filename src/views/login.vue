@@ -1,7 +1,7 @@
 <template>
             <main id="main-holder">
           <h1 id="login-header" @click="gotoMain()">로고</h1>
-          <form id="login-form">
+          <form id="login-form" method="POST">
             <input type="text" name="username" id="username-field" class="login-form-field" placeholder="ID(이메일)">
             <input type="password" name="password" id="password-field" class="login-form-field" placeholder="PW">
             <input type="submit" value="Login" id="login-form-submit">
