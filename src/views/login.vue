@@ -32,6 +32,10 @@ import axios from 'axios'
       },
       // 로컬 로그인
       localLogin() {
+        if(this.user_id == '' || this.user_pw == '') {
+          this.$swal("아이디와 비밀번호를 입력해주세요.")
+          return
+        }
         axios({
           url: "http://localhost:3000/auth/login_process",
           method: "POST",
@@ -309,6 +313,10 @@ html {
     color: rgb(136, 136, 136);
     cursor: pointer;
     outline: none;
+  }
+  #login-header {
+    text-align: center;
+    margin-bottom: 50px;
   }
   /*헤더*/
 </style>
