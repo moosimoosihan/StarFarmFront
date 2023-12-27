@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import store from './store'
+import mixins from './mixins'
 
 // 레이아웃
 import defaultLayout from './layouts/defaultLayout.vue'
@@ -174,4 +175,5 @@ const app = createApp(App)
 app.use(router)
 app.use(store)
 app.use(VueSweetalert2)
+app.mixin(mixins)
 app.mount('#app')
