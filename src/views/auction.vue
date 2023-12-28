@@ -10,7 +10,7 @@
               <div class="profile_img_box">
                 <img class="profile_img" src="" alt="프로필 사진">
               </div>
-              <span class="profile_nick">닉네임</span>
+              <span class="profile_nick">{{ goodsUser.user_nick }}</span>
             </div>
           </div>
 
@@ -19,9 +19,9 @@
             <div class="friendly_box">
               <span class="friendly_text">친밀도</span>
               <div class="friendly_img_box">
-                <progress value="50" max="100"></progress>
-                <span>50점</span>
-                <p>종로구:블라블라</p>
+                <progress :value="goodsUser.user_fr" max="100"></progress>
+                <span>{{ goodsUser.user_fr }}점</span>
+                <p>{{ goodsUser.user_adr1 }}</p>
               </div>
             </div>
           </div>
@@ -31,9 +31,8 @@
     <!--경매시작가+타임-->
     <div class="product-details4">
       <div class="product-details1">
-        <p>시작가:</p>
-        <p>시작가:</p>
-        <p>입찰가:</p>
+        <p>시작가: {{ goods.goods_start_price }}</p>
+        <p>입찰가: {{ goodsSuccBid.succ_bid}}</p>
       </div>
     </div>
     <!--이미지표출 슬라이더-->
@@ -64,44 +63,58 @@
     <!--경매시작을 보여주는 화면-->
     <div class="product-details6">
       <div class="product-details">
-        <h1>경매 시작</h1>
-        <p class="description">
-        </p>
-        <div class="bid_container">
-            <p class="price">1.000님: 21000원 입찰</p>
-            <p class="price">2.000님: 25000원 입찰</p>
-            <p class="price">3.555님: 35000원 입찰</p>
-            <p class="price" id="me">4.555님: 45000원 입찰</p>
-            <p class="price">5.555님: 5000원 입찰</p>
-            <p class="price">6.555님: 6000원 입찰</p>
-            <p class="price">7.555님: 65000원 입찰</p>
-            <p class="price" v-if="displayBidAmount" id="me">000님: {{ displayBidAmount }}원 입찰</p>
-            <p class="price" v-if="displayBidAmount" id="me">002님: {{ displayBidAmount }}원 입찰</p>
+        <form class="product_bid">
+          <h1>경매 시작</h1>
+          <p class="description">
+          </p>
+          <div class="bid_container">
+              <ul>
+                <li v-for="(nick, i) in goodsBidList" class="price" :key="i">{{ goodsBidList[i].user_nick }}님이 {{ goodsBidList[i].bid_amount }}원 입찰하셨습니다.</li>
+              </ul>
 
-        </div>
-        <div class="mid_wrapper">
-          <!--1:1 채팅버튼-->
-          <button class="chatroom_container" @click="gotoChatRoom(0)">1:1 채팅</button>
-          <!--결제페이지 이동버튼-->
-          <button class="button" @click="button">결제</button>
-          <!--검색창-->
-          <input type="text" id="searchInput" autocomplete="off" size="50">
-          <!--입찰버튼-->
-          <!-- <input type="button" id="submit_button" value="입찰">-->
+          </div>
+          <div class="mid_wrapper">
+            <!--1:1 채팅버튼-->
+            <button class="chatroom_container" @click="gotoChatRoom(0)">1:1 채팅</button>
+            <!--결제페이지 이동버튼-->
+            <button class="button" @click="button">결제</button>
+            <!--검색창-->
+            <input type="text" id="searchInput" autocomplete="off" size="50" name="bid_value">
+            <!--입찰버튼-->
+            <!-- <input type="button" id="submit_button" value="입찰">-->
             <input type="button" id="submit_button" value="입찰" @click="handleBid">
-        </div>1233
+          </div>1233
+        </form>
       </div>
     </div>
   </div>
 </template>
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
       currentIndex: 0,
       bidAmount: '', // 사용자가 입력한 입찰 값
-      displayBidAmount: '' // 화면에 표시될 입찰 값
+      displayBidAmount: '', // 화면에 표시될 입찰 값
+      startPrice: '',
+      goods: {},
+      goodsUser: {},
+      goodsSuccBid: {},
+      goodsBidList: {}
     };
+  },
+  computed: {
+        user() {
+            return this.$store.state.user;
+        }
+  },
+  created() {
+    this.getGoods();
+    this.getGoodsUser();
+    this.getSuccBid();
+    this.getBidList();
   },
   methods: {
     moveToSlide(index) {
@@ -128,6 +141,43 @@ export default {
       } else {
         this.bidAmount = bidValue; // 사용자가 입력한 값 업데이트
         this.displayBidAmount = this.bidAmount; // 화면에 표시할 값 업데이트
+      }
+    },
+    async getGoods() {
+      try {
+        const goodsno = this.$route.params.id;
+        const response = await axios.get(`http://localhost:3000/goods/goodsInfo/${goodsno}`);
+        this.goods = response.data[0];
+        } catch (error) {
+          console.error(error);
+        }
+    },
+    async getGoodsUser() {
+      try {
+        const goodsno = this.$route.params.id;
+        const response = await axios.get(`http://localhost:3000/goods/goodsInfoUser/${goodsno}`);
+        this.goodsUser = response.data[0];
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getSuccBid() {
+      try {
+        const goodsno = this.$route.params.id;
+        const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goodsno}`);
+        this.goodsSuccBid = response.data[0];
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getBidList() {
+      try {
+        const goodsno = this.$route.params.id;
+        const response = await axios.get(`http://localhost:3000/goods/goodsBidList/${goodsno}`);
+        this.goodsBidList = response.data;
+        console.log(this.$store.state.user);
+      } catch (error) {
+        console.error(error);
       }
     }
   }
