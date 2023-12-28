@@ -17,7 +17,7 @@
           <tbody>
             <tr v-for="(item, index) in items" :key="index">
               <td>{{ index + 1 }}</td>
-              <td>닉네임 란</td>
+              <td>{{item.nicknameEmail}}</td>
               <td>{{ item.userState }}</td>
               <td>{{ item.reportNum}}</td>
               <td>{{ item.date }}</td>

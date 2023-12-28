@@ -5,7 +5,7 @@
     <input type="password" name="password" id="password-field" class="login-form-field" placeholder="PW" v-model="user_pw">
     <input type="submit" value="Login" id="login-form-submit" @click="localLogin()">
     <input type="submit" value="카카오" id="kakao-form-submit" @click="kakaoLogin()">
-    <input type="submit" value="네이버" id="naver-form-submit" @click="naverlogin()">
+    <input type="submit" value="네이버" class="naver-form-submit" id="naverIdLogin" @click="naverlogin()">
     <input type="submit" value="회원가입" id="join-form-submit" @click="gotoSignUp()"><br>
     <input type="submit" value="아이디 / 비밀번호 찾기" id="find" @click="goToFind()">
   </main>
@@ -112,14 +112,11 @@ import axios from 'axios'
                         }).then(() => {
                             window.location.href = "http://localhost:8080";
                         })
-
                     }
                 })
                     .catch(err => {
                         console.log(err);
                     })
-
-
             },
             fail: (error) => {
                 // this.$router.push("/errorPage");
@@ -137,13 +134,10 @@ import axios from 'axios'
                 data: {
                     // naverlogin: this.naverLogin.accessToken.accessToken,
                     naverlogin: this.naverLogin.user,
-
                 },
             })
                 .then(res => {
-
                     if (res.data.message == '저장완료') {
-
                         this.$swal({
                             position: 'top',
                             icon: 'success',
@@ -151,24 +145,17 @@ import axios from 'axios'
                             showConfirmButton: false,
                             timer: 1000
                         });
-
-
-
                     } else {
                         this.$store.commit("user", { user_id: this.naver_id, user_no: res.data.message })
-
                         this.$swal({
                             position: 'top',
                             icon: 'success',
                             title: '로그인 성공!',
                             showConfirmButton: false,
                             timer: 1000,
-
                         }).then(() => {
-                            window.location.href = "http://localhost:8080";
+                            window.location.href = "http://localhost:8080/";
                         })
-
-
                     }
                 })
                 .catch(err => {
@@ -188,8 +175,11 @@ import axios from 'axios'
         console.log(this.naverLogin.user);
         this.naverLogin = new window.naver.LoginWithNaverId({
             clientId: "DTZs9Sc_PhmpMYxpkUfD",
-            callbackUrl: "http://localhost:8080",
+            callbackUrl: "http://localhost:8080/",
             isPopup: false,
+            loginButton: {
+              color: "green", type: 1, height: 45
+            },
         });
         this.$store.commit("naverLogin", this.naverLogin);
 
@@ -277,7 +267,7 @@ html {
     margin-left: 20px;
   }
   
-  #naver-form-submit {
+  .naver-form-submit {
     width: 350px;
     padding: 7px;
     border: none;

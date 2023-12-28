@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import store from './store'
+import mixins from './mixins'
 
 // 레이아웃
 import defaultLayout from './layouts/defaultLayout.vue'
@@ -22,6 +23,8 @@ import report from './views/report.vue'
 import review from './views/review.vue'
 import storeUpload from './views/store_upload.vue'
 import userpage from './views/userpage.vue'
+import paymentdetail from './views/paymentDetail.vue'
+import searchgoodslist from './views/search_goodslist.vue'
 
 // 마이 페이지
 import buylist from './mypage/buylist.vue'
@@ -80,6 +83,16 @@ const routes = [
         path: '/userpage/:id',
         name: 'userpage',
         component: userpage
+      },
+      {
+        path: '/paymentdetail',
+        name: 'paymentdetail',
+        component: paymentdetail
+      },
+      {
+        path: '/search_goodslist',
+        name: 'search_goodslist',
+        component: searchgoodslist
       }
     ]
   },
@@ -174,4 +187,5 @@ const app = createApp(App)
 app.use(router)
 app.use(store)
 app.use(VueSweetalert2)
+app.mixin(mixins)
 app.mount('#app')
