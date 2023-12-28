@@ -8,7 +8,12 @@
             <!-- 프로필 사진, 닉네임 -->
             <div class="profile_box">
               <div class="profile_img_box">
-                <img class="profile_img" src="" alt="프로필 사진">
+                <!-- <img :width="70" style="border-radius: 10px;"
+                        :src="loginUser.USER_IMG ? require(`../../../StarFarmBack/uploads/user_img/${loginUser.USER_IMG}`) : '../assets/profile.png'"
+                        alt="프로필 사진 미리보기" /> -->
+                <img id="photo-preview" :width="70" style="border-radius: 10px; display: none;"
+                        src="../assets/profile.png"
+                        alt="프로필 사진 미리보기" />
               </div>
               <span class="profile_nick">{{ goodsUser.user_nick }}</span>
             </div>

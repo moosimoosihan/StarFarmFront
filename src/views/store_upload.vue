@@ -6,8 +6,8 @@
             <div class="col-md-9">
                 <div class="row">
                 </div>
-                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 0)"> <!-- type 0 메인-->
-                <img v-if="goods_img_src!=''" :src="goods_img_src" />
+                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 0)">
+                <img v-if="goods_img_src[0]!=''" :src="goods_img_src[0]" />
                 <div class="alert alert-secondary" role="alert">
                     <ul>
                         <li>이미지 사이즈 : 700*700</li>
@@ -18,10 +18,49 @@
             </div>
         </div>
         <div class="mb-3 row">
-            <label class="col-md-3 col-form-label">설명 이미지 *</label>
+            <label class="col-md-3 col-form-label">서브 이미지 *</label>
             <div class="col-md-9">
-                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 1)"> <!-- type 1 상세-->
-                <img v-if="goods_detail_img_src!=''" :src="goods_detail_img_src" />
+                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 1)">
+                <img v-if="goods_img_src[1]!=''" :src="goods_img_src[1]" />
+                <div class="alert alert-secondary" role="alert">
+                    <ul>
+                        <li>파일 사이즈 : 5M 이하</li>
+                        <li>파일 확장자 : png, jpg만 가능</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-md-3 col-form-label">서브 이미지 *</label>
+            <div class="col-md-9">
+                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 2)">
+                <img v-if="goods_img_src[2]!=''" :src="goods_img_src[2]" />
+                <div class="alert alert-secondary" role="alert">
+                    <ul>
+                        <li>파일 사이즈 : 5M 이하</li>
+                        <li>파일 확장자 : png, jpg만 가능</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-md-3 col-form-label">서브 이미지 *</label>
+            <div class="col-md-9">
+                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 3)">
+                <img v-if="goods_img_src[3]!=''" :src="goods_img_src[3]" />
+                <div class="alert alert-secondary" role="alert">
+                    <ul>
+                        <li>파일 사이즈 : 5M 이하</li>
+                        <li>파일 확장자 : png, jpg만 가능</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-md-3 col-form-label">서브 이미지 *</label>
+            <div class="col-md-9">
+                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 4)">
+                <img v-if="goods_img_src[4]!=''" :src="goods_img_src[4]" />
                 <div class="alert alert-secondary" role="alert">
                     <ul>
                         <li>파일 사이즈 : 5M 이하</li>
@@ -110,12 +149,10 @@ import moment from 'moment'
                 bid_time: '',
 
                 // 이미지 파일명만 저장할 변수 
-                goods_img: "",
-                goods_detail_img: "",
+                goods_img: ["","","","",""],
 
                 // 이미지를 보여줄 변수
-                goods_img_src: "",
-                goods_detail_img_src: ""
+                goods_img_src: ["","","","",""]
             }
         },
         computed: {
@@ -193,8 +230,7 @@ import moment from 'moment'
                         goods_timer: this.goods_timer,
                         user_no: this.user.user_no,
 
-                        goods_img: this.goods_img,
-                        goods_detail_img: this.goods_detail_img
+                        goods_img: this.goods_img
                     },
                 })
                     .then((res) => {
@@ -250,11 +286,7 @@ import moment from 'moment'
                 
                 formData.append('img', file[0]);
 
-                if(type==0){
-                    this.goods_img_src = URL.createObjectURL(file[0]);
-                } else if(type==1){
-                    this.goods_detail_img_src = URL.createObjectURL(file[0]);
-                }
+                this.goods_img_src[type] = URL.createObjectURL(file[0]);
 
                 for (let key of formData.keys()) {
                     console.log(key, ":", formData.get(key));
@@ -268,12 +300,7 @@ import moment from 'moment'
                     })
                         .then ((res) => {
                             if (res.data.message == 'success'){
-                                if (type == 0){
-                                    this.goods_img = name;
-                                }
-                                else if (type == 1){
-                                    this.goods_detail_img = name;
-                                }
+                                this.goods_img[type] = name;
                             }
                             else {
                                 this.$swal("DB 에러");
