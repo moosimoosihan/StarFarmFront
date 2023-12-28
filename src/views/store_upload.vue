@@ -100,11 +100,11 @@ import moment from 'moment'
                 product_name: '',
                 product_category1: '의류',
                 product_category2: '1',
-                price_trade: '',
+                price_trade: 0,
                 goods_trade: '택배거래',
                 goods_timer: '',
                 product_content: '',
-                goods_deliv_price: '',
+                goods_deliv_price: 0,
                 bid_time: '',
 
                 // 이미지 파일명만 저장할 변수 
@@ -148,7 +148,7 @@ import moment from 'moment'
                 if(this.product_content===''){
                     return this.$swal('상품 설명을 입력해주세요.')
                 }
-                if(this.price_trade===''){
+                if(this.price_trade==='' && this.price_trade<0){
                     return this.$swal('경매 시작가를 입력해주세요.')
                 }
                 if(this.goods_timer===''){
@@ -157,11 +157,11 @@ import moment from 'moment'
                 if(moment(this.goods_timer).isBefore(moment().format())){
                     return this.$swal('현재 시간보다 이전 시간은 입력할 수 없습니다.')
                 }
-                if(this.goods_trade==='택배거래' && goods_deliv_price===''){
-                    return this.$swal('택배 비용을 입력해주세요.')
-                }
-
-                if(this.goods_trade != '택배거래'){
+                if(this.goods_trade==='택배거래'){
+                    if(this.goods_deliv_price==='' && this.goods_deliv_price<0){
+                        return this.$swal('택배 비용을 입력해주세요.')
+                    }
+                } else {
                     this.goods_deliv_price = 0
                 }
                 switch(this.goods_trade){
