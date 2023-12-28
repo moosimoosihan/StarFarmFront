@@ -74,7 +74,7 @@
             <input type="text" placeholder="0" value="0" style="width: 100%;" v-model="goods_deliv_price" @input="validateNumber('goods_deliv_price')">
         </div>
         <div v-else>
-            <input type="text" v-model="goods_deliv_price" style="width: 100%;" placeholder="0" value="0" disabled>
+            <input type="text" style="width: 100%;" placeholder="0" value="0" disabled>
         </div>
     </div>
     <div id="store_product_content">
