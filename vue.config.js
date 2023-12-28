@@ -12,6 +12,10 @@ module.exports = defineConfig({
         target,
         changeOrigin: true
       },
+      '^/goods': {
+        target,
+        changeOrigin: true
+      }
     }
   },
   transpileDependencies: true,

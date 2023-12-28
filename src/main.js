@@ -23,6 +23,8 @@ import report from './views/report.vue'
 import review from './views/review.vue'
 import storeUpload from './views/store_upload.vue'
 import userpage from './views/userpage.vue'
+import paymentdetail from './views/paymentDetail.vue'
+import searchgoodslist from './views/search_goodslist.vue'
 
 // 마이 페이지
 import buylist from './mypage/buylist.vue'
@@ -81,6 +83,16 @@ const routes = [
         path: '/userpage/:id',
         name: 'userpage',
         component: userpage
+      },
+      {
+        path: '/paymentdetail',
+        name: 'paymentdetail',
+        component: paymentdetail
+      },
+      {
+        path: '/search_goodslist',
+        name: 'search_goodslist',
+        component: searchgoodslist
       }
     ]
   },
