@@ -201,7 +201,7 @@ import moment from 'moment'
                                 timer: 1000
                             })
                             .then(() => {
-                                this.$router.push("http://localhost:8080/mypage/salelist")
+                                this.$router.push("mypage/salelist")
                             })
                         } else if (res.data.message == 'already_exist_goods'){
                             this.$swal("이미 등록된 제품입니다.");
