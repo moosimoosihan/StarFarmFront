@@ -7,6 +7,7 @@
                 <div class="row">
                 </div>
                 <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 0)"> <!-- type 0 메인-->
+                <img v-if="goods_img_src!=''" :src="goods_img_src" />
                 <div class="alert alert-secondary" role="alert">
                     <ul>
                         <li>이미지 사이즈 : 700*700</li>
@@ -20,6 +21,7 @@
             <label class="col-md-3 col-form-label">설명 이미지 *</label>
             <div class="col-md-9">
                 <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 1)"> <!-- type 1 상세-->
+                <img v-if="goods_detail_img_src!=''" :src="goods_detail_img_src" />
                 <div class="alert alert-secondary" role="alert">
                     <ul>
                         <li>파일 사이즈 : 5M 이하</li>
@@ -109,7 +111,11 @@ import moment from 'moment'
 
                 // 이미지 파일명만 저장할 변수 
                 goods_img: "",
-                goods_detail_img: ""
+                goods_detail_img: "",
+
+                // 이미지를 보여줄 변수
+                goods_img_src: "",
+                goods_detail_img_src: ""
             }
         },
         computed: {
@@ -243,6 +249,12 @@ import moment from 'moment'
                 const formData = new FormData();
                 
                 formData.append('img', file[0]);
+
+                if(type==0){
+                    this.goods_img_src = URL.createObjectURL(file[0]);
+                } else if(type==1){
+                    this.goods_detail_img_src = URL.createObjectURL(file[0]);
+                }
 
                 for (let key of formData.keys()) {
                     console.log(key, ":", formData.get(key));
