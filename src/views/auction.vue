@@ -48,10 +48,8 @@
             <div class="slide" v-for="(img, i) in good_img" :key="i">
               <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${img}`)" alt="Slide" width="500" height="400">
             </div>
-            <!-- 추가 이미지 경로 추가 가능 -->
           </div>
         </div>
-         <!-- 추가 이미지에 대한 dot 추가 -->
         <div class="dot-navigation">
           <span class="dot" v-for="(img,i) in good_img" :key="i" @click="moveToSlide(i)"></span>
         </div>
