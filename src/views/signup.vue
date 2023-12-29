@@ -6,7 +6,7 @@
       <div id="box1">
         <div class="id">
           <input id="id" type="text" v-model="user_id" placeholder="id를 입력해 주세요.">
-          <button>중복확인</button>
+          <button @click="id_check()">중복확인</button>
         </div>
         <div class="nickName">
           <input id="nickName" type="text" v-model="user_nick" placeholder="닉네임을 입력해 주세요.">
@@ -22,6 +22,7 @@
         </div>
         <div class="phone">
           <input id="phone" type="text" placeholder="-를 뺀 전화번호를 입력해 주세요." v-model="user_mobile" maxlength="11" @input="validatePhoneNumber()"> 
+          <button @click="mobile_check()">중복확인</button>
         </div>
         <div class="address">
           <span v-show="zipinput" class="addinput1">{{ user_zipcode }}</span>
@@ -103,6 +104,9 @@ export default {
                     }
                     else if (res.data.message == 'DB_error') {
                         this.$swal("DB 에러 발생")
+                    }
+                    if (res.data.message == 'already_exist_phone') {
+                        this.$swal("이미 존재하는 전화번호입니다.")
                     }
                     else {
                         this.$swal({
@@ -257,6 +261,64 @@ export default {
                         })
                         this.$swal.fire('삭제되었습니다.','','success')
                     }
+                })
+            },
+            id_check() {
+                if(this.user_id == "") {
+                    this.$swal("아이디를 입력하세요.");
+                    return false;
+                }
+                axios({
+                    url: "http://localhost:3000/auth/id_check",
+                    method: "POST",
+                    data: {
+                        user_id: this.user_id,
+                    },
+                })
+                    .then(res => {
+                        console.log(res.data.message);
+                        if (res.data.message == 'already_exist_id') {
+                            this.$swal("이미 존재하는 아이디입니다.")
+                        }
+                        else if (res.data.message == 'DB_error') {
+                            this.$swal("DB 에러 발생")
+                        }
+                        else {
+                            this.$swal("사용 가능한 아이디입니다.")
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    
+                })
+            },
+            mobile_check() {
+                if(this.user_mobile == "") {
+                    this.$swal("전화번호를 입력하세요.");
+                    return false;
+                }
+                axios({
+                    url: "http://localhost:3000/auth/mobile_check",
+                    method: "POST",
+                    data: {
+                        user_mobile: this.user_mobile,
+                    },
+                })
+                    .then(res => {
+                        console.log(res.data.message);
+                        if (res.data.message == 'already_exist_phone') {
+                            this.$swal("이미 존재하는 전화번호입니다.")
+                        }
+                        else if (res.data.message == 'DB_error') {
+                            this.$swal("DB 에러 발생")
+                        }
+                        else {
+                            this.$swal("사용 가능한 전화번호입니다.")
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    
                 })
             },
   }
