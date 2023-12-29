@@ -37,7 +37,7 @@
     <div class="product-details4">
       <div class="product-details1">
         <p>시작가: {{ goods.goods_start_price }}</p>
-        <p>입찰가: {{ goodsSuccBid.succ_bid}}</p>
+        <p>입찰가: {{ goodsSuccBid}}</p>
       </div>
     </div>
     <!--이미지표출 슬라이더-->
@@ -45,23 +45,15 @@
       <div class="slider-container">
         <div class="slider">
           <div class="slide-wrapper">
-            <div class="slide">
-              <img src="../assets/1.jpg" alt="Slide 1" width="500" height="400">
-            </div>
-            <div class="slide">
-              <img src="../assets/2.jpg" alt="Slide 2" width="500" height="400">
-            </div>
-            <div class="slide">
-              <img src="../assets/3.jpg" alt="Slide 3" width="500" height="400">
+            <div class="slide" v-for="(img, i) in good_img" :key="i">
+              <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${img}`)" alt="Slide" width="500" height="400">
             </div>
             <!-- 추가 이미지 경로 추가 가능 -->
           </div>
         </div>
          <!-- 추가 이미지에 대한 dot 추가 -->
         <div class="dot-navigation">
-          <span class="dot" @click="moveToSlide(0)"></span>
-          <span class="dot" @click="moveToSlide(1)"></span>
-          <span class="dot" @click="moveToSlide(2)"></span>
+          <span class="dot" v-for="(img,i) in good_img" :key="i" @click="moveToSlide(i)"></span>
         </div>
       </div>
     </div>
@@ -84,10 +76,10 @@
             <!--결제페이지 이동버튼-->
             <button class="button" @click="button">결제</button>
             <!--검색창-->
-            <input type="text" id="searchInput" autocomplete="off" size="50" name="bid_value">
+            <input type="text" id="searchInput" autocomplete="off" size="50" name="bid_value" v-model="bidAmount" @input="validateNumber()">
             <!--입찰버튼-->
             <!-- <input type="button" id="submit_button" value="입찰">-->
-            <input type="button" id="submit_button" value="입찰" @click="handleBid">
+            <input type="button" id="submit_button" value="입찰" @click="postBidding">
           </div>1233
         </form>
       </div>
@@ -106,8 +98,10 @@ export default {
       startPrice: '',
       goods: {},
       goodsUser: {},
-      goodsSuccBid: {},
-      goodsBidList: {}
+      goodsSuccBid: 0,
+      goodsBidList: {},
+
+      good_img : []
     };
   },
   computed: {
@@ -153,6 +147,7 @@ export default {
         const goodsno = this.$route.params.id;
         const response = await axios.get(`http://localhost:3000/goods/goodsInfo/${goodsno}`);
         this.goods = response.data[0];
+        this.good_img = this.goods.goods_img.split(',');
         } catch (error) {
           console.error(error);
         }
@@ -170,7 +165,7 @@ export default {
       try {
         const goodsno = this.$route.params.id;
         const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goodsno}`);
-        this.goodsSuccBid = response.data[0];
+        this.goodsSuccBid = response.data[0].succ_bid;
       } catch (error) {
         console.error(error);
       }
@@ -180,11 +175,48 @@ export default {
         const goodsno = this.$route.params.id;
         const response = await axios.get(`http://localhost:3000/goods/goodsBidList/${goodsno}`);
         this.goodsBidList = response.data;
-        console.log(this.$store.state.user);
+        console.log(this.goods);
       } catch (error) {
         console.error(error);
       }
-    }
+    },
+    async postBidding() {
+      if(this.goods.goods_start_price>=this.bidAmount){
+        this.$swal.fire({
+          icon: 'error',
+          title: '입찰금액이 시작가보다 낮습니다.',
+          text: '다시 입력해주세요.',
+        });
+        return;
+      }
+      if(this.goodsSuccBid>=this.bidAmount){
+        this.$swal.fire({
+          icon: 'error',
+          title: '입찰금액이 입찰가 낮습니다.',
+          text: '다시 입력해주세요.',
+        });
+        return;
+      }
+      try {
+        const goodsno = this.$route.params.id;
+        await axios({
+          url: `http://localhost:3000/goods/goodsBidding/${goodsno}`,
+          method: "POST",
+          data: {
+            bid_amount: this.bidAmount,
+            goods_no: this.goods.goods_no,
+            user_no: this.user.user_no,
+          }
+        })
+      } catch (error) {
+        console.error(error);
+      }
+      this.getSuccBid();
+      window.location.reload();
+    },
+    validateNumber() {
+        this.bidAmount = this.bidAmount.replace(/\D/g, ''); // 숫자 이외의 문자 제거
+    },
   }
 };
 
