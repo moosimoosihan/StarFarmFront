@@ -324,8 +324,14 @@ import moment from 'moment'
                     cancelButtonText: `취소`
                 }).then(async (result) => {
                     if(result.isConfirmed){
-                        await this.$api('/api/imageDelete',{params:[id]})
-                        this.getProductImage()
+                        await axios({
+                            url:'/goods/imageDelete',
+                            method:'POST',
+                            data:{
+                                id:id,
+                                name:name
+                            }
+                        })
                         this.$swal.fire('삭제되었습니다.','','success')
                     }
                 })
