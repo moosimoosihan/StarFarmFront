@@ -87,7 +87,7 @@
             <input type="text" id="searchInput" autocomplete="off" size="50" name="bid_value">
             <!--입찰버튼-->
             <!-- <input type="button" id="submit_button" value="입찰">-->
-            <input type="button" id="submit_button" value="입찰" @click="handleBid">
+            <input type="button" id="submit_button" value="입찰" @click="postBidding">
           </div>1233
         </form>
       </div>
@@ -180,7 +180,24 @@ export default {
         const goodsno = this.$route.params.id;
         const response = await axios.get(`http://localhost:3000/goods/goodsBidList/${goodsno}`);
         this.goodsBidList = response.data;
-        console.log(this.$store.state.user);
+        console.log(this.goods);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async postBidding() {
+      try {
+        const goodsno = this.$route.params.id;
+        await axios({
+          url: `http://localhost:3000/goods/goodsBidding/${goodsno}`,
+          method: "POST",
+          data: {
+            goods: this.goods,
+            goods_no: this.goods.goods_no,
+            user_no: this.user_no,
+            
+          }
+        })
       } catch (error) {
         console.error(error);
       }
