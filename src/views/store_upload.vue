@@ -207,7 +207,7 @@ import moment from 'moment'
                 } else {
                     this.goods_deliv_price = 0
                 }
-                if(good_img.length===0){
+                if(this.goods_img.length===0){
                     return this.$swal('상품 이미지를 등록해주세요.')
                 }
                 switch(this.goods_trade){
