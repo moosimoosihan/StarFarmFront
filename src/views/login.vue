@@ -69,7 +69,7 @@ import axios from 'axios'
       //카카오 로그인
       kakaoLogin() {
         window.Kakao.Auth.login({
-            scope: "profile_nickname, account_email",
+            scope: "profile_nickname, account_email, profile_image",
             success: this.getKakaoAccount,
         });
       },
@@ -81,7 +81,7 @@ import axios from 'axios'
                 const email = kakao_account.email; //카카오 이메일
                 const nickname = kakao_account.profile.nickname;
 
-                console.log(kakao_account, email, nickname)
+                console.log(kakao_account, email, nickname, profile_image)
 
                 axios({
                     url: "http://localhost:3000/auth/kakaoLoginProcess",

@@ -2,12 +2,12 @@
     <div class="header_wrapper">
       <div class="navbar_top">
             <div @click="gotoMain()" class="navbar_logo">
-                <img class="logo_img" src="" alt="로고">
+                <img class="logo_img" src="../assets/pink.png" alt="로고">
             </div>
             
-            <div class="navbar_icons">
+            <div class="navbar_icons"> 
               <div v-if="user.user_id==''">
-                <button @click="gotoLogin()" class="login_btn">로그인</button>
+                <button @click="gotoLogin()" class="login_btn"><img src="../assets/login.png" height="55px" width="130px" ></button>
               </div>
               <div v-else>
                 <button class="chat_btn" @click="gotoMyChat()">1:1채팅</button>
@@ -181,22 +181,21 @@ a {
 
 /* ------------------------------------------------------ logo */
 .logo_img {
-  width: 100px;
-  height: 50px;
+  width: 150px;
+  height: 70px;
   float: left;
   padding: 0 0 0 16px;
-  background-color: red;
   margin-top: 20px;
-  margin-left: 20px;
+  margin-left: 35px;
 }
 
 /* ------------------------------------------------------ search */
 .navbar_search {
   display: flex;
-  width: 40%;
+  width: 20%;
   max-width: 100%;
-  outline: rgb(237, 237, 237) solid 2px;
-  background-color: rgb(251, 251, 251);
+  outline: rgb(255, 204, 230) solid 2px;
+  background-color: rgb(255, 236, 253);
   float : right;
   margin-right: 20px;
   margin-top: 20px;
@@ -206,8 +205,9 @@ input[type='text'] {
   width: 100%;
   font-size: 1rem;
   outline: none;
-  background-color: rgb(251, 251, 251);
+  background-color: rgb(255, 236, 253);
   border: none;
+  margin-top: 17px;
   margin-right: 8px;
 }
 
@@ -216,7 +216,7 @@ input[type='text']:focus {
 }
 
 input::placeholder {
-  color: #aaa;
+  color:  rgb(255, 236, 253);
 }
 
 .search_btn {
@@ -247,16 +247,16 @@ input::placeholder {
   width: 80px;
   height: 40px;
   float: right;
-  margin-top: 20px;
+  margin-top: 30px;
   margin-right: 20px;
 }
 
 .login_btn {
-  width: 80px;
-  height: 40px;
   float: right;
-  margin-top: 20px;
-  margin-right: 20px;
+  margin-top: 10px;
+  margin-right: 50px;
+  background-color: transparent;
+  border: 0;
 }
 
 .storeupload_btn {
@@ -319,22 +319,24 @@ a {
     margin: auto;
     justify-content:space-between;
     margin-left: 10%;
+    margin-top: 40px;
+    margin-bottom: 30px;
   }
   .menu > li {
     width: 13.333%;
     float: left;
     text-align: center;
     line-height: 40px;
-    background-color: #5778ff;
+    background-color: #ffffff;
   }
   
   .menu a {
-    color: #fff;
+    color: #520119;
   }
   
   .submenu > li {
     line-height: 50px;
-    background-color: #94a9ff;
+    background-color: #ffffff;
   }
   
   .submenu {
@@ -343,7 +345,7 @@ a {
   }
 
   .menu > li:hover {
-    background-color: #94a9ff;
+    background-color: #c4c4c4;
     transition-duration: 0.5s;
   }
   

@@ -6,7 +6,7 @@
       <div id="box1">
         <div class="id">
           <input id="id" type="text" v-model="user_id" placeholder="id를 입력해 주세요.">
-          <button>중복확인</button>
+          <button @click="id_check()">중복확인</button>
         </div>
         <div class="nickName">
           <input id="nickName" type="text" v-model="user_nick" placeholder="닉네임을 입력해 주세요.">
@@ -22,6 +22,7 @@
         </div>
         <div class="phone">
           <input id="phone" type="text" placeholder="-를 뺀 전화번호를 입력해 주세요." v-model="user_mobile" maxlength="11" @input="validatePhoneNumber()"> 
+          <button @click="mobile_check()">중복확인</button>
         </div>
         <div class="address">
           <span v-show="zipinput" class="addinput1">{{ user_zipcode }}</span>
@@ -35,14 +36,10 @@
       
       <div id="box2">
         <div class="profile-upload-content upload-img">
-          <div class="img-preview">
-            <img id="img-preview" src="" style="display: none" width="250" alt="미리보기" />
-            <input id="img-url" type="hidden" name="url" />
+          <div class="profile-img">
+            <img v-if="user_img_src!=''" id="img-preview" :src="user_img_src" alt="미리보기" />
           </div>
-        </div>
-        <div class="profile-img">
-          <input id="profile-img" type="text" placeholder="이미지" v-model="user_img"><br><br>
-          <button class="imgButton">사진등록</button>
+          <input id="profile-img" type="file" placeholder="이미지" @change="uploadFile($event.target.files)">
         </div>
       </div>
 
@@ -72,6 +69,8 @@ export default {
 
       user_pw_ck: '',
       zipinput: false,
+
+      user_img_src: '',
     }
   },
   methods: {
@@ -79,16 +78,15 @@ export default {
             if (!this.validationCheck()) {
                 return;
             }
-            console.log(this.user_id, this.user_email, this.user_nick, this.user_pw, this.user_mobile, this.user_zipcode, this.user_adr1, this.user_adr2);
+            console.log(this.user_id, this.user_email, this.user_nick, this.user_pw, this.user_mobile, this.user_zipcode, this.user_adr1, this.user_adr2, this.user_img);            
             axios({
-                url: "http://localhost:3000/auth/join_process/",
+                url: "http://localhost:3000/auth/join_process",
                 method: "POST",
                 data: {
                     user_id: this.user_id,
                     user_email: this.user_email,
                     user_nick: this.user_nick,
                     user_pw: this.user_pw,
-                    // user_img: this.user_img,
                     // user_social_tp: 0,
                     // user_accesstoken: '',
                     // user_tp: 0,
@@ -96,6 +94,8 @@ export default {
                     user_zipcode: this.user_zipcode,
                     user_adr1: this.user_adr1,
                     user_adr2: this.user_adr2,
+
+                    user_img: this.user_img,
                 },
             })
                 .then(res => {
@@ -104,6 +104,9 @@ export default {
                     }
                     else if (res.data.message == 'DB_error') {
                         this.$swal("DB 에러 발생")
+                    }
+                    if (res.data.message == 'already_exist_phone') {
+                        this.$swal("이미 존재하는 전화번호입니다.")
                     }
                     else {
                         this.$swal({
@@ -196,7 +199,128 @@ export default {
         },
         gotoLogin() {
           this.$router.back();
-        }
+        },
+        async uploadFile(file) {
+                let name = "";
+                if (file) {
+                    name = file[0].name;
+                }
+                else {
+                    return;     // 파일 미선택 시 반환
+                }
+
+                const formData = new FormData();
+                
+                formData.append('img', file[0]);
+
+                this.user_img_src = URL.createObjectURL(file[0]);
+
+                for (let key of formData.keys()) {
+                    console.log(key, ":", formData.get(key));
+                }
+                try {
+                    axios({
+                        url: `http://localhost:3000/auth/upload_img`,
+                        method: 'POST',
+                        headers: {'Content-Type': 'multipart/form-data'},
+                        data: formData
+                    })
+                        .then ((res) => {
+                            if (res.data.message == 'success'){
+                                this.user_img = name;
+                            }
+                            else {
+                                this.$swal("DB 에러");
+                            }
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        })
+                    return true;
+
+                } catch(err){
+                    console.log(err);
+                    return false;
+                }
+            },
+            deleteImage(id,name){
+                this.$swal.fire({
+                    title:'정말 삭제하시겠습니까?',
+                    showCancelButton: true,
+                    confirmButtonText: `삭제`,
+                    cancelButtonText: `취소`
+                }).then(async (result) => {
+                    if(result.isConfirmed){
+                      await axios({
+                            url:'/auth/imageDelete',
+                            method:'POST',
+                            data:{
+                                id:id,
+                                name:name
+                            }
+                        })
+                        this.$swal.fire('삭제되었습니다.','','success')
+                    }
+                })
+            },
+            id_check() {
+                if(this.user_id == "") {
+                    this.$swal("아이디를 입력하세요.");
+                    return false;
+                }
+                axios({
+                    url: "http://localhost:3000/auth/id_check",
+                    method: "POST",
+                    data: {
+                        user_id: this.user_id,
+                    },
+                })
+                    .then(res => {
+                        console.log(res.data.message);
+                        if (res.data.message == 'already_exist_id') {
+                            this.$swal("이미 존재하는 아이디입니다.")
+                        }
+                        else if (res.data.message == 'DB_error') {
+                            this.$swal("DB 에러 발생")
+                        }
+                        else {
+                            this.$swal("사용 가능한 아이디입니다.")
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    
+                })
+            },
+            mobile_check() {
+                if(this.user_mobile == "") {
+                    this.$swal("전화번호를 입력하세요.");
+                    return false;
+                }
+                axios({
+                    url: "http://localhost:3000/auth/mobile_check",
+                    method: "POST",
+                    data: {
+                        user_mobile: this.user_mobile,
+                    },
+                })
+                    .then(res => {
+                        console.log(res.data.message);
+                        if (res.data.message == 'already_exist_phone') {
+                            this.$swal("이미 존재하는 전화번호입니다.")
+                        }
+                        else if (res.data.message == 'DB_error') {
+                            this.$swal("DB 에러 발생")
+                        }
+                        else {
+                            this.$swal("사용 가능한 전화번호입니다.")
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    
+                })
+            },
   }
 }
 </script>
@@ -218,7 +342,10 @@ div {
     padding-top: 20px;
     
 }
-
+#img-preview{
+    width: 100%;
+    height: 100%;
+}
 
 .title {
     text-align: center;
@@ -265,7 +392,16 @@ button{
     margin-left: 80px;
 }
 
-input {
+#box1 input {
+    margin-left: 20px;
+    width:300px;
+    border: 2px solid black;
+    border-radius: 7px;
+    line-height: 35px;
+    font-size: 12px;
+    padding-left: 10px;
+}
+#box3 input {
     margin-left: 20px;
     width:300px;
     border: 2px solid black;
@@ -304,18 +440,12 @@ input {
   float: left;
 }
 
-#profile-img {
-        width: 200px;
-        height: 200px; 
-        border-radius: 70%;
-        overflow: hidden;
-        text-align: center;
-        margin-top: 30px;
-        margin-right: 200px;
-    }
-
-    .imgButton {
-        margin-left: 84px;
-        margin-top: 10px;
-    }
+.profile-img {
+  width: 200px;
+  height: 200px;
+  text-align: center;
+  border-radius: 70%;
+  border: 2px solid black;
+  overflow: hidden;
+}
 </style>
