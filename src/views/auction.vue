@@ -8,11 +8,8 @@
             <!-- 프로필 사진, 닉네임 -->
             <div class="profile_box">
               <div class="profile_img_box">
-                <!-- <img :width="70" style="border-radius: 10px;"
-                        :src="loginUser.USER_IMG ? require(`../../../StarFarmBack/uploads/user_img/${loginUser.USER_IMG}`) : '../assets/profile.png'"
-                        alt="프로필 사진 미리보기" /> -->
-                <img id="photo-preview" :width="70" style="border-radius: 10px; display: none;"
-                        src="../assets/profile.png"
+                <img :width="70" style="border-radius: 10px;"
+                        :src="goodsUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${goodsUser.user_no}/${goodsUser.user_img}`) : require(`../assets/profile.png`)"
                         alt="프로필 사진 미리보기" />
               </div>
               <span class="profile_nick">{{ goodsUser.user_nick }}</span>
@@ -76,9 +73,8 @@
             <!--검색창-->
             <input type="text" id="searchInput" autocomplete="off" size="50" name="bid_value" v-model="bidAmount" @input="validateNumber()">
             <!--입찰버튼-->
-            <!-- <input type="button" id="submit_button" value="입찰">-->
             <input type="button" id="submit_button" value="입찰" @click="postBidding">
-          </div>1233
+          </div>
         </form>
       </div>
     </div>
@@ -367,15 +363,14 @@ export default {
   text-align: center;
   flex-direction: column;
   justify-content: space-around;
-  background-color: red;
   float: left;
 }
 .profile_img_box {
-  width: 80px;
-  height: 80px; 
-  border-radius: 30%;
+  width: 70px;
+  height: 70px;
+  border-radius: 70%;
   overflow: hidden;
-
+  margin: 0 auto;
 }
 .friendly_box {
   width: 200px;

@@ -15,6 +15,10 @@ module.exports = defineConfig({
       '^/goods': {
         target,
         changeOrigin: true
+      },
+      '^/mypage': {
+        target,
+        changeOrigin: true
       }
     }
   },
