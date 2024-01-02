@@ -248,8 +248,8 @@ import moment from 'moment'
                             .then(() => {
                                 this.$router.push("mypage/salelist")
                             })
-                        } else if (res.data.message == 'already_exist_goods'){
-                            this.$swal("이미 등록된 제품입니다.");
+                        // } else if (res.data.message == 'already_exist_goods'){
+                        //     this.$swal("이미 등록된 제품입니다.");
                         }
                         else if (res.data.message == '파일 변경 실패'){
                             this.$swal("파일 변경 실패");

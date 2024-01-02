@@ -65,7 +65,7 @@ const routes = [
         component: payment
       },
       {
-        path: '/report',
+        path: '/report/:id',
         name: 'report',
         component: report
       },

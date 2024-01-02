@@ -84,6 +84,8 @@
           <input type="text" id="searchInput" autocomplete="off" size="50" name="bid_value" v-model="bidAmount" @input="validateNumber()">
           <!--입찰버튼-->
           <input type="button" id="submit_button" value="입찰" @click="postBidding">
+          <!-- 신고버튼 -->
+          <button class="button" @click="reportBtn()">신고</button>
         </div>
     </div>
   </div>
@@ -140,7 +142,7 @@ methods: {
     try {
       const goodsno = this.$route.params.id;
       await axios({
-        url: `http://localhost:3000/goods/likeInsert/${goodsno}/${this.user.user_no}`,
+        url: `http://localhost:3000/goods/likeInsert/${this.user.user_no}/${goodsno}`,
         method: "POST",
         data: {
           goods_no: this.goods.goods_no,
@@ -182,7 +184,6 @@ methods: {
     } catch (error) {
       console.error(error);
     }
-  
   },
   moveToSlide(index) {
     const slides = this.$el.querySelectorAll('.slide');
@@ -286,6 +287,20 @@ methods: {
   validateNumber() {
       this.bidAmount = this.bidAmount.replace(/\D/g, ''); // 숫자 이외의 문자 제거
   },
+  reportBtn() {
+    this.$swal.fire({
+      title: '신고하기',
+      text: '신고하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '신고하기',
+      cancelButtonText: '취소',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.$router.push(`/report/${this.goods.goods_no}`);
+      }
+    });
+  }
 }
 };
 
