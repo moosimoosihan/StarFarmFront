@@ -172,7 +172,7 @@ a {
 }
 
 .navbar_top {
-  height: 90px;
+  height: 50px;
   justify-content: space-between;
   align-items: center;
   padding: 0;
@@ -185,7 +185,7 @@ a {
   height: 70px;
   float: left;
   padding: 0 0 0 16px;
-  margin-top: 20px;
+  margin-top: 30px;
   margin-left: 35px;
 }
 
@@ -247,7 +247,7 @@ input::placeholder {
   width: 80px;
   height: 40px;
   float: right;
-  margin-top: 30px;
+  margin-top: 20px;
   margin-right: 20px;
 }
 

@@ -29,19 +29,18 @@ import mypageSideBar from './mypageLeftBar.vue'
     padding-left: 10%;
     margin: auto;
     width: 90%;
-    height: 1000px;
+    height: 700px;
     overflow-y: scroll;
   }
   .mypage_content {
-    padding-top: 130px;
+    padding-top: 200px;
   }
-  .nev.nevbar{
-    padding: 0;
+
+  Footer {
+    width: 100%;
+    height: auto;
+    position : relative;
+    transform : translateY(-1%);
   }
-Footer {
-  width: 100%;
-  height: auto;
-  position : relative;
-  transform : translateY(-1%);
-}
+
   </style>

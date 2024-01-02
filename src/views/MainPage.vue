@@ -1,6 +1,18 @@
 <template>
     <div class="container">
       <div class="slide-imges_container">
+        <div class="slider-container">
+          <div class="slider">
+            <div class="slide-wrapper">
+              <div class="slide" v-for="(img,i) in eventImageList" :key="i">
+                <img :src="require(`../assets/${img}`)" alt="EventSlide" width="550">
+              </div>
+            </div>
+          </div>
+          <div class="dot-navigation">
+            <span class="dot" v-for="(img,i) in eventImageList" :key="i" @click="moveToSlide(i)"></span>
+          </div>
+        </div>
       </div>
         <div class="goodslist_div">
             <div class="item_container" v-for="(goods, i) in goodsList" :key="i" @click="gotoAuction(goods.goods_no)">
@@ -18,6 +30,8 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      eventImageList: ['1-1.jpg','1-2.jpg','1-3.jpg','1-4.jpg'],
+      currentIndex: 0,
       goodsList: [],
       goods_succ_bid: [],
     }
@@ -54,9 +68,9 @@ export default {
       this.$router.push(`/product/${goods_no}`);
     },
     moveToSlide(index) {
-      const slides = this.$el.querySelectorAll('.slide-image');
+      const slides = this.$el.querySelectorAll('.slide');
       const slideWidth = slides[0].clientWidth;
-      this.$el.querySelector('.slide-images').style.transform = `translateX(-${index * slideWidth}px)`;
+      this.$el.querySelector('.slide-wrapper').style.transform = `translateX(-${index * slideWidth}px)`;
       this.currentIndex = index;
     },
   },
@@ -68,6 +82,11 @@ export default {
 }
 </script>
 <style scoped>
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 .container {
   width: 100%;
   height: 1500px;
@@ -76,11 +95,6 @@ export default {
   flex-direction: column;
 }
 
-.slide-imges_container {
-  width : 100%;
-  height : 500px;
-  background-color: grey;
-}
 
 .goodslist_div {
   width: 70%;
@@ -105,5 +119,58 @@ export default {
 
 .item_container p {
   margin-top:10px;
+}
+
+/* 슬라이드 */
+.slide-imges_container {
+  width : 100%;
+  height : 500px;
+}
+
+.slider-container {
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+
+  }
+
+
+  .slider {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .slide-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+  .slide {
+    flex: 0 0 100%;
+  }
+.slide img {
+  max-width: 100%; /* 이미지가 부모 요소를 넘어가지 않도록 최대 너비 설정 */
+  max-height: 100%; /* 이미지가 부모 요소를 넘어가지 않도록 최대 높이 설정 */
+  display: block; /* 이미지 간격을 없애기 위해 inline 속성 제거 */
+  margin: auto; /* 가운데 정렬을 위한 마진 설정 */
+}
+
+.dot-navigation {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: black; /* 도트 색상 */
+  margin: 0 5px;
+  cursor: pointer;
 }
 </style>

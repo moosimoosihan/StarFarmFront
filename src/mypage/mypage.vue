@@ -5,14 +5,11 @@
                 <!-- 프로필 사진, 닉네임 -->
                 <div class="profile_box">
                     <div class="profile_img_box">
-                        <div class="profile-icon">
+                        <!-- <div class="profile-icon">
                             <i class="fas fa-user-circle"></i>
-                        </div>
-                        <!-- <img :width="70" style="border-radius: 10px;"
-                            :src="loginUser.USER_IMG ? require(`../../../StarFarmBack/uploads/user_img/${loginUser.USER_IMG}`) : '../assets/profile.png'"
-                            alt="프로필 사진 미리보기" /> -->
-                        <img id="photo-preview" :width="70" style="border-radius: 10px; display: none;"
-                            src="../assets/profile.png"
+                        </div> -->
+                        <img :width="70" style="border-radius: 10px;"
+                            :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
                             alt="프로필 사진 미리보기" />
                     </div>
                     <span class="profile_nick">{{ loginUser.user_nick }}</span>
@@ -57,6 +54,7 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
     export default {
         name : 'mypage',
         data() {
@@ -73,22 +71,11 @@
             this.getUser()
         },
         methods: {
-            updateProgressbar() {
-                var currentFr = this.loginUser.user_fr
-                let time = 100 - currentFr;
-                let el = document.getElementById("bar");
-                let width = (time / 100) * 100 + "%";
-                width = parseFloat(width).toFixed(2);
-                if (width > 100) width = 100;
-
-                //console.log("width" + width);
-                let widthStr = width + "%";
-                el.style.width = widthStr;
-            },
             async getUser() {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
                     this.loginUser = response.data[0];
+                    console.log(this.loginUser);
                 } catch (error) {
                     console.error(error);
                 }

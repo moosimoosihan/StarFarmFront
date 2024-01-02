@@ -61,7 +61,7 @@ import Footer from './footer.vue'
   width: 100px;
   position: fixed; 
   /* z-index: 2; /* Stay on top */
-  top: 150px; /* Stay at the top */
+  top: 170px; /* Stay at the top */
   left: 0;
   overflow-x: hidden; /* Disable horizontal scroll */
   background-color: rgb(255, 221, 147);
