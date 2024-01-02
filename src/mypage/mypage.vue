@@ -8,7 +8,7 @@
                         <!-- <div class="profile-icon">
                             <i class="fas fa-user-circle"></i>
                         </div> -->
-                        <img :width="70" style="border-radius: 10px;"
+                        <img :width="150" style="border-radius: 10px;"
                             :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
                             alt="프로필 사진 미리보기" />
                     </div>
@@ -32,7 +32,7 @@
             <div class="logout_lapper">
                 <!-- 로그아웃 버튼 -->
                 <div class="logout_box">
-                    <button class="logout_btn" @click="logout()">로그아웃</button>
+                    <button class="logout_btn" @click="logout()"><img src="../assets/logout.png" height="40px" width="100px" ></button>
                 </div>
             </div>
         </div>
@@ -166,8 +166,15 @@ import axios from 'axios';
     margin-right: 10px;
     float: right;
 }
+
+.logout_btn {
+    background-color: transparent;
+    border: 0;
+}
+
 .friendly_lapper {
     float :left;
+    margin-left: 10px;
 }
 .friendly_score {
     margin-left: 10px;
@@ -182,7 +189,7 @@ import axios from 'axios';
   max-width: 330px;
   width: 90%;
   margin: 10px auto;
-  margin-top: 100px;
+  margin-top: 20px;
   height: 8px;
 
   border-radius: 3px;
@@ -198,4 +205,7 @@ import axios from 'axios';
   border-radius: 3px;
   background: linear-gradient(#5be6ba, #5ed1ad);
 }
+
+
+
 </style>

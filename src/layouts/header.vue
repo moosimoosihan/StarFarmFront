@@ -10,14 +10,14 @@
                 <button @click="gotoLogin()" class="login_btn"><img src="../assets/login.png" height="55px" width="130px" ></button>
               </div>
               <div v-else>
-                <button class="chat_btn" @click="gotoMyChat()">1:1채팅</button>
+                <button class="chat_btn" @click="gotoMyChat()"><img src="../assets/chating.png" height="55px" width="130px" ></button>
                 <!-- <img :width="70" style="border-radius: 10px;"
                   :src="chatroom.items[0].CHATROOM_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${chatroom.CHATROOM_IMG}`) : '../assets/profile.png'"
                   alt="프로필 이미지" /> -->
                 <img class="myPage" :width="70" style="border-radius: 10px;"
                   src="../assets/profile.png" @click="gotoMypage()"
                   alt="프로필 이미지" />
-                <button @click="gotoUpload()" class="storeupload_btn">상품등록</button>
+                <button @click="gotoUpload()" class="storeupload_btn"><img src="../assets/storeupload.png" height="55px" width="130px" ></button>
               </div>
             </div>
 
@@ -236,35 +236,35 @@ input::placeholder {
 }
 
 .myPage {
-  width: 80px;
-  height: 40px;
+  width: 55px;
+  height: 55px;
   float: right;
-  margin-top: 20px;
-  margin-right: 20px;
+  margin-top: 10px;
+  margin-right: 10px;
 }
 
 .chat_btn {
-  width: 80px;
-  height: 40px;
   float: right;
-  margin-top: 20px;
+  margin-top: 10px;
   margin-right: 20px;
+  background-color: transparent;
+  border: 0;
 }
 
 .login_btn {
   float: right;
   margin-top: 10px;
-  margin-right: 50px;
+  margin-right: 20px;
   background-color: transparent;
   border: 0;
 }
 
 .storeupload_btn {
-  width: 80px;
-  height: 40px;
   float: right;
-  margin-top: 20px;
-  margin-right: 20px;
+  margin-top: 10px;
+  margin-right: 10px;
+  background-color: transparent;
+  border: 0;
 }
 
 /* --------------------------------------------------------------------------------------------------------------- */
