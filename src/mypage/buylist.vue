@@ -19,29 +19,32 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(order, i) in uniqueOrderList" :key="i">
-                                <td>{{ order.ORDER_TRADE_NO }}</td>
+                            <tr v-for="(order, i) in orderList" :key="i" @click="gotoProduct(order.goods_no)">
                                 <td>
-                                    <!-- <img :width="70" style="border-radius: 10px;"
-                                        :src="order.items[0].ORDER_GOODS_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${order.items[0].ORDER_GOODS_IMG}`) : '../assets/2-1.png'"
-                                        alt="상품 이미지" /> -->
-                                        <img :width="70" style="border-radius: 10px;"
-                                        src="../assets/2-1.png"
+                                    <p>{{ i+1 }}</p>
+                                </td>
+                                <td>
+                                    <img :width="70" style="border-radius: 10px;"
+                                        :src="order.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${order.goods_no}/${order.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
                                         alt="상품 이미지" />
                                 </td>
-                                <td @click="gotoProduct(order.items[0].GOODS_NO)">
-                                    {{ order.items[0].ORDER_GOODS_NM }}
+                                <td>
+                                    <p>{{ order.goods_nm }}</p>
                                 </td>
                                 <td>
-                                    <span>시작가 : {{ formatPrice(order.items[0].GOODS_PRICE) }}</span><br>
-                                    <span>입찰가: {{ formatPrice(order.items[0].BID_PRICE) }}</span><br>
-                                    <span>낙찰가:{{ formatPrice(order.items[0].BID_COMP_PRICE) }}</span><br>
+                                    <span>시작가 : {{ formatPrice(order.goods_start_price) }}</span><br>
+                                    <span>입찰가: {{ formatPrice(order.bid_amount) }}</span><br>
+                                    <span v-if="getOrderStatusText(order.goods_state)=='경매 중'">최고 입찰가:{{ formatPrice(succ_bidList[i]) }}</span>
+                                    <span v-else>낙찰가:{{ formatPrice(succ_bidList[i]) }}</span><br>
                                 </td>
                                 <td>
-                                    <p>{{ getOrderStatusText(order.items[0].ORDER_STATUS) }}</p>
+                                    <p>{{ getOrderStatusText(order.goods_state) }}</p>
                                 </td>
                                 <td>
-                                    <div class="trash_icon" @click="deleteItem(order.ORDER_TRADE_NO)">
+                                    <p>{{ formatDateTime(order.goods_timer) }}</p>
+                                </td>
+                                <td>
+                                    <div class="trash_icon" @click="deleteItem(order.goods_no)">
                                         <i class="fas fa-solid fa-trash"></i>
                                     </div>
                                 </td>
@@ -65,30 +68,31 @@ import axios from 'axios'
             return {
                 loginUser: {},
                 orderList: [],
+                succ_bidList: [],
             }
         },
         computed: {
             user() {
                 return this.$store.state.user;
             },
-            uniqueOrderList() {
-                const uniqueOrders = [];
-                const tradeNos = [];
+        //     uniqueOrderList() {
+        //         const uniqueOrders = [];
+        //         const tradeNos = [];
 
-                for (const order of this.orderList) {
-                    if (!tradeNos.includes(order.ORDER_TRADE_NO)) {
-                        uniqueOrders.push({
-                            ORDER_TRADE_NO: order.ORDER_TRADE_NO,
-                            items: [order],
-                        });
-                        tradeNos.push(order.ORDER_TRADE_NO);
-                    } else {
-                        const index = uniqueOrders.findIndex((o) => o.ORDER_TRADE_NO === order.ORDER_TRADE_NO);
-                        uniqueOrders[index].items.push(order);
-                    }
-                }
-                return uniqueOrders;
-            }
+        //         for (const order of this.orderList) {
+        //             if (!tradeNos.includes(order.ORDER_TRADE_NO)) {
+        //                 uniqueOrders.push({
+        //                     ORDER_TRADE_NO: order.ORDER_TRADE_NO,
+        //                     items: [order],
+        //                 });
+        //                 tradeNos.push(order.ORDER_TRADE_NO);
+        //             } else {
+        //                 const index = uniqueOrders.findIndex((o) => o.ORDER_TRADE_NO === order.ORDER_TRADE_NO);
+        //                 uniqueOrders[index].items.push(order);
+        //             }
+        //         }
+        //         return uniqueOrders;
+        //     }
         },
         created() {
             this.getUser();
@@ -108,8 +112,21 @@ import axios from 'axios'
             },
             async getOrderList() {
                 try {
-                    const response = await axios.get(`http://localhost:3000/goods/orderlist/${this.user.user_no}`);
+                    const response = await axios.get(`http://localhost:3000/mypage/orderlist/${this.user.user_no}`);
                     this.orderList = response.data;
+                    for(let i=0; i<this.orderList.length; i++){
+                        this.succ_bidList.push(await this.getSuccBid(this.orderList[i].goods_no));
+                    }
+                    console.log(this.orderList);
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+            async getSuccBid(goods_no) {
+                try {
+                    const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goods_no}`);
+                    console.log(response.data[0].succ_bid);
+                    return response.data[0].succ_bid;
                 } catch (error) {
                     console.error(error);
                 }
