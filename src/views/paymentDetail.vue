@@ -7,39 +7,40 @@
         
         <div class="info-row">
           <p class="info-label">수령자 이름 *</p>
-          <p class="info-value">{{ userInfo.name }}</p>
+         <p class="info-value">{{ loginUser.user_id }}</p>
         </div>
 
         <!-- 전화번호 -->
         <div class="info-row">
           <p class="info-label">전화번호 *</p>
-          <p class="info-value">{{ userInfo.phone }}</p>
+         <p class="info-value">{{ loginUser.user_mobile }}</p>
         </div>
 
         <!-- 배송지 주소 -->
         <div class="info-row">
           <p class="info-label">배송지 *</p>
-          <p class="info-value">{{ userInfo.address }}</p>
+          <p class="info-value">{{ loginUser.user_zipcode }}</p>
         </div>
 
         <!-- 상세주소, 참고항목 -->
         <div class="info-row">
           <p class="info-label">상세주소 *</p>
-          <p class="info-value">{{ userInfo.detailAddress }}</p>
+          <p class="info-value">{{ 'loginUser.user_adr1 '+'loginUser.user_adr2 '}}</p>
         </div>
 
         <!-- 배송 요청사항 -->
         <div class="info-row">
           <p class="info-label">배송 요청사항</p>
-          <p class="info-value">{{ userInfo.deliveryRequest }}</p>
+          <p class="info-value">{{ loginUser.AddressHope }}</p>
         </div>
 
         <!-- 상품 정보 -->
         <div id="payment_product">
-          <p>{{ product.name }}</p>
-          <p>{{ product.number }}</p>
-          <p>{{ product.Address }}</p>
-          <p>{{ product.AddressHope }}</p>
+          <p>{{ product.user_id}}</p>
+          <p>{{ product.user_mobile }}</p>
+          <p>{{ product.user_adr1 }}</p>
+          <p>{{ product.user_adr2 }}</p>
+           <p>{{ product.AddressHope }}</p>
           <!-- 상품 상세 정보 표시 -->
         </div>
 
@@ -56,22 +57,19 @@
 </template>
 
 <script>
-export default {
-  data() {
+ import axios from 'axios' 
+  
+ export default {
+    data() {
     return {
-      loginUser: {
-        user_id: '홍길동',
-        user_mobile: '010-1234-5678',
-        user_adr1: '서울시 강남구',
-        user_adr2: '123동 456호',
-        AddressHope: '부재 시 문 앞에 놓아주세요.',
-      },
-      productInfo: {
-        goods_no: '상품1',
-        goods_nm: '12345',
-        goods_state: '상품 배송지',
-        goods_content: '참고항목',
-      },
+     loginUser: {
+      user_id: '',
+      user_mobile: '',
+      user_adr1: '',
+      user_adr2: '',
+      AddressHope: '',
+      }
+      ,
     };
   },
 };
