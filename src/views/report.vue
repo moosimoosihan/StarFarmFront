@@ -29,7 +29,20 @@
     </div>
 </template>
 <script>
-
+import axios from 'axios'
+export default {
+    data() {
+        return {
+            report: {
+                user: '',
+                category: '',
+                title: '',
+                content: '',
+                file: ''
+            }
+        }
+    }
+}
 </script>
 <style scoped>
 * {
