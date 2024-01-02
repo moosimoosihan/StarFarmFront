@@ -55,7 +55,6 @@
     <!--경매시작을 보여주는 화면-->
     <div class="product-details6">
       <div class="product-details">
-        <form class="product_bid">
           <h1>경매 시작</h1>
           <p class="description">
           </p>
@@ -75,8 +74,7 @@
             <!--입찰버튼-->
             <input type="button" id="submit_button" value="입찰" @click="postBidding">
           </div>
-        </form>
-      </div>
+              </div>
     </div>
   </div>
 </template>

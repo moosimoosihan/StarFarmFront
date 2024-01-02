@@ -36,10 +36,10 @@
 
         <!-- 상품 정보 -->
         <div id="payment_product">
-          <p>{{ productInfo.name }}</p>
-          <p>{{ productInfo.number }}</p>
-          <p>{{ productInfo.address }}</p>
-          <p>{{ productInfo.addressHope }}</p>
+          <p>{{ product.name }}</p>
+          <p>{{ product.number }}</p>
+          <p>{{ product.Address }}</p>
+          <p>{{ product.AddressHope }}</p>
           <!-- 상품 상세 정보 표시 -->
         </div>
 
@@ -59,18 +59,18 @@
 export default {
   data() {
     return {
-      userInfo: {
-        name: '홍길동',
-        phone: '010-1234-5678',
-        address: '서울시 강남구',
-        detailAddress: '123동 456호',
-        deliveryRequest: '부재 시 문 앞에 놓아주세요.',
+      loginUser: {
+        user_id: '홍길동',
+        user_mobile: '010-1234-5678',
+        user_adr1: '서울시 강남구',
+        user_adr2: '123동 456호',
+        AddressHope: '부재 시 문 앞에 놓아주세요.',
       },
       productInfo: {
-        name: '상품1',
-        number: '12345',
-        address: '상품 배송지',
-        addressHope: '참고항목',
+        goods_no: '상품1',
+        goods_nm: '12345',
+        goods_state: '상품 배송지',
+        goods_content: '참고항목',
       },
     };
   },
