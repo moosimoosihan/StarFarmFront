@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <div id="payment_wrapper">
+    <div class="payment_wrapper">
       <form id="payment_form">
         <h1>상품 결제</h1>
-        <div id="payment_product">
+        <div class="payment_product">
           <!-- 상품 정보 가져오면 됨 -->
         </div>
-        <div id="payment_user_name">
+        <div class="payment_user_name">
           <p>수령자 이름 *</p>
           <input type="text" placeholder="이름">
         </div>
@@ -36,9 +36,9 @@
         </div>
         <div v-for="(item, index) in reports" :key="index">
          {{ report.name }} 
-         {{ report.Num }}
-         {{ report.Address }}
-         {{ report.AddressHope }}
+         {{ loginUser.user_zipcode }}
+         {{ loginUser.user_adr1}}
+         {{ loginUser.user_adr2}}
          {{ report.price}}
         </div>
         </form>
@@ -47,26 +47,11 @@
         </template>
         <script>
         export default {
-        data() {
-        return {
-          showSendDataButton: false, // 조건에 따라 버튼을 표시할지 여부를 결정하는 변수
-        items: [
-        // 실제 데이터를 추가하거나, 사용자 입력 시 동적으로 할당
-        {
-          name: '상품1',
-          Num: '01012345678', // 전화번호 형식으로 변경
-          Address: '주소1',
-          AddressHope: '참고항목1',
-          price:'20000'
-         },
-         {
-          name: '상품2',
-          Num: '01098765432', // 다른 전화번호 예시
-          Address: '주소2',
-          AddressHope: '참고항목2',
-          price:'20000'
-        },
-        ],
+          name : 'payment',
+            data() {
+            return {
+         loginUser:{},
+            
         postcodeResult: null, // 우편번호 검색 결과를 저장할 변수 추가
         };
         },
@@ -146,23 +131,23 @@
 }
 /* ------------------------------------------------------------- */
 
-#payment_wrapper {
-    width: 55%;
-    height: 1000px;
+.payment_wrapper {
+    width: 60%;
+    height: 60%;
     margin:  auto;
     padding-top: 2px;
 }
-#payment_form h1 {
+.payment_form h1 {
     margin-bottom: 20px;
 }
-#payment_product {
+.payment_product {
     width: 100%;
     height: 150px;
     background-color: bisque;
     border-radius: 20px;
     margin-bottom: 20px;
 }
-#payment_user_name {
+.payment_user_name {
     height: 100px;
 }
 #payment_user_name p {
@@ -212,12 +197,12 @@
 
 }
 .payment_address_btn {
-    width: 80px;
-    height: 30px;
+    width: 90%;
+    height: 90%;
 }
 #payment_address2 {
     width: 90%;
-    height: 40px;
+    height: 90%;
     background: none;
     border: 0;
     border-bottom: 1px solid black;
@@ -233,7 +218,7 @@
 }
 #payment_request textarea {
     width: 100%;
-    height: 300px;
+    height: 100%;
     resize: none;
     font-size: 15px;
     line-height: 100px;
