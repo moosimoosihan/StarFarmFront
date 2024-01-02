@@ -16,10 +16,6 @@ module.exports = defineConfig({
         target,
         changeOrigin: true
       },
-      '^/mypage': {
-        target,
-        changeOrigin: true
-      }
     }
   },
   transpileDependencies: true,

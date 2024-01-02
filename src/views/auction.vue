@@ -74,8 +74,7 @@
             <!--입찰버튼-->
             <input type="button" id="submit_button" value="입찰" @click="postBidding">
           </div>
-        </form>
-      </div>
+              </div>
     </div>
   </div>
 </template>
