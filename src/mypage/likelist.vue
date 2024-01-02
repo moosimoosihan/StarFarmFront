@@ -10,29 +10,27 @@
                         <thead>
                             <tr>
                                 <th>상품 이미지</th>
-                                <th>금액</th>
                                 <th>상품명</th>
+                                <th>금액</th>
                                 <th>판매자</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(likegoods, i) in likegoodsList" :key="i">
+                            <tr v-for="(likegoods, i) in likegoodsList" :key="i" @click="gotoProduct(likegoods.items[0].GOODS_NO)">
                                 <td>
-                                    <!-- <img :width="70" style="border-radius: 10px;"
-                                        :src="likegoods.items[0].GOODS_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${likegoods.GOODS_IMG}`) : '../assets/2-1.png'"
-                                        alt="상품 이미지" /> -->
                                     <img :width="70" style="border-radius: 10px;"
-                                        src="../assets/2-1.png"
+                                        :src="likegoods.items[0].goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${likegoods.items[0].GOODS_NO}/${likegoods.items[0].goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
                                         alt="상품 이미지" />
                                 </td>
                                 <td>
-                                    입찰가 {{ formatPrice(likegoods.items[0].BID_PRICE) }}
-                                </td>
-                                <td @click="gotoProduct(likegoods.items[0].GOODS_NO)">
-                                    {{ likegoods.items[0].GOODS_NM }}
+                                    {{ likegoods.items[0].goods_nm }}
                                 </td>
                                 <td>
-                                    {{ likegoods.items[0].USER_ID }}
+                                    <span>시작가 {{ formatPrice(likegoods.items[0].goods_start_price) }}</span><br>
+                                    <span>입찰가 {{ formatPrice(succ_bidList[i]) }}</span>
+                                </td>
+                                <td>
+                                    {{ likegoods.items[0].user_nick }}
                                 </td>
                             </tr>
                             <tr v-if="likegoodsList.length === 0">
@@ -46,12 +44,15 @@
     </main>
 </template>
 <script>
+import axios from 'axios'
+
     export default {
         name: 'likelist',
         data() {
             return {
                 loginUser: {},
-                goodsList: [],
+                likeList: [],
+                succ_bidList: [],
             }
         },
         computed: {
@@ -62,7 +63,7 @@
                 const likegoods = []
                 const tradeNos = []
 
-                for(const goods of this.goodsList) {
+                for(const goods of this.likeList) {
                     if(!tradeNos.includes(goods.GOODS_NO)){
                         likegoods.push({
                             ORDER_TRADE_NO: goods.ORDER_TRADE_NO,
@@ -95,8 +96,15 @@
             },
             async getLikeGoods() {
                 try {
-                    const response = await axios.get(`http://localhost:3000/goods/likelist/${this.user.user_no}`);
-                    this.likegoods = response.data;
+                    const response = await axios.get(`http://localhost:3000/mypage/likelist/${this.user.user_no}`);
+                    this.likeList = response.data;
+                    for(let i=0; i<this.likeList.length; i++){
+                        let val = await this.getSuccBid(this.likeList[i].goods_no)
+                        if(val === undefined || val === null){
+                            val = 0;
+                        }
+                        this.succ_bidList.push(val)
+                    }
                 } catch (error) {
                     console.error(error);
                 }
@@ -117,6 +125,15 @@
                 };
                 const formattedDateTime = date.toLocaleDateString("ko-KR", options);
                 return formattedDateTime;
+            },
+            async getSuccBid(goods_no) {
+                try {
+                    const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goods_no}`);
+                    console.log(response.data[0].succ_bid);
+                    return response.data[0].succ_bid;
+                } catch (error) {
+                    console.error(error);
+                }
             },
         }
     }

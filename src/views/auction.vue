@@ -10,6 +10,8 @@
               <div class="profile_img_box">
                 <img :width="70" style="border-radius: 10px;"
                         :src="goodsUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${goodsUser.user_no}/${goodsUser.user_img}`) : require(`../assets/profile.png`)"
+                <img :width="70" style="border-radius: 10px;"
+                        :src="goodsUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${goodsUser.user_no}/${goodsUser.user_img}`) : require(`../assets/profile.png`)"
                         alt="프로필 사진 미리보기" />
               </div>
               <span class="profile_nick">{{ goodsUser.user_nick }}</span>
@@ -74,7 +76,8 @@
             <!--입찰버튼-->
             <input type="button" id="submit_button" value="입찰" @click="postBidding">
           </div>
-              </div>
+        </form>
+      </div>
     </div>
   </div>
 </template>

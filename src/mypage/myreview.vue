@@ -11,6 +11,7 @@
                             <tr>
                                 <th>상품 이미지</th>
                                 <th>상품명</th>
+                                <th>판매자명</th>
                                 <th>리뷰 내용</th>
                                 <th>리뷰 점수</th>
                                 <th>작성 날짜</th>
@@ -19,39 +20,39 @@
                         <tbody>
                             <tr v-for="(review,i) in uniqueReviewList" :key="i">
                                 <td>
-                                    <!-- <img :width="70" style="border-radius: 10px;"
-                                        :src="review.items[0].ORDER_GOODS_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${review.items[0].ORDER_GOODS_IMG}`) : '../assets/2-1.png'"
-                                        alt="상품 이미지" /> -->
                                     <img :width="70" style="border-radius: 10px;"
-                                        src="../assets/2-1.png"
+                                        :src="review.items[0].goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${review.items[0].goods_no}/${review.items[0].goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
                                         alt="상품 이미지" />
                                 </td>
-                                <td @click="gotoProduct(review.items[0].GOODS_NO)">
-                                    {{ review.items[0].ORDER_GOODS_NM }}
+                                <td @click="gotoProduct(review.items[0].goods_no)">
+                                    {{ review.items[0].goods_nm }}
                                 </td>
                                 <td>
-                                    <p>{{ review.items[0].REVIEW_CONTENTS }}</p>
+                                    <p>{{ review.items[0].user_nick }}</p>
                                 </td>
                                 <td>
-                                    <div v-if="review.items[0].REVIEW_SCORE === 0">
+                                    <p>{{ review.items[0].review_con }}</p>
+                                </td>
+                                <td>
+                                    <div v-if="review.items[0].review_score === 0">
                                         <img :width="70" style="border-radius: 10px;"
                                             :src="require(`../assets/smile.png`)" alt="리뷰 점수 이미지" />
                                     </div>
-                                    <div v-if="review.items[0].REVIEW_SCORE === 1">
+                                    <div v-if="review.items[0].review_score === 1">
                                         <img :width="70" style="border-radius: 10px;"
                                             :src="require(`../assets/bad.png`)" alt="리뷰 점수 이미지" />
                                     </div>
-                                    <div v-if="review.items[0].REVIEW_SCORE === 2">
+                                    <div v-if="review.items[0].review_score === 2">
                                         <img :width="70" style="border-radius: 10px;"
                                             :src="require(`../assets/normal.png`)" alt="리뷰 점수 이미지" />
                                     </div>
                                 </td>
                                 <td>
-                                    <p>{{ formatDateTime(review.items[0].REVIEW_DATE) }}</p>
+                                    <p>{{ formatDateTime(review.items[0].review_create_dt) }}</p>
                                 </td>
                             </tr>
                             <tr v-if="reviewList.length === 0">
-                                <td colspan="5">리뷰가 없습니다.</td>
+                                <td colspan="6">리뷰가 없습니다.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -61,6 +62,8 @@
     </main>
 </template>
 <script>
+import axios from 'axios'
+
     export default {
         name: 'myreview',
         data() {
@@ -107,7 +110,7 @@
             },
             async getReviewList() {
                 try {
-                    const response = await axios.get(`http://localhost:3000/goods/reviewlist/${this.user.user_no}`);
+                    const response = await axios.get(`http://localhost:3000/mypage/myreview/${this.user.user_no}`);
                     this.reviewList = response.data;
                 } catch (error) {
                     console.error(error);
