@@ -2,68 +2,20 @@
     <div class="container">
     <div id="store_upload_wrapper">
         <div class="mb-3 row">
-            <label class="col-md-3 col-form-label">메인 이미지 * </label>
+            <label class="col-md-3 col-form-label">상품 이미지</label>
             <div class="col-md-9">
-                <div class="row">
+                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="multiUploadFile($event.target.files)" multiple>
+                <div class="imgContainer">
+                    <img v-if="goods_img_src[0]!=''" :src="goods_img_src[0]" />
+                    <img v-if="goods_img_src[1]!=''" :src="goods_img_src[1]" />
+                    <img v-if="goods_img_src[2]!=''" :src="goods_img_src[2]" />
+                    <img v-if="goods_img_src[3]!=''" :src="goods_img_src[3]" />
+                    <img v-if="goods_img_src[4]!=''" :src="goods_img_src[4]" />
                 </div>
-                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 0)">
-                <img v-if="goods_img_src[0]!=''" :src="goods_img_src[0]" />
                 <div class="alert alert-secondary" role="alert">
                     <ul>
                         <li>이미지 사이즈 : 700*700</li>
                         <li>파일 사이즈 : 1M 이하</li>
-                        <li>파일 확장자 : png, jpg만 가능</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label class="col-md-3 col-form-label">서브 이미지 *</label>
-            <div class="col-md-9">
-                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 1)">
-                <img v-if="goods_img_src[1]!=''" :src="goods_img_src[1]" />
-                <div class="alert alert-secondary" role="alert">
-                    <ul>
-                        <li>파일 사이즈 : 5M 이하</li>
-                        <li>파일 확장자 : png, jpg만 가능</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label class="col-md-3 col-form-label">서브 이미지 *</label>
-            <div class="col-md-9">
-                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 2)">
-                <img v-if="goods_img_src[2]!=''" :src="goods_img_src[2]" />
-                <div class="alert alert-secondary" role="alert">
-                    <ul>
-                        <li>파일 사이즈 : 5M 이하</li>
-                        <li>파일 확장자 : png, jpg만 가능</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label class="col-md-3 col-form-label">서브 이미지 *</label>
-            <div class="col-md-9">
-                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 3)">
-                <img v-if="goods_img_src[3]!=''" :src="goods_img_src[3]" />
-                <div class="alert alert-secondary" role="alert">
-                    <ul>
-                        <li>파일 사이즈 : 5M 이하</li>
-                        <li>파일 확장자 : png, jpg만 가능</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label class="col-md-3 col-form-label">서브 이미지 *</label>
-            <div class="col-md-9">
-                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 4)">
-                <img v-if="goods_img_src[4]!=''" :src="goods_img_src[4]" />
-                <div class="alert alert-secondary" role="alert">
-                    <ul>
-                        <li>파일 사이즈 : 5M 이하</li>
                         <li>파일 확장자 : png, jpg만 가능</li>
                     </ul>
                 </div>
@@ -74,8 +26,8 @@
       <input v-model="product_name" type="text" placeholder="상품명을 입력해주세요." style="width: 100%;" required>
    </div>
    <div id="store_product_category1">
-     <p>카테고리1</p>
-     <select style="width: 100%;" v-model="product_category1" required>
+     <p>카테고리</p>
+     <select style="width: 100%;" v-model="product_category1" required @change="cate2Change()">
         <option value="의류">의류</option>
         <option value="뷰티">뷰티</option>
         <option value="생활/가전">생활/가전</option>
@@ -84,12 +36,32 @@
      </select>
    </div>
    <div id="store_product_category2">
-        <p>카테고리2</p>
-        <select style="width: 100%;" v-model="product_category2" required>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
+        <p>세부 카테고리</p>
+        <select v-if="product_category1==='의류'" style="width: 100%;" v-model="product_category2" required>
+            <option value="1" selected>상의</option>
+            <option value="2">하의</option>
+            <option value="3">신발</option>
+            <option value="4">외투</option>
+            <option value="5">가방</option>
+        </select>
+        <select v-if="product_category1==='뷰티'" style="width: 100%;" v-model="product_category2" required>
+            <option value="1" selected>악세사리</option>
+            <option value="2">화장품</option>
+            <option value="3">향수</option>
+        </select>
+        <select v-if="product_category1==='생활/가전'" style="width: 100%;" v-model="product_category2" required>
+            <option value="1" selected>주방용품</option>
+            <option value="2">가전제품</option>
+            <option value="3">생필품</option>
+        </select>
+        <select v-if="product_category1==='취미'" style="width: 100%;" v-model="product_category2" required>
+            <option value="1" selected>스포츠</option>
+            <option value="2">게임</option>
+            <option value="3">음악</option>
+            <option value="4">미술</option>
+        </select>
+        <select v-if="product_category1==='기타'" style="width: 100%;" v-model="product_category2" required>
+            <option value="1" selected>기타</option>
         </select>
     </div>
     <div id="store_price_trade">
@@ -105,28 +77,28 @@
             </select>
         </div>
     </div>
-    <div id="store_timer_deliv">
-        <div>
-            마감 시간
-            <input type="datetime-local" required v-model="goods_timer">
+        <div id="store_timer_deliv">
+            <div>
+                마감 시간
+                <input type="datetime-local" required v-model="goods_timer">
+            </div>
+            <div v-if="goods_trade==='택배거래'">
+                택배 비용
+                <input type="text" placeholder="0" value="0" style="width: 100%;" v-model="goods_deliv_price" @input="validateNumber('goods_deliv_price')">
+            </div>
+            <div v-else>
+                <input type="text" style="width: 100%;" placeholder="0" value="0" disabled>
+             </div>
+            </div>
+            <div id="store_product_content">
+            <p>설명</p>
+            <textarea style="width: 100%; height: 400px;" placeholder="상품 설명을 입력해주세요. (최소 10글자)" v-model="product_content"></textarea>
         </div>
-        <div v-if="goods_trade==='택배거래'">
-            택배 비용
-            <input type="text" placeholder="0" value="0" style="width: 100%;" v-model="goods_deliv_price" @input="validateNumber('goods_deliv_price')">
-        </div>
-        <div v-else>
-            <input type="text" style="width: 100%;" placeholder="0" value="0" disabled>
+        <div id="store_submit">
+            <input type="button" value="취소" class="cancel-btn">
+            <button class="btn" @click="product_add()">상품 등록</button>
         </div>
     </div>
-    <div id="store_product_content">
-    <p>설명</p>
-    <textarea style="width: 100%; height: 400px;" placeholder="상품 설명을 입력해주세요. (최소 10글자)" v-model="product_content"></textarea>
-   </div>
-   <div id="store_submit">
-    <input type="button" value="취소" class="cancel-btn">
-    <button class="btn" @click="product_add()">상품 등록</button>
-   </div>
-   </div>
    </div>
 </template>
 <script>
@@ -140,7 +112,7 @@ import moment from 'moment'
                 productImage: [],
                 product_name: '',
                 product_category1: '의류',
-                product_category2: '1',
+                product_category2: 1,
                 price_trade: 0,
                 goods_trade: '택배거래',
                 goods_timer: '',
@@ -193,6 +165,9 @@ import moment from 'moment'
                 }
                 if(this.price_trade==='' && this.price_trade<0){
                     return this.$swal('경매 시작가를 입력해주세요.')
+                }
+                if(this.goods_trade===''){
+                    return this.$swal('거래 유형을 선택해주세요.')
                 }
                 if(this.goods_timer===''){
                     return this.$swal('마감 시간을 입력해주세요.')
@@ -276,23 +251,25 @@ import moment from 'moment'
                         break
                 }
             },
-            async uploadFile(file, type) {
-                let name = "";
-                if (file) {
-                    name = file[0].name;
+            async multiUploadFile(files) {
+                let name = [];
+                if (files.length > 0) {
+                    for(var i=0;i<files.length;i++){
+                        name.push(files[i].name);
+                    }
                 }
                 else {
-                    return;     // 파일 미선택 시 반환
+                    return; // 파일 미선택 시 반환
                 }
-
-                const formData = new FormData();
-                
-                formData.append('img', file[0]);
-
-                this.goods_img_src[type] = URL.createObjectURL(file[0]);
-
-                for (let key of formData.keys()) {
-                    console.log(key, ":", formData.get(key));
+                const formData = [];
+                this.goods_img_src = ["","","","",""];
+                for(var i=0;i<files.length;i++){
+                    formData[i] = new FormData();
+                    formData[i].append('img', files[i]);
+                    this.goods_img_src[i] = URL.createObjectURL(files[i]);
+                    for (let key of formData[i].keys()) {
+                        console.log(key, ":", formData[i].get(key));
+                    }
                 }
                 try {
                     axios({
@@ -302,8 +279,9 @@ import moment from 'moment'
                         data: formData
                     })
                         .then ((res) => {
+                            this.goods_img = ["","","","",""];
                             if (res.data.message == 'success'){
-                                this.goods_img[type] = name;
+                                this.goods_img = name;
                             }
                             else {
                                 this.$swal("DB 에러");
@@ -313,7 +291,6 @@ import moment from 'moment'
                             console.log(e);
                         })
                     return true;
-
                 } catch(err){
                     console.log(err);
                     return false;
@@ -339,6 +316,17 @@ import moment from 'moment'
                     }
                 })
             },
+            cate2Change() {
+                switch(this.product_category1){
+                    case '의류':
+                    case '뷰티':
+                    case '생활/가전':
+                    case '취미':
+                    case '기타':
+                        this.product_category2 = 1
+                        break
+                }
+            }
         }
     }
 </script>
@@ -449,5 +437,15 @@ select {
     background-color: black;
     color: white; /* Ensure text is visible */
     border-radius: 5px;
+  }
+  .imgContainer {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .imgContainer img {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+    margin-bottom: 10px;
   }
 </style>
