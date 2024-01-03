@@ -1,7 +1,7 @@
 <template>
   <main id="main-holder">
     <div class="logo">
-    <img src="../assets/pink.png" @click="gotoMain()"></div>
+    <img src="../assets/logo.png" @click="gotoMain()"></div>
     
     <input type="text" name="username" id="username-field" class="login-form-field" placeholder="ID" v-model="user_id">
     <input type="password" name="password" id="password-field" class="login-form-field" placeholder="PW" v-model="user_pw">

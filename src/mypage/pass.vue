@@ -2,7 +2,7 @@
     <main class="form">
         <div class="login-form">
             <div class="logo">
-                <img src="../assets/pink.png"></div>
+                <img src="../assets/logo.png"></div>
 
                 <div class="one">
                     <input
