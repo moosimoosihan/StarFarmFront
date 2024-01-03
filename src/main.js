@@ -85,7 +85,7 @@ const routes = [
         component: userpage
       },
       {
-        path: '/paymentdetail',
+        path: '/paymentdetail/:id',
         name: 'paymentdetail',
         component: paymentdetail
       },
