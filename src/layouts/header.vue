@@ -11,12 +11,9 @@
               </div>
               <div v-else>
                 <button class="chat_btn" @click="gotoMyChat()"><img src="../assets/chating.png" height="55px" width="130px" ></button>
-                <!-- <img :width="70" style="border-radius: 10px;"
-                  :src="chatroom.items[0].CHATROOM_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${chatroom.CHATROOM_IMG}`) : '../assets/profile.png'"
-                  alt="프로필 이미지" /> -->
-                <img class="myPage" :width="70" style="border-radius: 10px;"
-                  src="../assets/profile.png" @click="gotoMypage()"
-                  alt="프로필 이미지" />
+                <img :width="70" style="border-radius: 10px;" class="myPage"
+                  :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
+                  alt="프로필 이미지" @click="gotoMypage()" />
                 <button @click="gotoUpload()" class="storeupload_btn"><img src="../assets/storeupload.png" height="55px" width="130px" ></button>
               </div>
             </div>
@@ -98,6 +95,7 @@
         </div>
 </template>
 <script>
+import axios from 'axios';
 export default {
     name: 'header',
     data() {
@@ -120,9 +118,17 @@ export default {
       }
     },
     created() {
-      console.log(this.user);
+      this.getUser();
     },
     methods: {
+        async getUser() {
+            try {
+                const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
+                this.loginUser = response.data[0];
+            } catch (error) {
+                console.error(error);
+            }
+        },
         gotoMain () {
           this.$router.push('/')
         },

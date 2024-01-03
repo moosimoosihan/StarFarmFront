@@ -15,7 +15,6 @@
                                 <th>금액</th>
                                 <th>상품상태</th>
                                 <th>일시</th>
-                                <th>삭제</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,14 +42,9 @@
                                 <td>
                                     <p>{{ formatDateTime(order.goods_timer) }}</p>
                                 </td>
-                                <td>
-                                    <div class="trash_icon" @click="deleteItem(order.goods_no)">
-                                        <i class="fas fa-solid fa-trash"></i>
-                                    </div>
-                                </td>
                             </tr>
                             <tr v-if="orderList.length === 0">
-                                <td colspan="7">입찰 상품이 없습니다.</td>
+                                <td colspan="6">입찰 상품이 없습니다.</td>
                             </tr>
                         </tbody>
                     </table>

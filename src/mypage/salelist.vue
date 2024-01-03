@@ -19,14 +19,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(goodslist,i) in saleList" :key="i" @click="gotoProduct(goodslist.GOODS_NO)">
+                            <tr v-for="(goodslist,i) in saleList" :key="i">
                                 <td>
                                     <p>{{ i+1 }}</p>
                                 </td>
                                 <td>
                                     <img :width="70" style="border-radius: 10px;"
                                         :src="goodslist.GOODS_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${goodslist.GOODS_NO}/${goodslist.GOODS_IMG.split(',')[0]}`) : require(`../assets/2-1.png`)"
-                                        alt="상품 이미지" />
+                                        alt="상품 이미지" @click="gotoProduct(goodslist.GOODS_NO)" />
                                 </td>
                                 <td>
                                     <p>{{ goodslist.GOODS_NM }}</p>
@@ -45,7 +45,9 @@
                                     <div v-if="goodslist.GOODS_STATE===2">
                                         <button>후기 작성</button>
                                         <button>결제 내역</button>
-                                        <button>내역 삭제</button>
+                                        <div class="trash_icon" @click="deleteItem(goodslist.GOODS_NO)">
+                                            <i class="fas fa-solid fa-trash"></i>
+                                        </div>
                                     </div>
 
                                     <!-- 거래 중 -->
@@ -173,6 +175,18 @@ import axios from 'axios';
                     return `${formattedPrice} 원`;
                 }
                 return "";
+            },
+            async deleteItem(goods_no) {
+                if (confirm("정말 삭제하시겠습니까?")) {
+                    await axios.post(`http://localhost:3000/goods/delete_goods/${goods_no}`)
+                    this.$swal({
+                        title: "삭제 완료",
+                        text: "상품이 삭제되었습니다.",
+                        icon: "success",
+                        button: "확인",
+                    });
+                }
+                this.getSaleList()
             },
         }
     }
