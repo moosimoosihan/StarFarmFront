@@ -3,28 +3,131 @@
         <div class="review_wrapper">
             <h1>리뷰 작성</h1>
             <div class="review_product_name">
-                <img src="" class="review_product_img">
-                <h2>상품명</h2>
+                <img :src="review_info.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${review_info.goods_no}/${review_info.goods_img.split(',')[0]}`):require(`../assets/2-1.png`)" class="review_product_img">
+                <h2>{{ review_info.goods_nm }}</h2>
                 <div class="review_user">
-                <img src="" class="review_user_img">
-                <span class="review_user_nick">판매자 닉네임</span>
+                <img class="review_user_img">
+                <span class="review_user_nick">{{ review_info.user_nick }}</span>
                 </div>
             </div>
             <p>리뷰 평가</p>
             <div class="review_rating">
-                <button><img src="../assets/smile.png"></button>
-                <button><img src="../assets/normal.png"></button>
-                <button><img src="../assets/bad.png"></button>
+                <button :class=" { clicked_good:isClicked_good }"><img src="../assets/smile.png" @click="score_click_good"></button>
+                <button :class=" { clicked_normal:isClicked_normal }"><img src="../assets/normal.png" @click="score_click_normal"></button>
+                <button :class=" { clicked_bad:isClicked_bad}"><img src="../assets/bad.png" @click="score_click_bad"></button>
             </div>
-            <form>
-                <textarea></textarea>
-                <input type="submit" value="확인">
-                <input type="button" value="취소">
-            </form>
+                <textarea v-model="review_con"></textarea>
+                <button @click="review_add">확인</button>
+                <button value="취소" >취소</button>
         </div>
     </div>
 </template>
 <script>
+import axios from 'axios'
+
+export default {
+    data() {
+        return {
+            review_con: '',
+            review_score: 2,
+            review_info: [],
+            isClicked_good: false,
+            isClicked_bad: false,
+            isClicked_normal: true,
+        }
+    },
+    computed: {
+            user () {
+                return this.$store.state.user
+            }
+    },
+    created() {
+        this.getGoodsInfo();
+    },
+    methods: {
+            async review_add() {
+                if(this.review_con===''){
+                    return this.$swal('리뷰 내용을 입력해주세요.')
+                }
+                try {
+                    const goods_no = this.$route.params.id;
+                    axios({
+                    url: `http://localhost:3000/goods/write_review/${goods_no}`,
+                    method: "POST", 
+                    data: { 
+                        review_con: this.review_con,
+                        review_score: this.review_score,
+                        writer_user: this.user.user_no,
+                        review_goods: this.review_info.goods_no,
+                        sell_user_no: this.review_info.user_no
+                    },
+                })
+                    .then((res) => {
+                        if(res.data.message=='review_complete'){
+                            this.$swal({
+                                position: 'top',
+                                icon: 'success',
+                                title: '리뷰 등록 성공!',
+                                showConfirmButton: false,
+                                timer: 1000
+                            })
+                            .then(() => {
+                                this.$router.push('/mypage/myreview');
+                            })
+                        // } else if (res.data.message == 'already_exist_goods'){
+                        //     this.$swal("이미 등록된 제품입니다.");
+                        }
+                        else if (res.data.message == '리뷰 등록 실패'){
+                            this.$swal("리뷰 등록 실패");
+                        }
+                        else {
+                            console.log(res.data.message);
+                            this.$swal("리뷰 등록 실패");
+                        }
+                })
+                    .catch(() => {
+                        this.$swal("오류 발생")
+                    })
+                } catch(err){
+                    console.log(err);
+                }
+            },
+            score_click_good() {
+                this.review_score = 0;
+                if(!this.isClicked_good){
+                    this.isClicked_good = true;
+                }
+                this.isClicked_bad = false;
+                this.isClicked_normal = false;
+            },
+            score_click_bad() {
+                this.review_score = 1;
+                if(!this.isClicked_bad){
+                    this.isClicked_bad = true;
+                }
+                this.isClicked_good = false;
+                this.isClicked_normal = false;
+            },
+            score_click_normal() {
+                this.review_score = 2;
+                if(!this.isClicked_normal){
+                    this.isClicked_normal = true;
+                }
+                this.isClicked_good = false;
+                this.isClicked_bad = false;
+            },
+            async getGoodsInfo() {
+                try {
+                    const goods_no = this.$route.params.id;
+                    const response = await axios.get(`http://localhost:3000/goods/write_review_info/${goods_no}`);
+                    this.review_info = response.data[0];
+                    console.log(this.review_info.goods_img.split(',')[0]);
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+    }
+}
 
 </script>
 <style scoped>
@@ -122,7 +225,7 @@ textarea {
     resize: none;
     margin-top: 50px;
 }
-form input {
+button {
     width: 100px;
     height: 50px;
     float: right;
@@ -131,5 +234,14 @@ form input {
     background-color: aqua;
     margin-left: 20px;
     border-radius: 10px;
+}
+.clicked_good {
+    background-color: yellow;
+}
+.clicked_bad {
+    background-color: yellow;
+}
+.clicked_normal {
+    background-color: yellow;
 }
 </style>
