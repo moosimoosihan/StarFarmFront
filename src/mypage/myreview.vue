@@ -18,37 +18,37 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(review,i) in uniqueReviewList" :key="i">
+                            <tr v-for="(review,i) in reviewList" :key="i">
                                 <td>
                                     <img :width="70" style="border-radius: 10px;"
-                                        :src="review.items[0].goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${review.items[0].goods_no}/${review.items[0].goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
+                                        :src="review.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${review.goods_no}/${review.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
                                         alt="상품 이미지" />
                                 </td>
-                                <td @click="gotoProduct(review.items[0].goods_no)">
-                                    {{ review.items[0].goods_nm }}
+                                <td @click="gotoProduct(review.goods_no)">
+                                    {{ review.goods_nm }}
                                 </td>
                                 <td>
-                                    <p>{{ review.items[0].user_nick }}</p>
+                                    <p>{{ review.user_nick }}</p>
                                 </td>
                                 <td>
-                                    <p>{{ review.items[0].review_con }}</p>
+                                    <p>{{ review.review_con }}</p>
                                 </td>
                                 <td>
-                                    <div v-if="review.items[0].review_score === 0">
+                                    <div v-if="review.review_score === 0">
                                         <img :width="70" style="border-radius: 10px;"
                                             :src="require(`../assets/smile.png`)" alt="리뷰 점수 이미지" />
                                     </div>
-                                    <div v-if="review.items[0].review_score === 1">
+                                    <div v-if="review.review_score === 1">
                                         <img :width="70" style="border-radius: 10px;"
                                             :src="require(`../assets/bad.png`)" alt="리뷰 점수 이미지" />
                                     </div>
-                                    <div v-if="review.items[0].review_score === 2">
+                                    <div v-if="review.review_score === 2">
                                         <img :width="70" style="border-radius: 10px;"
                                             :src="require(`../assets/normal.png`)" alt="리뷰 점수 이미지" />
                                     </div>
                                 </td>
                                 <td>
-                                    <p>{{ formatDateTime(review.items[0].review_create_dt) }}</p>
+                                    <p>{{ formatDateTime(review.review_create_dt) }}</p>
                                 </td>
                             </tr>
                             <tr v-if="reviewList.length === 0">
@@ -76,24 +76,24 @@ import axios from 'axios'
             user() {
                 return this.$store.state.user;
             },
-            uniqueReviewList() {
-                const uniqueOrders = [];
-                const tradeNos = [];
+            // uniqueReviewList() {
+            //     const uniqueOrders = [];
+            //     const tradeNos = [];
 
-                for (const order of this.reviewList) {
-                    if (!tradeNos.includes(order.ORDER_TRADE_NO)) {
-                        uniqueOrders.push({
-                            ORDER_TRADE_NO: order.ORDER_TRADE_NO,
-                            items: [order],
-                        });
-                        tradeNos.push(order.ORDER_TRADE_NO);
-                    } else {
-                        const index = uniqueOrders.findIndex((o) => o.ORDER_TRADE_NO === order.ORDER_TRADE_NO);
-                        uniqueOrders[index].items.push(order);
-                    }
-                }
-                return uniqueOrders;
-            }
+            //     for (const order of this.reviewList) {
+            //         if (!tradeNos.includes(order.ORDER_TRADE_NO)) {
+            //             uniqueOrders.push({
+            //                 ORDER_TRADE_NO: order.ORDER_TRADE_NO,
+            //                 items: [order],
+            //             });
+            //             tradeNos.push(order.ORDER_TRADE_NO);
+            //         } else {
+            //             const index = uniqueOrders.findIndex((o) => o.ORDER_TRADE_NO === order.ORDER_TRADE_NO);
+            //             uniqueOrders[index].items.push(order);
+            //         }
+            //     }
+            //     return uniqueOrders;
+            // }
         },
         created() {
             this.getUser();
