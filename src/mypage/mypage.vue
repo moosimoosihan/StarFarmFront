@@ -32,19 +32,19 @@
             <div class="logout_lapper">
                 <!-- 로그아웃 버튼 -->
                 <div class="logout_box">
-                    <button class="logout_btn" @click="logout()"><img src="../assets/logout.png" height="40px" width="100px" ></button>
+                    <button class="logout_btn" @click="logout()"><img src="../assets/Logout.png" height="40px" width="100px" ></button>
                 </div>
             </div>
         </div>
         <div class="myinfo">
             <div>
-                <h2>내 정보</h2>
+                <h1>내 정보</h1><br><br>
             </div>
             <div class="my">
                 <div class="detail">
-                    <p>ID : {{ loginUser.user_id }}</p>
-                    <p>휴대전화번호 : {{ loginUser.user_mobile }}</p>
-                    <p>주소</p>
+                    <p>ID : {{ loginUser.user_id }}</p><br>
+                    <p>휴대전화번호 : {{ loginUser.user_mobile }}</p><br>
+                    <p>주소 :</p>
                     <p>{{ loginUser.user_zipcode }}</p>
                     <p>{{ loginUser.user_adr1 }}</p>
                     <p>{{ loginUser.user_adr2 }}</p>
@@ -113,8 +113,9 @@ import axios from 'axios';
     box-sizing: border-box;
 }
 .container {
-    width: 80%;
+    width: 100%;
     height: 100%;
+    margin-top: 35px;
 }
 
 /* -------------------- */
@@ -184,6 +185,13 @@ import axios from 'axios';
 }
 .myinfo {
     margin-left: 20px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.info {
+    display: flex;
+    text-align: center;
 }
 .progressBar {
   max-width: 330px;

@@ -64,12 +64,13 @@ import Footer from './footer.vue'
   top: 170px; /* Stay at the top */
   left: 0;
   overflow-x: hidden; /* Disable horizontal scroll */
-  background-color: rgb(255, 185, 249);
+  background-color: rgb(131, 83, 19);
+  margin-top: 35px;
 }
 
 /* icon */
 .mypage-bar .m, .icon-bar p{
-  color: #f362e0;
+  color: #000000;
 }
 
 .mypage-bar p {
@@ -79,11 +80,11 @@ import Footer from './footer.vue'
 }
 
 .mypage-bar .m:hover{
-  background-color: #ffcbf2;
+  background-color: #a1ff6a;
 }
 
 .active {
-  background-color: #d418a5;
+  background-color: #4dd418;
 } 
 Footer {
     width: 100%;

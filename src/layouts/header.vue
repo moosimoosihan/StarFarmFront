@@ -2,19 +2,19 @@
     <div class="header_wrapper">
       <div class="navbar_top">
             <div @click="gotoMain()" class="navbar_logo">
-                <img class="logo_img" src="../assets/pink.png" alt="로고">
+                <img class="logo_img" src="../assets/logo.png" alt="로고">
             </div>
             
             <div class="navbar_icons"> 
               <div v-if="user.user_id==''">
-                <button @click="gotoLogin()" class="login_btn"><img src="../assets/login.png" height="55px" width="130px" ></button>
+                <button @click="gotoLogin()" class="login_btn"><img src="../assets/Login.png" height="50px" width="120px" ></button>
               </div>
               <div v-else>
-                <button class="chat_btn" @click="gotoMyChat()"><img src="../assets/chating.png" height="55px" width="130px" ></button>
                 <img :width="70" style="border-radius: 10px;" class="myPage"
                   :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
                   alt="프로필 이미지" @click="gotoMypage()" />
-                <button @click="gotoUpload()" class="storeupload_btn"><img src="../assets/storeupload.png" height="55px" width="130px" ></button>
+                <button @click="gotoUpload()" class="storeupload_btn"><img src="../assets/storeupload.png" height="50px" width="120px" ></button>
+                <button class="chat_btn" @click="gotoMyChat()"><img src="../assets/chatting.png" height="50px" width="120px" ></button>
               </div>
             </div>
 
@@ -31,7 +31,7 @@
       <div>
             <ul class="menu">
               <li>
-                <a href="#">의류</a>
+                <a1 href="#">의류</a1>
                 <ul class="submenu">
                   <li><a href="#">상의</a></li>
                   <li><a href="#">하의</a></li>
@@ -41,7 +41,7 @@
                 </ul>
               </li>
               <li>
-                <a href="#">뷰티</a>
+                <a1 href="#">뷰티</a1>
                 <ul class="submenu">
                   <li><a href="#">악세사리</a></li>
                   <li><a href="#">화장품</a></li>
@@ -51,7 +51,7 @@
                 </ul>
               </li>
               <li>
-                <a href="#">생활/가전</a>
+                <a1 href="#">생활/가전</a1>
                 <ul class="submenu">
                   <li><a href="#">주방용품</a></li>
                   <li><a href="#">가전제품</a></li>
@@ -61,7 +61,7 @@
                 </ul>
               </li>
               <li>
-                <a href="#">취미</a>
+                <a1 href="#">취미</a1>
                 <ul class="submenu">
                   <li><a href="#">스포츠</a></li>
                   <li><a href="#">게임</a></li>
@@ -71,7 +71,7 @@
                 </ul>
               </li>
               <li>
-                <a href="#">기타</a>
+                <a1 href="#">기타</a1>
                 <ul class="submenu">
                   <li><a href="#">&nbsp;</a></li>
                   <li><a href="#">&nbsp;</a></li>
@@ -81,7 +81,7 @@
                 </ul>
               </li>
               <li>
-                <a href="#">커뮤니티</a>
+                <a1 href="#">커뮤니티</a1>
                 <ul class="submenu">
                   <li><a href="#">신고하기</a></li>
                   <li><a href="#"></a>&nbsp;</li>
@@ -187,8 +187,8 @@ a {
 
 /* ------------------------------------------------------ logo */
 .logo_img {
-  width: 150px;
-  height: 70px;
+  width: 230px;
+  height: 100px;
   float: left;
   padding: 0 0 0 16px;
   margin-top: 30px;
@@ -200,18 +200,19 @@ a {
   display: flex;
   width: 20%;
   max-width: 100%;
-  outline: rgb(255, 204, 230) solid 2px;
-  background-color: rgb(255, 236, 253);
+  outline: rgb(0, 0, 0) solid 3px;
+  background-color: rgb(230, 255, 219);
   float : right;
   margin-right: 20px;
   margin-top: 20px;
+  border-radius: 30px;
 }
 
 input[type='text'] {
   width: 100%;
   font-size: 1rem;
   outline: none;
-  background-color: rgb(255, 236, 253);
+  background-color: rgb(230, 255, 219);
   border: none;
   margin-top: 17px;
   margin-right: 8px;
@@ -251,23 +252,22 @@ input::placeholder {
 
 .chat_btn {
   float: right;
-  margin-top: 10px;
-  margin-right: 20px;
+  margin-top: 15px;
   background-color: transparent;
   border: 0;
 }
 
 .login_btn {
   float: right;
-  margin-top: 10px;
-  margin-right: 20px;
+  margin-top: 15px;
+  margin-right: 10px;
   background-color: transparent;
   border: 0;
 }
 
 .storeupload_btn {
   float: right;
-  margin-top: 10px;
+  margin-top: 15px;
   margin-right: 10px;
   background-color: transparent;
   border: 0;
@@ -297,7 +297,7 @@ input::placeholder {
   }
 
   .navbar_logo {
-    scale: 70%;
+    scale: 100%;
     position: relative;
   }
 
@@ -361,5 +361,10 @@ a {
   }
   .search_btncontainer {
     scale: 150%;
+  }
+
+  a1 {
+    font-size: 20px;
+    font-weight: 700;
   }
 </style>
