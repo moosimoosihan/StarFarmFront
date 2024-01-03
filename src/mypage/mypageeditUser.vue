@@ -17,17 +17,18 @@
                 </div>
             </div>
 
-            <div class="form">
-                <label class="te">휴대전화번호</label>
-                <div class="in">
-                    <input type="tel" class="form-control" placeholder="휴대전화번호" @input="validatePhoneNumber" v-model="loginUser.user_mobile" />
+            <div class="form2">
+                <label class="te2">휴대전화번호</label>
+                <div class="in3">
+                    <input type="tel" class="form-control" placeholder="휴대전화번호" maxlength="11" @input="validatePhoneNumber" v-model="loginUser.user_mobile" />
+                    <button class="btn" @click="mobile_check()">중복확인</button>
                 </div>
             </div>
 
             <div class="form2">
                 <label class="te2">우편번호</label>
                 <div class="in3">
-                    <input type="text" class="form-control" v-model="loginUser.user_zipcode" />
+                    <input type="text" class="form-control" v-model="loginUser.user_adr1" />
                     <button class="btn" type="button" v-on:click="zipload">우편번호 찾기</button>
                 </div>
             </div>
@@ -60,50 +61,37 @@ export default {
             return this.$store.state.user;
         }
     },
+    created() {
+        this.getUser()
+    },
     mounted() {
-        if (this.user.user_no === '') {
-            this.$swal('로그인해주세요');
-            this.$router.push({ path: '/login' });
-        } else {
-            axios
-                .get('http://localhost:3000/mypage/getUserData', {
-                    params: {
-                        user_no: this.user.user_no,
-                    },
-                })
-                .then((res) => {
-                    if (res.data.length > 0) {
-                        this.loginUser = res.data[0];
-                        console.log
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
-    }, methods: {
+        
+    },
+    methods: {
         onSubmitForm() {
-            if (this.loginUser.user_id === "" || this.loginUser.user_nick === "" || this.loginUser.user_email === "" || this.loginUser.user_mobile === "" || this.loginUser.user_phone === "" || this.loginUser.user_zipcode === "" || this.loginUser.user_adr1 === "" || this.loginUser.user_adr2 === "" || this.user_pw === "" || this.user_npw === "" || this.user_pw_ck === "") {
+            if (this.loginUser.user_nick === "" || this.loginUser.user_email === "" || this.loginUser.user_mobile === "" || this.loginUser.user_phone === "" || this.loginUser.user_zipcode === "" || this.loginUser.user_adr1 === "" || this.loginUser.user_adr2 === "") {
                 this.$swal("모든 항목을 입력해주세요");
-            } else if (this.user_npw !== this.user_pw_ck) {
-                    this.$swal("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
             } else {
-                axios
-                    .post('http://localhost:3000/mypage/mypageupdate', {
-                        user_no: this.user.user_no,
+                axios({
+                    url:'http://localhost:3000/mypage/mypageupdate',
+                    method: "POST",
+                        data:{
+                            user_nick: this.loginUser.user_nick,
+                            user_email: this.loginUser.user_email,
+                            user_mobile: this.loginUser.user_mobile,
+                            user_zipcode: this.loginUser.user_zipcode,
+                            user_adr1: this.loginUser.user_adr1,
+                            user_adr2: this.loginUser.user_adr2,
 
-                        user_id: this.loginUser.user_id,
-                        user_nick: this.loginUser.user_nick,
-                        user_email: this.loginUser.user_email,
-                        user_mobile: this.loginUser.user_mobile,
-                        user_zipcode: this.loginUser.user_zipcode,
-                        user_adr1: this.loginUser.user_adr1,
-                        user_adr2: this.loginUser.user_adr2,
+                            user_no: this.user.user_no,
+                        }
                     })
                     .then((res) => {
                         if (res.data.message === 'mypage_update') {
-                            this.$swal("수정이 완료되었습니다");
+                            this.$swal("수정을 완료했습니다.");
                             this.$router.push({ path: '/mypage' });
+                        } else if (res.data.message == 'already_exist_phone') {
+                            this.$swal("이미 존재하는 전화번호입니다.")
                         } else {
                             this.$swal("수정에 실패했습니다.");
                         }
@@ -152,9 +140,47 @@ export default {
         validatePhoneNumber() {
             this.loginUser.user_mobile = this.loginUser.user_mobile.replace(/\D/g, ''); // 숫자 이외의 문자 제거
         },
+        mobile_check() {
+                if(this.user_mobile == "") {
+                    this.$swal("전화번호를 입력하세요.");
+                    return false;
+                }
+                axios({
+                    url: "http://localhost:3000/auth/mobile_check2",
+                    method: "POST",
+                    data: {
+                        user_mobile: this.loginUser.user_mobile,
+                        user_no: this.user.user_no,
+                    },
+                })
+                    .then(res => {
+                        console.log(res.data.message);
+                        if (res.data.message == 'already_exist_phone') {
+                            this.$swal("이미 존재하는 전화번호입니다.")
+                        }
+                        else if (res.data.message == 'DB_error') {
+                            this.$swal("DB 에러 발생")
+                        }
+                        else {
+                            this.$swal("사용 가능한 전화번호입니다.")
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    
+                })
+            },
         goToPass() {
             this.$router.push({ path: '/mypage/pass' });
         },
+        async getUser() {    
+            try {
+                const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
+                this.loginUser = response.data[0];
+            } catch (error) {
+                console.error(error);
+            }
+        }
     }
 }
 </script>

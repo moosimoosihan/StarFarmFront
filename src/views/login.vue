@@ -1,12 +1,15 @@
 <template>
   <main id="main-holder">
-    <h1 id="login-header" @click="gotoMain()">로고</h1>
+    <div class="logo">
+    <img src="../assets/pink.png" @click="gotoMain()"></div>
+    
     <input type="text" name="username" id="username-field" class="login-form-field" placeholder="ID" v-model="user_id">
     <input type="password" name="password" id="password-field" class="login-form-field" placeholder="PW" v-model="user_pw">
     <input type="submit" value="Login" id="login-form-submit" @click="localLogin()">
-    <input type="submit" value="카카오" id="kakao-form-submit" @click="kakaoLogin()">
-    <input type="submit" value="네이버" class="naver-form-submit" id="naverIdLogin" @click="naverlogin()">
-    <input type="submit" value="회원가입" id="join-form-submit" @click="gotoSignUp()"><br>
+    <input type="submit" value="회원가입" id="join-form-submit" @click="gotoSignUp()">
+    <img src="../assets/kakao.png" class="btn_kakao" @click="kakaoLogin">
+    <div id="naverIdLogin" style="display:none;"></div>
+    <img src="../assets/naver.png" @click="naverBtnClick()" class="btn_naver" />
     <input type="submit" value="아이디 / 비밀번호 찾기" id="find" @click="goToFind()">
   </main>
 </template>
@@ -164,6 +167,10 @@ import axios from 'axios'
         },
         gotoMain() {
           this.$router.push('/')
+        },
+        naverBtnClick(){
+          var btnNaverLogin = document.getElementById("naverIdLogin").firstChild;
+          btnNaverLogin.click();
         }
     },
     computed: {
@@ -203,110 +210,123 @@ import axios from 'axios'
             }
         });
       },
+      
 };
 </script>
 <style scoped>
 /*로그인
 */
 html {
-    height: 100%;
-  }
-
-#login-header{
-  margin-left: 30%;
-  width: 40%;
-  text-align: center;
-  margin-top: 50px;
+  height: 100%;
 }
+
+.logo {
+  margin-left: 110px; 
+  margin-top: 20px;
+  margin-bottom: 20px;
+}  
 
 #main-holder {
-    display: grid;
-    width: 400px;
-    height: 450px;
-    margin: 6% auto;
-    border: solid 2px rgb(237, 237, 237);
-    border-radius: 30px;
+  display: grid;
+  width: 450px;
+  height: 600px;
+  margin: 6% auto;
+  border: solid 2px rgb(237, 237, 237);
+  border-radius: 30px;
+  align-items: center;
 }
 
-  .login-form-field {
-    height: 30px;
-    width: 350px;
-    border: none;
-    border-bottom: 1px solid #3a3a3a;
-    margin-bottom: 10px;
-    border-radius: 3px;
-    outline: none;
-    margin-left: 20px;
+.login-form-field {
+  width: 350px;
+  height: 45px;
+  font-size: 16px;
+  margin-left: 50px;
+  margin-bottom: 10px;
+  border: solid 1.5px rgb(230, 230, 230);
+  text-align: center; 
+  border-radius: 8px;
+  position: relative;
+  font-family: 'GmarketSansMedium';
+}
+
+#login-form-submit {
+  width: 350px;
+  height: 50px;
+  padding: 7px;
+  border: none;
+  border-radius: 15px;
+  color: white;
+  font-weight: bold;
+  background-color: rgb(255, 217, 251);
+  cursor: pointer;
+  outline: none;
+  margin-bottom: 10px;
+  margin-left: 50px;
+  font-size: 18px;
+}
+
+#kakao-form-submit {
+  width:  350px;
+  padding: 7px;
+  border: none;
+  border-radius: 30px;
+  color: rgb(160, 121, 3);
+  font-weight: bold;
+  background-color: #ffff00;
+  cursor: pointer;
+  outline: none;
+  margin-bottom: 20px;
+  margin-left: 50px;
+}
+
+.btn_naver {
+  width: 300px;
+  height: 75px;
+  padding: 7px;
+  cursor: pointer;
+  outline: none;
+  margin-bottom: 4px;
+  margin-left: 75px;
   }
-  
-  #login-form-submit {
-    width: 350px;
-    padding: 7px;
-    border: none;
-    border-radius: 30px;
-    color: white;
-    font-weight: bold;
-    background-color: #1b0b6a;
-    cursor: pointer;
-    outline: none;
-    margin-bottom: 20px;
-    margin-left: 20px;
-  }
-  
-  #kakao-form-submit {
-    width:  350px;
-    padding: 7px;
-    border: none;
-    border-radius: 30px;
-    color: rgb(160, 121, 3);
-    font-weight: bold;
-    background-color: #ffff00;
-    cursor: pointer;
-    outline: none;
-    margin-bottom: 20px;
-    margin-left: 20px;
-  }
-  
-  .naver-form-submit {
-    width: 350px;
-    padding: 7px;
-    border: none;
-    border-radius: 20px;
-    color: white;
-    font-weight: bold;
-    background-color: #6aee6e;
-    cursor: pointer;
-    outline: none;
-    margin-bottom: 20px;
-    margin-left: 20px;
-  }
-  
-  #join-form-submit {
-    width:  350px;
-    padding: 7px;
-    border: none;
-    border-radius: 20px;
-    color: white;
-    font-weight: bold;
-    background-color: #1b0b6a;
-    cursor: pointer;
-    outline: none;
-    margin-bottom: 7px;
-    margin-left: 20px;
-  }
-  
-  #find {
-    width: 100%;
-    text-align: center;
-    border: none;
-    background: none;
-    color: rgb(136, 136, 136);
-    cursor: pointer;
-    outline: none;
-  }
-  #login-header {
-    text-align: center;
-    margin-bottom: 50px;
-  }
-  /*헤더*/
+
+#join-form-submit {
+  width: 350px;
+  height: 50px;
+  padding: 7px;
+  border: none;
+  border-radius: 15px;
+  color: white;
+  font-weight: bold;
+  background-color: rgb(255, 217, 251);
+  cursor: pointer;
+  outline: none;
+  margin-bottom: 10px;
+  margin-left: 50px;
+  font-size: 18px;
+}
+
+.btn_kakao {
+  width: 300px;
+  height: 75px;
+  padding: 7px;
+  cursor: pointer;
+  outline: none;
+  margin-left: 75px;
+}
+
+#find {
+  width: 100%;
+  text-align: center;
+  border: none;
+  background: none;
+  color: rgb(136, 136, 136);
+  cursor: pointer;
+  outline: none;
+}
+
+#login-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+/*헤더*/
 </style>
