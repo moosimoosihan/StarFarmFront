@@ -34,6 +34,7 @@ import userEdit from './mypage/mypageeditUser.vue'
 import myReview from './mypage/myreview.vue'
 import myChat from './mypage/mychat.vue'
 import myPage from './mypage/mypage.vue'
+import pass from './mypage/pass.vue'
 
 // 관리자 페이지
 import adminDeal from './admin/AdminDeal.vue'
@@ -128,6 +129,10 @@ const routes = [
         {
           path: 'mychat',
           component: myChat,
+        },
+        {
+          path: 'pass',
+          component: pass,
         }
       ]
     },
