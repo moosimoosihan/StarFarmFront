@@ -15,17 +15,18 @@
                                 <th>금액</th>
                                 <th>상품상태</th>
                                 <th>일시</th>
+                                <th>기타</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(order, i) in orderList" :key="i" @click="gotoProduct(order.goods_no)">
+                            <tr v-for="(order, i) in orderList" :key="i">
                                 <td>
                                     <p>{{ i+1 }}</p>
                                 </td>
                                 <td>
                                     <img :width="70" style="border-radius: 10px;"
                                         :src="order.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${order.goods_no}/${order.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
-                                        alt="상품 이미지" />
+                                        alt="상품 이미지" @click="gotoProduct(order.goods_no)" />
                                 </td>
                                 <td>
                                     <p>{{ order.goods_nm }}</p>
@@ -42,9 +43,12 @@
                                 <td>
                                     <p>{{ formatDateTime(order.goods_timer) }}</p>
                                 </td>
+                                <td>
+                                    <span v-if="order.goods_state == '2'" @click="writeReview(order.goods_no)">리뷰쓰기</span>
+                                </td>
                             </tr>
                             <tr v-if="orderList.length === 0">
-                                <td colspan="6">입찰 상품이 없습니다.</td>
+                                <td colspan="7">입찰 상품이 없습니다.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -157,6 +161,9 @@ import axios from 'axios'
                     default:
                         return "";
                 }
+            },
+            writeReview(goods_no) {
+                this.$router.push(`/review/${goods_no}`);
             },
         },
     }
