@@ -6,13 +6,15 @@
         <h1>상품 결제</h1>
         <div class="payment_product">
           <!-- 상품 정보 표시 -->
-          <div v-for="(product, index) in products" :key="index" class="product-card">
+          <div class="product-card">
               <div class="product-content">
-                <img :src="require(`./${product.imageURL}`)" alt="상품 이미지" class="product-image">
+                <img class="product-image"
+                    :src="products.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${products.goods_no}/${products.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
+                    alt="상품 이미지" />
               <div class="payment_product_content">
-                <h2>{{ product.name }}</h2>
-                <p>{{ product.description }}</p>
-                <p>가격: {{ product.price }}</p>
+                <h2>상품명 : {{ products.goods_nm }}</h2>
+                <p>상품설명: {{ products.goods_content}}</p>
+                <p>가격: {{ products.goods_succ_price }}</p>
               </div>
               <!--판매자 닉네임 및 사진-->
               <div class="profile_box">
@@ -27,6 +29,7 @@
         <!--수령자이름,전화번호-->
         <div class="payment_name">
           <label for="phoneNumber"> 수령자이름 *</label>
+          
           <li></li>
           <input type="text"  placeholder="이름">
         </div>
@@ -41,7 +44,7 @@
           <button @click="openKakaoMap">우편번호 찾기</button><br>
           <input type="text" id="sample6_address" placeholder="주소"><br>
           <input type="text" id="sample6_detailAddress" placeholder="상세주소">
-          <input type="text" id="sample6_extraAddress" placeholder="참고항목">
+          <input type="text" id="sample6_extraAddress" placeholder="참고항목" >
          </div>
          <div class="payment_request">
            <li>배송 시 요청사항</li>
@@ -71,36 +74,11 @@
         export default {
         data() {
         return {
-          showSendDataButton: false, // 조건에 따라 버튼을 표시할지 여부를 결정하는 변수
-        items: [
-        // 실제 데이터를 추가하거나, 사용자 입력 시 동적으로 할당
-        {
-          name: '',
-          Num: '', // 전화번호 형식으로 변경
-          Address: '',
-          AddressHope: '',
-          price:''
-         },
-         {
-          name: '상품2',
-          Num: '01098765432', // 다른 전화번호 예시
-          Address: '주소2',
-          AddressHope: '참고항목2',
-          price:'20000'
-        },
-        ],
-        products: [
-        {
-          name: '셔츠',
-          description: '옷입니다 옷 많이 사세요',
-          price: '25000',
-          imageURL: '3.jpg'
-        },
-      ],
-
-        postcodeResult: null, // 우편번호 검색 결과를 저장할 변수 추가
-        loginUser:{},
-        };
+            showSendDataButton: false, // 조건에 따라 버튼을 표시할지 여부를 결정하는 변수
+            postcodeResult: null, // 우편번호 검색 결과를 저장할 변수 추가
+            loginUser:{},
+            products: [],
+          };
         },
         mounted() {
      
@@ -111,6 +89,7 @@
         },
         created() {
             this.getUser()
+            this.getProduct()
         },
         computed: {
             user() {
@@ -126,6 +105,17 @@
                     console.log(this.loginUser);
                 } catch (error) {
                     console.error(error);
+                }
+            },
+            // 상품 정보 가져오기
+            async getProduct(){
+              try {
+                const goodsno = this.$route.params.id;
+                const response = await axios.get(`http://localhost:3000/goods/goodsInfo/${goodsno}`);
+                console.log(response.data[0]);
+                this.products = response.data[0];
+                } catch (error) {
+                  console.error(error);
                 }
             },
                  //주문상세보기 페이지 연결
@@ -332,6 +322,5 @@ li {
     align-items:center;
     background-color: rgb(255, 236, 253);
 }
-
 
 </style>

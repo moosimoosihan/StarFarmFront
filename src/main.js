@@ -60,7 +60,7 @@ const routes = [
         component: product
       },
       {
-        path: '/payment',
+        path: '/payment/:id',
         name: 'payment',
         component: payment
       },
