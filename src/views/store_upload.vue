@@ -252,13 +252,8 @@ import moment from 'moment'
                 }
             },
             async multiUploadFile(files) {
-                let name = [];
-                if (files.length > 0) {
-                    for(var i=0;i<files.length;i++){
-                        name.push(files[i].name);
-                    }
-                }
-                else {
+                console.log(files);
+                if (files.length <= 0) {
                     return; // 파일 미선택 시 반환
                 }
                 const formData = [];
@@ -281,16 +276,15 @@ import moment from 'moment'
                             data: formData[i]
                         })
                             .then ((res) => {
-                                if (res.data.message == 'success'){
-                                    this.goods_img[i] = name;
-                                }
-                                else {
+                                if (res.data.message != 'success'){
                                     this.$swal("DB 에러");
                                 }
                             })
                         .catch(e => {
                             console.log(e);
                         })
+                        this.goods_img[i] = files[i].name
+                        console.log(this.goods_img[i])
                     }
                     return true;
                 } catch(err){
