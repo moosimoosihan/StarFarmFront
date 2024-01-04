@@ -82,15 +82,7 @@ import axios from 'axios';
             },
             logout() {
                 if(this.loginUser.user_social_tp==1){
-                    window.Kakao.API.request({
-                        url: '/v1/user/unlink',
-                        success: function (response) {
-                            console.log(response);
-                        },
-                        fail: function (error) {
-                            console.log(error);
-                        },
-                    })
+                    window.Kakao.Auth.logout()
                 }
                 this.$store.commit("user", {})
                 this.$swal({

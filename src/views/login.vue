@@ -72,7 +72,7 @@ import axios from 'axios'
       //카카오 로그인
       kakaoLogin() {
         window.Kakao.Auth.login({
-            scope: "profile_nickname, account_email, profile_image",
+            scope: "profile_nickname, account_email",
             success: this.getKakaoAccount,
         });
       },
@@ -84,7 +84,7 @@ import axios from 'axios'
                 const email = kakao_account.email; //카카오 이메일
                 const nickname = kakao_account.profile.nickname;
 
-                console.log(kakao_account, email, nickname, profile_image)
+                console.log(kakao_account, email, nickname)
 
                 axios({
                     url: "http://localhost:3000/auth/kakaoLoginProcess",
@@ -92,7 +92,6 @@ import axios from 'axios'
                     data: {
                         user_id: email,
                         user_nick: nickname,
-                        accesstoken: res.kakao_account,
                     },
                 }).then(res => {
                     if (res.data.message == '저장완료') {
