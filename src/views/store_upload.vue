@@ -121,10 +121,10 @@ import moment from 'moment'
                 bid_time: '',
 
                 // 이미지 파일명만 저장할 변수 
-                goods_img: ["","","","",""],
+                goods_img: ['','','','',''],
 
                 // 이미지를 보여줄 변수
-                goods_img_src: ["","","","",""]
+                goods_img_src: ['','','','','']
             }
         },
         computed: {
@@ -262,7 +262,7 @@ import moment from 'moment'
                     return; // 파일 미선택 시 반환
                 }
                 const formData = [];
-                this.goods_img_src = ["","","","",""];
+                this.goods_img_src = ['','','','',''];
                 for(var i=0;i<files.length;i++){
                     formData[i] = new FormData();
                     formData[i].append('img', files[i]);
@@ -272,24 +272,26 @@ import moment from 'moment'
                     }
                 }
                 try {
-                    axios({
-                        url: `http://localhost:3000/goods/upload_img`,
-                        method: 'POST',
-                        headers: {'Content-Type': 'multipart/form-data'},
-                        data: formData
-                    })
-                        .then ((res) => {
-                            this.goods_img = ["","","","",""];
-                            if (res.data.message == 'success'){
-                                this.goods_img = name;
-                            }
-                            else {
-                                this.$swal("DB 에러");
-                            }
+                    this.goods_img = ['','','','',''];
+                    for(var i=0;i<formData.length;i++){
+                        axios({
+                            url: `http://localhost:3000/goods/upload_img`,
+                            method: 'POST',
+                            headers: {'Content-Type': 'multipart/form-data'},
+                            data: formData[i]
                         })
+                            .then ((res) => {
+                                if (res.data.message == 'success'){
+                                    this.goods_img[i] = name;
+                                }
+                                else {
+                                    this.$swal("DB 에러");
+                                }
+                            })
                         .catch(e => {
                             console.log(e);
                         })
+                    }
                     return true;
                 } catch(err){
                     console.log(err);
