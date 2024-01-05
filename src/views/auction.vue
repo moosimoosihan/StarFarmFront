@@ -59,7 +59,7 @@
   </div>
   <!--경매시작을 보여주는 화면-->
   <div class="product-details6">
-    <div class="product-details">
+    <div class="product-details1">
         <h1>경매 시작</h1>
         <p class="description">
         </p>
@@ -343,75 +343,77 @@ methods: {
 </script>
 <style scoped>
 * {
-  margin: 0;
+  margin-top: 20px;
   padding: 0;
   box-sizing: border-box;
 }
 .container {
-  width: 100%;
+  width: 1300px;
   height: 100%;
   overflow: hidden; /* 스크롤 제거 */
+  display: flex;
+  flex-wrap: wrap;
+  margin: auto;
 }
 /*------------*/
 /* 상세페이지 스타일 */
 body {
   font-family: Arial, sans-serif;
-  background-color: #ffffff;
 }
 /* <!--상,좌--> */
 .product-details3 {
   float: left;
-  width: 50%;
-  height: 500px;
-  background-Color: #6d5fbb;
+  width: 600px;
+  height: 250px;
+  border-radius: 30px;
+  border: rgba(24, 204, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-left: 10px;
 }
 /* <!--하,좌--> */
 .product-details5 {
   float: left;
-  width: 50%;
-  height: 500px;
-  background-Color: #FFF2FF;
+  width: 600px;
+  height: 600px;
+  border-radius: 30px;
+  border: rgba(24, 204, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-left: 10px;
+  margin-bottom: 10px;
 }
 /* <!--상,우--> */
 .product-details4 {
   float: left;
-  width: 50%;
-  height: 500px;
-  background-Color: #FFFFF2;
+  width: 600px;
+  height: 250px;
+  border-radius: 30px;
+  border: rgba(24, 204, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-left: 10px;
 }
 /* <!--하,우--> */
 .product-details6 {
   float: left;
-  width: 50%;
-  height: 500px;
-  background-Color: #EFEFEF;
-}
-.product-details {
-  width: 100%;
-  height: 100%;
-  background-color: #6d5fbb;
+  width: 600px;
+  height: 600px;
+  border-radius: 30px;
+  border: 2px rgba(24, 204, 0, 0.1) ;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  box-sizing: border-box;
-}
-.product-details1 {
-  width: 100%;
-  height: 100%;
-  background-color: #fff;
-  
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-}
-h1,
-p {
+  margin-left: 10px;
   margin-bottom: 10px;
 }
-.product-image {
-  width: 100%;
-  max-width: 400px;
-  height: auto;
-  margin-bottom: 20px;
+
+.product-details1 {
+  margin-left:20px;
 }
+
+
+.product-details4 > h1, h2, p {
+  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
 .description {
   line-height: 1.6;
 }
@@ -420,25 +422,21 @@ p {
 }
 button {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #124e00;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 button:hover {
-  background-color: #0056b3;
+  background-color: #249c00;
 }
 /* 슬라이더 스타일 */
 .slider-container {
   width: 100%;
   height: 500px;
-  background-color: #007bff;
-  
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   box-sizing: border-box;
-
 }
 
 .slider {
@@ -472,15 +470,17 @@ button:hover {
 }
 
 .mypage_topbar_container {
-  width: 350px;
+  width: 500px;
   height: 200px;
   margin: 0 auto;
-  border: 2px solid black;
+  border: none;
 }
 .profile_lapper {
 margin-left: 20px;
+margin-top: 15px;
 float: left;
 }
+
 .profile_box {
 width: 90px;
 height: 100px;
@@ -489,26 +489,22 @@ flex-direction: column;
 justify-content: space-around;
 float: left;
 }
+
 .profile_img_box {
 width: 70px;
-height: 70px;
-border-radius: 70%;
+height: 90px;
 overflow: hidden;
 margin: 0 auto;
 }
 .friendly_box {
-width: 200px;
+width: 300px;
 height: 50px;
 float: left;
 flex-direction: column;
-margin-top: 10px;
+margin-top: 20px;
 margin-left: 10px;
 }
-.profile_img {
-width: 100%;
-height: 100%;
-object-fit: cover;
-}
+
 
 #me {
 text-align: end;
@@ -517,7 +513,7 @@ text-align: end;
 .bid_container{
 overflow-y:scroll;
 background-color: #ffffff;
-height: 200px;
+height: 350px;
 }
 
 .dot-navigation {
@@ -530,7 +526,7 @@ display: inline-block;
 width: 10px;
 height: 10px;
 border-radius: 50%;
-background-color: #fff; /* 도트 색상 */
+background-color: #085f00; /* 도트 색상 */
 margin: 0 5px;
 cursor: pointer;
 }
@@ -547,7 +543,7 @@ margin: auto; /* 가운데 정렬을 위한 마진 설정 */
   margin-left: 10%;
   padding: 10px 20px;
   border-radius: 4px;
-  background-color:blue;
+  background-color:rgb(0, 168, 22);
 }
 
 </style>
