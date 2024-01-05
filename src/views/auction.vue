@@ -128,7 +128,7 @@ created() {
   this.checkLikeGoods();
   this.updateTimer()
 },
-beforeUpdate() {
+updated() {
   this.getSuccBid();
   this.getBidList();
 },
@@ -288,6 +288,7 @@ methods: {
           user_no: this.user.user_no,
         }
       })
+      this.bidAmount = ''
     } catch (error) {
       console.error(error);
     }
