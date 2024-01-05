@@ -44,7 +44,8 @@
                                     <p>{{ formatDateTime(order.goods_timer) }}</p>
                                 </td>
                                 <td>
-                                    <span v-if="order.goods_state == '2'" @click="writeReview(order.goods_no)">리뷰쓰기</span>
+                                    <span v-if="order.goods_state===1" @click="saleComp(i)">거래 완료</span>
+                                    <span v-if="order.goods_state == 2" @click="writeReview(order.goods_no)">리뷰쓰기</span>
                                 </td>
                             </tr>
                             <tr v-if="orderList.length === 0">
@@ -115,7 +116,6 @@ import axios from 'axios'
                     for(let i=0; i<this.orderList.length; i++){
                         this.succ_bidList.push(await this.getSuccBid(this.orderList[i].goods_no));
                     }
-                    console.log(this.orderList);
                 } catch (error) {
                     console.error(error);
                 }
@@ -123,7 +123,6 @@ import axios from 'axios'
             async getSuccBid(goods_no) {
                 try {
                     const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goods_no}`);
-                    console.log(response.data[0].succ_bid);
                     return response.data[0].succ_bid;
                 } catch (error) {
                     console.error(error);
@@ -165,7 +164,20 @@ import axios from 'axios'
             writeReview(goods_no) {
                 this.$router.push(`/review/${goods_no}`);
             },
-        },
+            async saleComp(i){
+                if(confirm("거래 완료 처리 하시겠습니까?")){
+                    try {
+                        await axios.post(`http://localhost:3000/goods/saleComp/${this.orderList[i].goods_no}`);
+                        this.$swal("거래 완료 처리 되었습니다.")
+                        this.getOrderList();
+                    } catch (error) {
+                        console.error(error);
+                    }
+                } else {
+                    this.$swal("거래 완료 처리가 취소되었습니다.");
+                }
+            }
+        }
     }
 </script>
 <style scoped>

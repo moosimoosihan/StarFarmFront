@@ -49,11 +49,6 @@
                                             <i class="fas fa-solid fa-trash"></i>
                                         </div>
                                     </div>
-
-                                    <!-- 거래 중 -->
-                                    <div v-if="goodslist.GOODS_STATE===1">
-                                        <button>거래 완료</button>
-                                    </div>
                                 </td>
                             </tr>
                             <tr v-if="saleList.length === 0">
@@ -160,9 +155,7 @@ import axios from 'axios';
             },
             async getSuccBid(goods_no) {
                 try {
-                    // console.log(goods_no)
                     const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goods_no}`);
-                    console.log(response.data[0].succ_bid);
                     return response.data[0].succ_bid;
                 } catch (error) {
                     console.error(error);

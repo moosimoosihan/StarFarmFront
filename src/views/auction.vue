@@ -167,13 +167,11 @@ methods: {
     try {
       const goodsno = this.$route.params.id;
       const response = await axios.post(`http://localhost:3000/goods/likeCheck/${this.user.user_no}/${goodsno}`);
-      // console.log(response.data.isLiked);
       if(response.data.isLiked){
         this.likeGoods = 1;
       } else {
         this.likeGoods = 0;
       }
-      // console.log(this.likeGoods);
     } catch (error) {
       console.error(error);
     }
@@ -245,7 +243,6 @@ methods: {
       const goodsno = this.$route.params.id;
       const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goodsno}`);
       this.goodsSuccBid = response.data[0].succ_bid;
-      // console.log(this.goodsSuccBid);
     } catch (error) {
       console.error(error);
     }
@@ -255,7 +252,6 @@ methods: {
       const goodsno = this.$route.params.id;
       const response = await axios.get(`http://localhost:3000/goods/goodsBidList/${goodsno}`);
       this.goodsBidList = response.data;
-      // console.log(this.goods);
     } catch (error) {
       console.error(error);
     }
@@ -286,6 +282,11 @@ methods: {
           bid_amount: this.bidAmount,
           goods_no: this.goods.goods_no,
           user_no: this.user.user_no,
+        }
+      })
+      .then(res => {
+        if(res.data.message == 'bidding_fail'){
+          this.$swal("경매가 마감되었습니다.")
         }
       })
       this.bidAmount = ''
@@ -319,7 +320,6 @@ methods: {
       // 현재 시간을 초로 바꾸어 저장
       this.currentTime = new Date().getTime();
       const distance = countDownDate - this.currentTime;
-      // console.log(distance);
       // 만약 종료시간이 지났다면 타이머를 종료하고 경매가 종료되었다는 메시지를 표시
       if (distance < 0) {
         clearInterval(timer);
