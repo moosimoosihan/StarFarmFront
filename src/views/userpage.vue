@@ -28,7 +28,7 @@
                 </div>
                 <ul class="product-tab-content" v-if="currentTab === 0">
                     <li v-for="(item, index) in userProductList" :key="index">
-                        <div class="userpage_product">
+                        <div class="userpage_product" @click="gotoAuction(item.goods_no)">
                             <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${userProductList[index].goods_no}/${userProductList[index].goods_img.split(',')[0]}`)" class="userpage_product_img">
                             <h1 class="userpage_product_name">{{ userProductList[index].goods_nm }}</h1>
                         </div>
@@ -104,7 +104,10 @@ import axios from 'axios';
             } catch (error) {
                 console.error(error);
             }
-        }
+        },
+        gotoAuction(goods_no) {
+            this.$router.push(`/product/${goods_no}`);
+        },
     },
     };
 </script>
