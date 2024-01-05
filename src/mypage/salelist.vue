@@ -118,17 +118,15 @@ import axios from 'axios';
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/salelist/${this.user.user_no}`);
                     this.saleList = response.data;
-                    for(let i=0; i<this.saleList.length; i++){
-                        let val = await this.getSuccBid(this.saleList[i].goods_no)
-                        if(val === undefined || val === null){
-                            val = 0;
-                        }
-                        this.succ_bidList.push(val)
-                    }
-                    console.log(this.succ_bidList);
-                    console.log(this.saleList);
                 } catch (error) {
                     console.error(error);
+                }
+                for(let i=0; i<this.saleList.length; i++){
+                    let val = await this.getSuccBid(this.saleList[i].GOODS_NO)
+                    if(val === undefined || val === null){
+                        val = 0;
+                    }
+                    this.succ_bidList.push(val)
                 }
             },
             getOrderStatusText(status) {
@@ -162,6 +160,7 @@ import axios from 'axios';
             },
             async getSuccBid(goods_no) {
                 try {
+                    // console.log(goods_no)
                     const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goods_no}`);
                     console.log(response.data[0].succ_bid);
                     return response.data[0].succ_bid;

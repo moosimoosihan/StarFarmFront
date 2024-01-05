@@ -99,7 +99,7 @@ import axios from 'axios'
                     const response = await axios.get(`http://localhost:3000/mypage/likelist/${this.user.user_no}`);
                     this.likeList = response.data;
                     for(let i=0; i<this.likeList.length; i++){
-                        let val = await this.getSuccBid(this.likeList[i].goods_no)
+                        let val = await this.getSuccBid(this.likeList[i].GOODS_NO)
                         if(val === undefined || val === null){
                             val = 0;
                         }
