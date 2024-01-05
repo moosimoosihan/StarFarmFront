@@ -4,62 +4,109 @@
             <div id="userpage_profile">
                 <div id="userpage_profile_box">
                     <div id="userpage_profile_img">
-                        <img src="../assets/profile.png">
+                        <img :src="userInfo.user_img ? require(`../../../StarFarmBack/uploads/userImg/${userInfo.user_no}/${userInfo.user_img}`) : require(`../assets/profile.png`)">
                     </div>
-                    <span>닉네임</span>
+                    <span>{{  userInfo.user_nick  }}</span>
                 </div>
                 <div id="userpage_friendly">
-                    <span>닉네임의 친밀도</span>
+                    <span>{{ userInfo.user_nick }}의 친밀도</span>
                     <progress value="70" max="100"></progress>
                     <a href="">1대1 채팅</a>
                 </div>
                 <a href="" id="userpage_report">신고</a>
             </div>
-            <div id="userpage_tab">
-                <ul class="userpage_tabs">
-                    <li class="tab-link current" data-tab="tab-1"><a href="">판매 리스트</a></li>
-                    <li class="tab-link" data-tab="tab-2"><a href="">판매자 리뷰</a></li>
+            <div class="wrap">
+                <div class="button_tab">
+                    <button
+                        v-for="(tab, index) in tabList"
+                        :key="index"
+                        @click.prevent="currentTab = index"
+                        :class="{'active' : currentTab === index}"
+                    >
+                        {{ tab.name }}
+                    </button>
+                </div>
+                <ul class="product-tab-content" v-if="currentTab === 0">
+                    <li v-for="(item, index) in userProductList" :key="index">
+                        <div class="userpage_product">
+                            <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${userProductList[index].goods_no}/${userProductList[index].goods_img.split(',')[0]}`)" class="userpage_product_img">
+                            <h1 class="userpage_product_name">{{ userProductList[index].goods_nm }}</h1>
+                        </div>
+                    </li>
                 </ul>
-                <div id="tab-1" class="tab-content current"></div>
-                <div id="tab-2" class="tab-content"></div>
-            </div>
-            <div id="userpage_review_list">
-                <div id="userpage_review_user">
-                    <h1>구매한 물건</h1>
-                    <p>구매자 닉네임</p>
-                </div>
-                <img src="" id="userpage_product_review_img">
-                <div id="userpage_review_content"><p>리뷰 내용 ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ</p></div>
-                <img src="../assets/smile.png" id="userpage_review_img">
-                <p id="userpage_review_date">2023-12-11</p>
-            </div>
-            <div id="userpage_product_list">
-                <div class="userpage_product">
-                    <img src="" class="userpage_product_img">
-                    <h1 class="userpage_product_name">상품 이름</h1>
-                </div>
-                <div class="userpage_product">
-                    <img src="" class="userpage_product_img">
-                    <h1 class="userpage_product_name">상품 이름</h1>
-                </div>
-                <div class="userpage_product">
-                    <img src="" class="userpage_product_img">
-                    <h1 class="userpage_product_name">상품 이름</h1>
-                </div>
-                <div class="userpage_product">
-                    <img src="" class="userpage_product_img">
-                    <h1 class="userpage_product_name">상품 이름</h1>
-                </div>
-                <div class="userpage_product">
-                    <img src="" class="userpage_product_img">
-                    <h1 class="userpage_product_name">상품 이름</h1>
-                </div>
-            </div>
+                <ul class="review-tab-content" v-if="currentTab === 1">
+                    <li v-for="(item, index) in userReviewList" :key="index">
+                        <div id="userpage_review_list">
+                            <div id="userpage_review_user">
+                                <h1>{{userReviewList[index].goods_nm}}</h1>
+                                <p>{{ userReviewList[index].user_nick }}</p>
+                            </div>
+                            <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${userReviewList[index].goods_no}/${userReviewList[index].goods_img.split(',')[0]}`)" id="userpage_product_review_img">
+                            <div id="userpage_review_content"><p>{{ userReviewList[index].review_con }}</p></div>
+                            
+                            <p id="userpage_review_date">{{ userReviewList[index].review_create_dt }}</p>
+                        </div>
+                    </li>
+                </ul>
+                
+        </div>
+            <div id="tab-1" class="tab-content current"></div>
+            <div id="tab-2" class="tab-content"></div>
         </div>
     </div>
 </template>
 <script>
+import axios from 'axios';
 
+    export default {
+    name: "Tab",
+    data() {
+        return {
+        currentTab: 0,
+        tabList: [
+            { name: "판매 리스트" },
+            { name: "판매자 리뷰" },
+        ],
+        userInfo: [],
+        userReviewList: [],
+        userProductList: [],
+        };
+    },
+    created() {
+        this.getUserInfo();
+        this.getReviewList();
+        this.getProductList();
+    },
+    methods: {
+        async getUserInfo() {
+            try {
+                const user_no = this.$route.params.id;
+                const response = await axios.get(`http://localhost:3000/mypage/mypage/${user_no}`);
+                this.userInfo = response.data[0];
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async getProductList() {
+            try {
+                const user_no = this.$route.params.id;
+                const response = await axios.get(`http://localhost:3000/mypage/get_user_product/${user_no}`);
+                this.userProductList = response.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async getReviewList() {
+            try {
+                const user_no = this.$route.params.id;
+                const response = await axios.get(`http://localhost:3000/mypage/get_user_review/${user_no}`);
+                this.userReviewList = response.data;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    },
+    };
 </script>
 <style scoped>
 * {
@@ -68,7 +115,7 @@
     box-sizing: border-box;
 }
 .container {
-    width: 2000px;
+    width: 100%;
     height: 1260px;
 }
 /* ------------------------------------------------------------- */
@@ -177,12 +224,25 @@ progress {
 /* 유저 페이지 상단 끝 */
 
 /* 판매자 리뷰 */
+.button_tab {
+    width:100%;
+    height:100px;
+}
+.button_tab button {
+    width: 50%;
+    height: 100%;
+    border:none;
+}
+.active {
+    background-color: red;
+}
 #userpage_review_list {
     width: 100%;
-    height: 40%;
+    height: 150px;
     background-color: beige;
-    margin: 0 auto;
+    margin: 30px auto;
     border-radius: 20px;
+    overflow:hidden;
 }
 #userpage_review_user {
     width: 153px;
@@ -223,17 +283,11 @@ progress {
 /* 판매자 리뷰 끝 */
 
 /* 판매자 상품 리스트 */
-
-#userpage_product_list {
-    width: 100%;
-    height: 800px;
-}
 .userpage_product {
     width: 200px;
     height: 250px;
     background-color: rgb(246, 244, 198);
     float: left;
-    margin-right: 100px;
     margin-top: 50px;
     border-radius: 10px;
 }
@@ -251,6 +305,18 @@ progress {
     font-size: 20px;
     line-height: 70px;
     margin-left: 55px;
+}
+.product-tab-content {
+    width: 100%;
+    height: 800px;
+    background-color: beige;
+}
+.product-tab-content li {
+    list-style: none;
+}
+.review-tab-content li {
+    margin-bottom: 30px;
+    list-style: none;
 }
 
 /* 판매자 상품 리스트 끝 */
