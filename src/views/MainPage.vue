@@ -13,6 +13,11 @@
             <span class="dot" v-for="(img,i) in eventImageList" :key="i" @click="moveToSlide(i)"></span>
           </div>
         </div>
+        <div class="slider-info-container">
+          <p class="slider-name">슬라이더에 떠있는 상품 이름</p>
+          <p class="slider-startprice">슬라이더에 떠있는 상품 시작가</p>
+          <p class="slider-nowprice">슬라이더에 떠있는 상품 입찰가</p>
+        </div>
       </div>
         <div class="goodslist_div">
             <div class="item_container" v-for="(goods, i) in goodsList" :key="i" @click="gotoAuction(goods.goods_no)">
@@ -93,6 +98,7 @@ export default {
   display: flex;
   overflow-y: scroll;
   flex-direction: column;
+  margin-top: 30px;
 }
 
 
@@ -123,21 +129,31 @@ export default {
 
 /* 슬라이드 */
 .slide-imges_container {
-  width : 100%;
+  width : 1200px;
   height : 500px;
+  display: flex;
+  margin: 0 auto; /* 브라우저에서 가운데 정렬하기 위해 auto설정 */
+  text-align: center; /* inline-block화 된 div들을 텍스트 마냥 center로 정렬*/
 }
 
+
 .slider-container {
-    width: 100%;
+    width: 50%;
     height: 500px;
     overflow: hidden;
-    
+    width: 50%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     box-sizing: border-box;
 
   }
 
+  .slider-info-container {
+    width: 50%;
+    height: 500px;
+    margin-left: 120px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
 
   .slider {
     width: 100%;
