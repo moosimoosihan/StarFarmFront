@@ -202,6 +202,7 @@ a {
   left: 0;
   z-index: 20;
   width: 100%;
+  height: 20%;
   background: #ffffff;
   box-shadow: 0 4px 5px -4px rgb(219, 219, 219);
 }
@@ -338,17 +339,17 @@ a {
 }
 
 .menu {
-    width: 1630px;
+    width: 80%;
     position: fixed;
     overflow: hidden;
-    justify-content:space-between;
-    margin-left: 150px;
+    justify-content:center;
     margin-top: 100px;
     margin-bottom: 30px;
-    margin-right: 100px;
+    margin-left: 10%;
+    margin-right: 10%;
   }
   .menu > li {
-    width: 270px;
+    width: 16%;
     float: left;
     text-align: center;
     line-height: 40px;
