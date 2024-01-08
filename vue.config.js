@@ -19,5 +19,8 @@ module.exports = defineConfig({
     }
   },
   transpileDependencies: true,
-  lintOnSave: false
+  lintOnSave: false,
+  devServer: {
+    historyApiFallback: true,
+  },
 })
