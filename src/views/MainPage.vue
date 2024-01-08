@@ -25,7 +25,7 @@
               <p class="goodsname">{{ goods.goods_nm }}</p>
               <p class="price">시작가 : {{ goods.goods_start_price }}</p>
               <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
-          </div>
+            </div>
         </div>
       </div>
 </template>
@@ -103,12 +103,13 @@ export default {
 
 
 .goodslist_div {
-  width: 70%;
+  width: 80%;
   height: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin: 0 auto;
+  justify-content: space-evenly;
+  margin: auto;
 }
 .item_container {
   width: 250px;
