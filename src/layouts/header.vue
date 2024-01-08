@@ -10,11 +10,23 @@
                 <button @click="gotoLogin()" class="login_btn"><img src="../assets/Login.png" height="50px" width="120px" ></button>
               </div>
               <div v-else>
-                <img :width="70" style="border-radius: 10px;" class="myPage"
-                  :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
-                  alt="프로필 이미지" @click="gotoMypage()" />
-                <button @click="gotoUpload()" class="storeupload_btn"><img src="../assets/storeupload.png" height="50px" width="120px" ></button>
-                <button class="chat_btn" @click="gotoMyChat()"><img src="../assets/chatting.png" height="50px" width="120px" ></button>
+                <ul class="mymenu">
+                  <li>
+                    <a1 href="#">
+                      <img style="border-radius: 10px;" class="myPage"
+                      :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
+                      alt="프로필 이미지"/></a1>
+                        <ul class="mypageMenu">
+                        <li @click="gotoMypage()">마이페이지</li>
+                        <li @click="gotoUpload()">상품등록</li>
+                        <li @click="gotoMyChat()">1:1채팅</li>
+                        <li @click="logout()">로그아웃</li>
+                      </ul>  
+                  </li>
+                  </ul>
+
+                <!-- <button @click="gotoUpload()" class="storeupload_btn"><img src="../assets/storeupload.png" height="50px" width="120px" ></button>
+                <button class="chat_btn" @click="gotoMyChat()"><img src="../assets/chatting.png" height="50px" width="120px" ></button> -->
               </div>
             </div>
 
@@ -123,13 +135,13 @@ export default {
     methods: {
         async getUser() {
           if(this.user.user_no!=''){
-              try {
-                  const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
-                  this.loginUser = response.data[0];
-              } catch (error) {
-                  console.error(error);
-              }
+            try {
+                const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
+                this.loginUser = response.data[0];
+            } catch (error) {
+                console.error(error);
             }
+          }
         },
         gotoMain () {
           this.$router.push('/')
@@ -146,6 +158,21 @@ export default {
         gotoMypage() {
           this.$router.push('/mypage')
         },
+        logout() {
+          if(this.loginUser.user_social_tp==1){
+                    window.Kakao.Auth.logout()
+                }
+                this.$store.commit("user", {})
+                this.$swal({
+                    position: 'top',
+                    icon: 'success',
+                    title: '로그아웃 성공!',
+                    showConfirmButton: false,
+                    timer: 1000
+                    }).then(() => {
+                        window.location.href="http://localhost:8080";
+                    })
+            }
     },
 }
 </script>
@@ -202,11 +229,11 @@ a {
   display: flex;
   width: 20%;
   max-width: 100%;
-  outline: rgb(0, 0, 0) solid 3px;
+  outline: rgb(0, 0, 0) solid 2px;
   background-color: rgb(230, 255, 219);
   float : right;
-  margin-right: 20px;
-  margin-top: 20px;
+  margin-right: 55px;
+  margin-top: 50px;
   border-radius: 30px;
 }
 
@@ -252,28 +279,17 @@ input::placeholder {
   margin-right: 10px;
 }
 
-.chat_btn {
-  float: right;
-  margin-top: 15px;
-  background-color: transparent;
-  border: 0;
-}
 
 .login_btn {
   float: right;
   margin-top: 15px;
-  margin-right: 10px;
+  margin-right: 35px;
+  margin-top: 40px;
   background-color: transparent;
   border: 0;
 }
 
-.storeupload_btn {
-  float: right;
-  margin-top: 15px;
-  margin-right: 10px;
-  background-color: transparent;
-  border: 0;
-}
+
 
 /* --------------------------------------------------------------------------------------------------------------- */
 
@@ -322,16 +338,17 @@ a {
 }
 
 .menu {
-    width: 100%;
+    width: 1630px;
+    position: fixed;
     overflow: hidden;
-    margin: auto;
     justify-content:space-between;
-    margin-left: 10%;
-    margin-top: 40px;
+    margin-left: 150px;
+    margin-top: 100px;
     margin-bottom: 30px;
+    margin-right: 100px;
   }
   .menu > li {
-    width: 13.333%;
+    width: 270px;
     float: left;
     text-align: center;
     line-height: 40px;
@@ -358,6 +375,49 @@ a {
   }
   
   .menu:hover {
+    height: 250px; /*서브메뉴 li한개의 높이 50*5*/
+    transition-duration: 1s;
+  }
+
+  .mymenu {
+    width:100px;
+
+    overflow: hidden;
+
+    margin-top: 30px;
+    margin-bottom: 30px;
+    float:right;
+    
+  }
+  .mymenu > li {
+    width:70px;
+    float: left;
+    text-align: center;
+    line-height: 40px;
+    background-color: #ffffff;
+    cursor:pointer;
+  }
+  
+  .mymenu a {
+    color: #520119;
+  }
+  
+  .mypageMenu > li {
+    line-height: 50px;
+    background-color: #ffffff;
+  }
+  
+  .mypageMenu {
+    height: 0; /*ul의 높이를 안보이게 처리*/
+   
+  }
+
+  .mymenu > li:hover {
+    background-color: #c4c4c4;
+    transition-duration: 0.5s;
+  }
+  
+  .mymenu:hover {
     height: 250px; /*서브메뉴 li한개의 높이 50*5*/
     transition-duration: 1s;
   }
