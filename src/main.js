@@ -98,55 +98,55 @@ const routes = [
     ]
   },
   {
-      path: '/mypage/',
+      path: '/mypage',
       name: 'mypageLayout',
       component: mypageLayout,
       children: [
         {
-          path: '',
+          path: '/mypage',
           component: myPage,
         },
         {
-          path: 'buylist',
+          path: '/buylist',
           component: buylist,
         },
         {
-          path: 'salelist',
+          path: '/salelist',
           component: salesList,
         },
         {
-          path: 'likelist',
+          path: '/likelist',
           component: likeList,
         },
         {
-          path: 'mypageeditUser',
+          path: '/mypageeditUser',
           component: userEdit,
         },
         {
-          path: 'myreview',
+          path: '/myreview',
           component: myReview,
         },
         {
-          path: 'mychat',
+          path: '/mychat',
           component: myChat,
         },
         {
-          path: 'pass',
+          path: '/pass',
           component: pass,
         }
       ]
     },
     {
-      path:'/login/',
+      path:'/login',
       name: 'emptyLayout',
       component: emptyLayout,
       children: [
         {
-          path: '',
+          path: '/login',
           component: login,
         },
         {
-          path: 'signup',
+          path: '/signup',
           component: signup,
         },
         {
@@ -155,26 +155,26 @@ const routes = [
           component: chatroom
         },
         {
-          path: 'find',
+          path: '/find',
           component: FindPage,
         },
       ]
     },
     {
-      path:'/admin/',
+      path:'/admin',
       name: 'adminLayout',
       component: adminLayout,
       children: [
         {
-          path: '',
+          path: '/admin',
           component: adminUser,
         },
         {
-          path: 'report',
+          path: '/report',
           component: adminReport,
         },
         {
-          path: 'deal',
+          path: '/deal',
           component: adminDeal,
         }
       ]

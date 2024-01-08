@@ -80,11 +80,11 @@
           <!--1:1 채팅버튼-->
           <button class="chatroom_container" @click="gotoChatRoom(0)">1:1 채팅</button>
           <!--결제페이지 이동버튼-->
-          <button class="button" @click="button">결제</button>
-          <!--검색창-->
-          <input type="text" id="searchInput" autocomplete="off" size="50" name="bid_value" v-model="bidAmount" @input="validateNumber()">
+          <button v-if="buyUser" class="button" @click="gotoPayment()">결제</button>
+          <!--금액창-->
+          <input v-if="goods.goods_state===0" type="text" id="searchInput" autocomplete="off" size="50" name="bid_value" v-model="bidAmount" @input="validateNumber()">
           <!--입찰버튼-->
-          <input type="button" id="submit_button" value="입찰" @click="postBidding">
+          <input v-if="goods.goods_state===0" type="button" id="submit_button" value="입찰" @click="postBidding">
           <!-- 신고버튼 -->
           <button class="button" @click="reportBtn()">신고</button>
         </div>
@@ -113,6 +113,8 @@ data() {
 
     currentTime: Date.now(),
     endTime: Date.now(),
+
+    buyUser: false,
   };
 },
 computed: {
@@ -121,16 +123,19 @@ computed: {
       }
 },
 created() {
-  this.getGoods();
-  this.getGoodsUser();
-  this.getSuccBid();
-  this.getBidList();
-  this.checkLikeGoods();
+  this.getGoods()
+  this.getGoodsUser()
+  this.getSuccBid()
+  this.getBidList()
+  this.checkLikeGoods()
   this.updateTimer()
 },
 updated() {
-  this.getSuccBid();
-  this.getBidList();
+  this.getSuccBid()
+  this.getBidList()
+},
+beforeUpdate() {
+  this.checkBuyUser()
 },
 methods: {
   goods_trade_(goods_trade){
@@ -334,10 +339,29 @@ methods: {
       // 표시할 남은 시간 문자열 생성
       this.currentTime = `${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
     }, 1000);
+  },
+  async checkBuyUser() {
+    // 경매가 종료되었는지 확인, 로그인 되어있는지, 상품 상태가 경매중인지
+    if(this.currentTime === '경매가 종료되었습니다.' && this.user.user_no !== '' && this.buyUser === false && this.goods.goods_state===1){
+      // 로그인 한 유저가 최고가 입찰자인지 확인
+      const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.goods.goods_no}`)
+      
+      const buyU = response.data[0].user_no
+      const logU = this.user.user_no
+      console.log(buyU, logU)
+      if(buyU === logU){
+        this.buyUser = true;
+      }
+      return this.buyUser;
+    } else {
+      return false;
+    }
+  },
+  async gotoPayment() {
+    this.$router.push(`/payment/${this.goods.goods_no}`);
   }
 }
-};
-
+}
 
 
 </script>
