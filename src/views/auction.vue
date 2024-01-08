@@ -365,6 +365,7 @@ methods: {
 
 
 </script>
+
 <style scoped>
 * {
   margin-top: 20px;
@@ -445,15 +446,15 @@ body {
   font-weight: bold;
 }
 button {
-  padding: 10px 20px;
-  background-color: #124e00;
+  padding: 12px 25px;
+  background-color: #0e3b00;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 button:hover {
-  background-color: #249c00;
+  background-color: rgb(48, 206, 0);
 }
 /* 슬라이더 스타일 */
 .slider-container {
@@ -486,7 +487,7 @@ button:hover {
   /* 다른 스타일링을 추가하고 싶다면 여기에 작성하세요 */
 }
 #submit_button{
-  padding: 10px 20px;
+  padding: 13px 25px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -564,10 +565,14 @@ margin: auto; /* 가운데 정렬을 위한 마진 설정 */
 
 .chatroom_container {
   margin-top: 20px;
-  margin-left: 10%;
-  padding: 10px 20px;
+  margin-left: 13px;
+  padding: 12px 25px;
   border-radius: 4px;
-  background-color:rgb(0, 168, 22);
+  background-color: #0e3b00;
+}
+
+.heart_icon {
+  font-size: 25px;
 }
 
 </style>
