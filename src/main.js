@@ -25,6 +25,7 @@ import storeUpload from './views/store_upload.vue'
 import userpage from './views/userpage.vue'
 import paymentdetail from './views/paymentDetail.vue'
 import searchgoodslist from './views/search_goodslist.vue'
+import paymentCheck from './views/paymentCheck.vue'
 
 // 마이 페이지
 import buylist from './mypage/buylist.vue'
@@ -89,6 +90,11 @@ const routes = [
         path: '/paymentdetail/:id',
         name: 'paymentdetail',
         component: paymentdetail
+      },
+      {
+        path: '/paymentCheck/:goods_no/:user_no/:goods_succ_bid/:content/:zipcode/:adr1/:adr2',
+        name: 'paymentCheck',
+        component: paymentCheck
       },
       {
         path: '/search_goodslist',
