@@ -202,7 +202,7 @@ a {
   left: 0;
   z-index: 20;
   width: 100%;
-  height: 20%;
+  height: 200px;
   background: #ffffff;
   box-shadow: 0 4px 5px -4px rgb(219, 219, 219);
 }
