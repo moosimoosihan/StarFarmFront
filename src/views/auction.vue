@@ -69,8 +69,8 @@
             </ul>
 
         </div>
-        <div class="mid_wrapper">
-          <!-- 관심 상품 버튼 -->
+          <div v-if="user.user_no!==''">
+            <!-- 관심 상품 버튼 -->
           <div v-if="likeGoods===0" class="heart_icon" @click="like_goods()">
             <i  class="far fa-regular fa-heart"></i>
           </div>
@@ -82,9 +82,9 @@
           <!--결제페이지 이동버튼-->
           <button v-if="buyUser" class="button" @click="gotoPayment()">결제</button>
           <!--금액창-->
-          <input v-if="goods.goods_state===0" type="text" id="searchInput" autocomplete="off" size="50" name="bid_value" v-model="bidAmount" @input="validateNumber()">
+          <input v-if="goods.goods_state===0 && this.currentTime !== '경매가 종료되었습니다.'" type="text" id="searchInput" autocomplete="off" size="50" name="bid_value" v-model="bidAmount" @input="validateNumber()">
           <!--입찰버튼-->
-          <input v-if="goods.goods_state===0" type="button" id="submit_button" value="입찰" @click="postBidding">
+          <input v-if="goods.goods_state===0 && this.currentTime !== '경매가 종료되었습니다.'" type="button" id="submit_button" value="입찰" @click="postBidding">
           <!-- 신고버튼 -->
           <button class="button" @click="reportBtn()">신고</button>
         </div>
