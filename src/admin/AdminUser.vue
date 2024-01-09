@@ -103,15 +103,15 @@ export default {
       }
     },
     formatDateTime(dateTime) {
-                const date = new Date(dateTime);
-                const options = {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                };
-                const formattedDateTime = date.toLocaleDateString("ko-KR", options);
-                return formattedDateTime;
-            },
+        const date = new Date(dateTime);
+        const options = {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        };
+        const formattedDateTime = date.toLocaleDateString("ko-KR", options);
+        return formattedDateTime;
+    },
   },
 };
 </script>
