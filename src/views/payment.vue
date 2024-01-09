@@ -14,7 +14,7 @@
               <div class="payment_product_content">
                 <h2>상품명 : {{ products.goods_nm }}</h2>
                 <p>상품설명: {{ products.goods_content}}</p>
-                <p>가격: {{ products.goods_succ_price }}</p>
+                <p>가격: {{ goods_succ_bid }}</p>
               </div>
               <!--판매자 닉네임 및 사진-->
               <div class="profile_box">
@@ -31,30 +31,32 @@
           <label for="phoneNumber"> 수령자이름 *</label>
           
           <li></li>
-          <input type="text"  placeholder="이름">
+          <input type="text" v-model="loginUser.user_nick">
         </div>
         <div class="payment_phone">
           <label for="phoneNumber">전화번호 *</label>
           <li></li>
-          <input type="text"  placeholder="전화번호">
+          <input type="text" v-model="loginUser.user_mobile">
         </div>
         <div class="payment_deliv">
           <p>배송지 *</p>
-          <input type="text" id="sample6_postcode" placeholder="우편번호">
-          <button @click="openKakaoMap">우편번호 찾기</button><br>
-          <input type="text" id="sample6_address" placeholder="주소"><br>
-          <input type="text" id="sample6_detailAddress" placeholder="상세주소">
-          <input type="text" id="sample6_extraAddress" placeholder="참고항목" >
+          <input type="text" id="sample6_postcode" v-model="loginUser.user_zipcode">
+          <button @click="zipload()">우편번호 찾기</button><br>
+          <input type="text" id="sample6_address" v-model="loginUser.user_adr1"><br>
+          <input type="text" id="sample6_detailAddress" v-model="loginUser.user_adr2">
          </div>
          <div class="payment_request">
            <li>배송 시 요청사항</li>
-           <textarea placeholder="배송 요청사항을 입력해주세요"></textarea>
+           <textarea v-model="order_content" placeholder="배송 요청사항을 입력해주세요"></textarea>
          </div>
          <div id="payment_submit">
          <div id="payment_pay_btn">
-           <a href="./search_goodslist" style="text-decoration:none;color:black">취소</a>
+          <a @click="gotoProduct()" style="text-decoration:none;color:black">취소</a>
+           <!--<a @click="gotoProduct()" style="text-decoration:none;color:black">취소</a>-->
          </div>
-            <input type="submit" value="결제" id="payment_pay_btn" @click="processPayment">
+         <div id="payment_pay_btn">
+         <a @click="sendDataToBackend()" style="text-decoration:none;color:black">결제</a>
+         </div>
          <div v-if="showSendDataButton">
         </div>
         </div>
@@ -78,6 +80,11 @@
             postcodeResult: null, // 우편번호 검색 결과를 저장할 변수 추가
             loginUser:{},
             products: [],
+            goods_succ_bid: '',
+            order_content:'',
+            order_zipcode:'',
+            order_adr1: '',
+            order_adr2: '',
           };
         },
         mounted() {
@@ -106,6 +113,9 @@
                 } catch (error) {
                     console.error(error);
                 }
+                this.order_zipcode = this.loginUser.user_zipcode;
+                this.order_adr1 = this.loginUser.user_adr1;
+                this.order_adr2 = this.loginUser.user_adr2;
             },
             // 상품 정보 가져오기
             async getProduct(){
@@ -117,46 +127,65 @@
                 } catch (error) {
                   console.error(error);
                 }
+                try{
+                  const response_bid = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.products.goods_no}`)
+                  this.goods_succ_bid = response_bid.data[0].succ_bid
+                } catch (error) {
+                  console.error(error)
+                }
             },
-                 //주문상세보기 페이지 연결
-        processPayment() {
-          this.$router.push({path:'/paymentDetail'})
-        },
-        
         sendDataToBackend() {
-           initDaumPostcode() 
-        // 서버로 데이터를 전송하는 로직
-        const dataToSend = {
-        // 원하는 데이터를 이 부분에 추가
-        // 예시로 수령자 이름, 전화번호 등을 추가했으나 실제로 필요한 데이터로 교체해야 함
-        recipientName: this.recipientName,
-        phoneNumber: this.phoneNumber,
-        // 이하 필요한 데이터 추가
-        };  
-
-        // Axios를 사용하여 서버로 데이터 전송
-        axios.post('localhost:8081/paymentDetail', dataToSend)
-        .then(response => {
-          // 전송 성공 시 실행할 로직
-          console.log('데이터 전송 성공');
-         })
-        .catch(error => {
-          // 전송 실패 시 실행할 로직
-          console.error('데이터 전송 실패', error);
-         });
+         this.$swal({
+          title:'결제확인',
+          text:'상세정보확인',
+          confirmButtonText:'결제확인',
+          cancelButtonText:'취소',
+          showCancelButton: true,
+         }).then((result)=>{
+            if(result.isConfirmed){
+              this.$router.push(`/paymentCheck/${this.products.goods_no}/${this.loginUser.user_no}/${this.goods_succ_bid}/${this.order_content}/${this.order_zipcode}/${this.order_adr1}/${this.order_adr2}`)
+            }
+          })
          },
-        openKakaoMap() {
-     
-        new daum.Postcode({
-        oncomplete: (data) => {
-        
-
-          this.postcodeResult = data;
-          this.handlePostcodeResult(data);
-         }
-         }).open();
+         zipload() {
+            new window.daum.Postcode({
+                oncomplete: (data) => {
+                    // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                    var addr = ''; // 주소 변수
+                    var extraAddr = '';
+                    //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                    if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                        addr = data.roadAddress;
+                    } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                        addr = data.jibunAddress;
+                    }
+                    // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                    if (data.userSelectedType === 'R') {
+                        // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                        // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                        if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                            // addr += ' ';
+                            extraAddr += data.bname;
+                        }
+                        // 건물명이 있고, 공동주택일 경우 추가한다.
+                        if (data.buildingName !== '' && data.apartment === 'Y') {
+                            // addr += ' ';
+                            extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                        }
+                    }
+                    this.loginUser.user_zipcode = data.zonecode;
+                    this.order_zipcode = data.zonecode;
+                    this.loginUser.user_adr1 = addr;
+                    this.order_adr1 = addr;
+                    this.loginUser.user_adr2 = extraAddr;
+                    this.order_adr2 = extraAddr;
+                }
+            }).open();
+         },gotoProduct(){
+          this.$router.back();
+          
          },
-
          handlePostcodeResult(data) {
     
         this.$nextTick(() => {
@@ -321,6 +350,13 @@ li {
     float:right;
     align-items:center;
     background-color: rgb(255, 236, 253);
+}
+.paymentCheck {
+  margin-top: 20px;
+  margin-left: 10%;
+  padding: 10px 20px;
+  border-radius: 4px;
+  background-color:blue;
 }
 
 </style>

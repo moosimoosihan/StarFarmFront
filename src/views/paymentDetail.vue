@@ -1,18 +1,15 @@
 <template>
   <div class="container">
     <div id="payment_wrapper">
+      <!--선라인-->
       <div class="line">
       </div>
-
         <h1>주문 상세 보기</h1>
         <div class="info-row">
           <p><p1>수령자 이름*</p1> {{ loginUser.user_id }}</p>
           <p><p1>전화번호*</p1>   {{ loginUser.user_mobile }}</p>
-          <p><p1> 배송지*</p1>   {{ loginUser.user_zipcode }}</p>
           <p><p1>상세주소*</p1>  {{ loginUser.user_adr1 + ' ' + loginUser.user_adr2 }}</p>
-        <!-- 배송 요청사항 -->
-          <p class="info-label">배송 요청사항</p>
-          <p class="info-value">{{ loginUser.AddressHope }}</p>
+          <p><p1> 우편번호*</p1>   {{ loginUser.user_zipcode }}</p>
         </div>
            <div class="line">
            </div>
@@ -31,8 +28,10 @@
              <div class="info-row">
            <p><p1>상품가격*</p1>{{products.goods_succ_price }}</p>
            <p><p1>배송비*</p1>{{ loginUser.goods_deliv_price }}</p>
-           <p><p1>상세주소*</p1>{{ loginUser.user_adr1 + ' ' + loginUser.user_adr2 }}</p>
             <p><p1>총 금액*</p1></p>
+                  <!-- 배송 요청사항 -->
+                  <p class="info-label">배송 요청사항</p>
+                  <p class="info-value">{{ Order.Order_content }}</p>
              </div>
         <div id="payment_submit">
           <button id="home_button" @click="gotoHome()">
@@ -51,6 +50,7 @@ export default {
     return {
       loginUser: {},
       products: {}, // 제품 속성을 추가합니다.
+      Order: {},
     };
   },
   computed: {
@@ -61,6 +61,7 @@ export default {
   created() {
     this.getUser();
     this.getProduct(); // 제품 정보를 가져 오기
+    this.getOrder();
   },
   methods: {
     async getUser() {
@@ -81,6 +82,9 @@ export default {
         } catch (error) {
           console.error(error);
         }
+    },
+    getOrder() {
+      
     },
     gotoHome() {
       this.$router.push('/');
