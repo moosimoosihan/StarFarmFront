@@ -2,7 +2,7 @@
     <div class="container">
         <div class="chatroom_container">
             <div class="chatroom_title">
-                <span>ㅇㅇㅇ님과의 대화</span>
+                <span>{{ you_nick.user_nick }}님과의 대화</span>
                 <button class="chatroom_exit">나가기</button>
             </div>
             <div class="chats_container" id="scroll">
@@ -50,13 +50,59 @@
     </div>
 </template>
 <script>
+import axios from "axios";
     export default {
-        name : 'chat',
-        data () {
-            return {
-                
-            }
+      name: 'chat',
+      data() {
+        return {
+          chatroom: [],
+          me_no: this.$store.state.user.user_no,
+          you_no: '',
+          me_nick: '',
+          you_nick: '',
         }
+      },
+      computed: {
+        user() {
+          return this.$store.state.user;
+        }
+      },
+      created() {
+        this.getChatRoom()
+      },
+      mounted() {
+        this.getUserNick()
+      },
+      methods: {
+        async getChatRoom() {
+          try {
+            const chatroom_no = this.$route.params.id;
+
+            const response = await axios.get(`http://localhost:3000/chat/getChatRoom/${chatroom_no}`);
+            this.chatroom = response.data[0];
+            console.log(this.chatroom);
+          } catch (error) {
+            console.error(error);
+          }
+
+          if (this.me == this.chatroom.CHATROOM_USER1) {
+            this.you_no = this.chatroom.CHATROOM_USER2;
+          } else {
+            this.you_no = this.chatroom.CHATROOM_USER1;
+          }
+        },
+        async getUserNick() {
+          try {
+            const user_no = this.you_no;
+
+            const response = await axios.get(`http://localhost:3000/chat/getUserNick/1`);
+            this.you_nick = response.data[0];
+            console.log(this.you_nick);
+          } catch(error) {
+            console.error(error);
+          }
+        }
+      }
     }
 </script>
 <style scoped>

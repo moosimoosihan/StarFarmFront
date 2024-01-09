@@ -78,7 +78,8 @@
             <i class="fas fa-regular fa-heart"></i>
           </div>
           <!--1:1 채팅버튼-->
-          <button class="chatroom_container" @click="gotoChatRoom(0)">1:1 채팅</button>
+          <div v-if="user.user_no == goodsUser.user_no"></div>
+          <button v-else class="chatroom_container" @click="gotoChatRoom(goodsUser.user_no), createChatRoom()">1:1 채팅</button>
           <!--결제페이지 이동버튼-->
           <button v-if="buyUser" class="button" @click="gotoPayment()">결제</button>
           <!--금액창-->
@@ -113,7 +114,7 @@ data() {
 
     currentTime: Date.now(),
     endTime: Date.now(),
-
+    chatRoomNo: '',
     buyUser: false,
   };
 },
@@ -123,12 +124,13 @@ computed: {
       }
 },
 created() {
-  this.getGoods()
-  this.getGoodsUser()
-  this.getSuccBid()
-  this.getBidList()
-  this.checkLikeGoods()
-  this.updateTimer()
+  this.getGoods();
+  this.getGoodsUser();
+  this.getSuccBid();
+  this.getBidList();
+  this.checkLikeGoods();
+  this.updateTimer();
+  // this.getChatRoomNo();
 },
 updated() {
   this.getSuccBid()
@@ -203,8 +205,37 @@ methods: {
     this.$el.querySelector('.slide-wrapper').style.transform = `translateX(-${index * slideWidth}px)`;
     this.currentIndex = index;
   },
+  //1:1 채팅룸 생성
+  async createChatRoom() {
+    try {
+      const user_no = this.goodsUser.user_no;
+
+      if (this.user.user_no == this.goodsUser.user_no) {
+        return this.$swal('본인과의 채팅은 불가능합니다.');
+      } else {
+        await axios({
+          url: `http://localhost:3000/chat/createChatRoom/${user_no}`,
+          method: "POST",
+          data: {
+            buyer: this.user.user_no,
+            seller: this.goodsUser.user_no,
+          }
+        })
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  //1:1 채팅룸 방번호 가져오기
+  // async getChatRoomNo() {
+  //   const seller_no = this.goodsUser.user_no;
+  //   const buyer_no = this.user.user_no;
+  //   console.log(this.goodsUser);
+  //
+  //   const response = await axios.get(`http://localhost:3000/chat/checkChatRoom/${seller_no}/${buyer_no}`);
+  // },
   /*1:1 채팅룸 열기*/
-  gotoChatRoom(index) {
+  async gotoChatRoom(index) {
     let popupWindow = window.open(`/chatroom/${index}`, '_blank', 'width=800', 'height=620', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
     popupWindow.resizeTo(800, 620);
     popupWindow.onresize = () => {
@@ -345,7 +376,7 @@ methods: {
     if(this.currentTime === '경매가 종료되었습니다.' && this.user.user_no !== '' && this.buyUser === false && this.goods.goods_state===1){
       // 로그인 한 유저가 최고가 입찰자인지 확인
       const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.goods.goods_no}`)
-      
+
       const buyU = response.data[0].user_no
       const logU = this.user.user_no
       console.log(buyU, logU)
