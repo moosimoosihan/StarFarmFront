@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div class="title">
-      <h1 style="font-size: 21px;">회원가입</h1>
-    </div>
+    <div class="logo">
+    <img src="../assets/logo.png" @click="gotoMain()"></div>
+
       <div id="box1">
         <div class="id">
           <input id="id" type="text" v-model="user_id" placeholder="id를 입력해 주세요.">
@@ -156,6 +156,9 @@ export default {
                     this.zipinput = true;
                 }
             }).open();
+        },
+        gotoMain() {
+          this.$router.push('/')
         },
         validationCheck() {
             if (this.user_id == "") {
@@ -330,9 +333,12 @@ export default {
     padding: 0;
     box-sizing: border-box;
 }
+.logo {
+  margin-left: 250px; 
+}  
 .container {
     width: 800px;
-    height: 700px;
+    height: 800px;
     border: 1px solid black;
     margin: 6% auto;
     border-radius: 30px;

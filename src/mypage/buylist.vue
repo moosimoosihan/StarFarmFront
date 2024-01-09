@@ -3,7 +3,7 @@
         <div class="container">
             <div class="myinfo">
                 <div class="buylist_title">
-                    <span>입찰 상품 이력</span>
+                    <span class="title">입찰 상품 이력</span>
                 </div>
                 <div class="goods">
                     <table class="table" style="width: 100%;">
@@ -239,6 +239,10 @@ th, td {
 }
 #ing {
     background-color: #ffea00;
+}
+
+.title {
+    font-size: 24px;
 }
 
 </style>
