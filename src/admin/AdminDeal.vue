@@ -12,22 +12,29 @@
               <th>판매현황</th>
               <th>마감일시</th>
               <th>카테고리</th>
-              <th>판매자</th>
-              <th>낙찰자</th>
+              <th>판매자번호</th>
+              <th>낙찰가</th>
               <th>보기</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in items" :key="index">
-              <td>{{ index + 1 }}</td>
-              <td>{{ item.productName }}</td>
-              <td>{{ item.bidPrice }}</td>
-              <td>{{ item.salesStatus }}</td>
-              <td>{{ item.deadline }}</td>
-              <td>{{ item.category }}</td>
-              <td>{{ item.seller }}</td>
-              <td>{{ item.winner }}</td>
-              <td><button class="view-button" @click="deleteItem(index)">삭제</button></td>
+            <tr v-for="(product, index) in productList" :key="index">
+              <td>{{ product.GOODS_NO }}</td>
+              <td>{{ product.GOODS_NM }}</td>
+              <td>{{ product.GOODS_START_PRICE }}</td>
+              <td>{{ product.GOODS_STATE }}</td>
+              <td>{{ product.GOODS_TIMER }}</td>
+              <td>{{ product.GOODS_CATEGORY }}</td>
+              <td>{{ product.USER_NO }}</td>
+              <td>{{ product.GOODS_SUCC_PRICE }}</td>
+              <td>
+                <button v-if="!product.DELETE_TIME" class="view-button" @click="deleteItem(product.GOODS_NO)">
+                  삭제
+                </button>
+                <button v-else class="view-button" @click="restoreGoods(product.GOODS_NO)">
+                  보기
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -35,70 +42,71 @@
     </div>
   </div>
 </template>
-<script>
+
+<script>  // delete_goods_2 로 상품삭제 goods_add: 상품GOODS 정보 다가져옴
+  import axios from 'axios';
+
   export default {
-            data() {
-            return {
-             items: [
-          {
-          productName: '코트',
-          bidPrice: '2000\\',
-          salesStatus: '거래중',
-          deadline: '2023-01-01',
-          category: '의류>외투',
-          seller: '코트',
-          winner: '',
-          }, 
-          {
-          productName: '금',
-          bidPrice: '2000\\',
-          salesStatus: '거래중',
-          deadline: '2023-01-01',
-          category: '악세서리',
-          seller: '빵빵',
-          winner: '',
-          },    
-              
-          {
-          productName: '총',
-          bidPrice: '2000\\',
-          salesStatus: '거래중',
-          deadline: '2023-01-01',
-          category: '게임',
-          seller: '통통',
-          winner: '꿀꿀이',
-          },    
-              
-          {
-          productName: '가위',
-          bidPrice: '2000\\',
-          salesStatus: '거래중',
-          deadline: '2023-01-01',
-          category: '주방용품',
-          seller: '빵상',
-          winner: '',
-          },    
-              
-          {
-          productName: '바위',
-          bidPrice: '2000\\',
-          salesStatus: '거래중',
-          deadline: '2023-01-01',
-          category: '기타',
-          seller: '오킹',
-          winner: '',
-          },    
-             ],
-            };
-           },
-    methods: {
-    deleteItem(index) {
-      // 상품 삭제 로직을 구현해야합니다.
-      console.log('상품 삭제:', this.items[index]);
+    data() {
+      return {
+        loginUser:{},
+        productList:[],
+      };
     },
+    created() {
+      this.getUser();
+      this.getAdd();
+    },
+    computed:{
+      user(){
+        return this.$store.state.user;
+      },
+    },
+    methods: {
+    async deleteItem(no) {
+     try {
+        await axios({
+          url: `http://localhost:3000/goods/delete_goods/${no}`, 
+          method: 'post',
+        });
+      } catch (error) {
+        console.log('상품 삭제 에러:', error);
+      }
+      await this.getAdd()
+    },
+    async getUser() {
+      const user_no = this.user.user_no;
+      try {
+        const response = await axios.get(`http://localhost:3000/mypage/mypage/${user_no}`);
+        this.loginUser = response.data[0];
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getAdd() {
+      try {
+        const response = await axios.get(`http://localhost:3000/goods/allGoods`);
+        this.productList = response.data;
+        console.log(this.productList);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async restoreGoods(no) {
+      try {
+        const response = await axios.post(`http://localhost:3000/goods/restoreGoods/${no}`)
+        if(response.data.message=='restore_complete'){
+          console.log("복구 성공")
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      await this.getAdd()
+    }
   },
 };
 </script>
+
 <style scoped>
 body {
     margin: 0;
