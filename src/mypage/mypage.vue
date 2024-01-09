@@ -38,9 +38,10 @@
             </div>
             
         </div>
-        <div>
+        <div class="mypageContainer">
             <p class="p1">내가 찜한 상품</p>
-        </div>
+            <p class="more" @click="gotoLike()">+more</p> 
+        </div> 
         <div class="goodslist_div">
             <div class="item_container" v-for="(goods, i) in goodsList" :key="i" @click="gotoAuction(goods.goods_no)">
               <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
@@ -49,8 +50,9 @@
               <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
             </div>
         </div>
-        <div>
+        <div class="mypageContainer">
             <p class="p1">나의 입찰 상품</p>
+            <p class="more" @click="gotoBuylist()">+more</p>
         </div>
         <div class="goodslist_div">
             <div class="item_container" v-for="(goods, i) in goodsList" :key="i" @click="gotoAuction(goods.goods_no)">
@@ -60,8 +62,9 @@
               <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
             </div>
         </div>
-        <div>
+        <div class="mypageContainer">
             <p class="p1">나의 판매 상품</p>
+            <p class="more" @click="gotoSalelist()">+more</p>
         </div>
         <div class="goodslist_div">
             <div class="item_container" v-for="(goods, i) in goodsList" :key="i" @click="gotoAuction(goods.goods_no)">
@@ -132,6 +135,17 @@ import axios from 'axios';
             gotoAuction(goods_no) {
                     this.$router.push(`/product/${goods_no}`);
             },
+            gotoLike() {
+                    this.$router.push(`/mypage/likelist`);
+            },
+            gotoBuylist() {
+                    this.$router.push(`/mypage/buylist`);
+            },
+            gotoSalelist() {
+                    this.$router.push(`/mypage/Salelist`);
+            },
+
+
 
             logout() {
                 if(this.loginUser.user_social_tp==1){
@@ -161,8 +175,7 @@ import axios from 'axios';
     width: 100%;
     height: 100%;
     margin-top: 35px;
-    overflow-y: scroll;
-    
+    overflow: scroll;
 }
 
 .container::-webkit-scrollbar {
@@ -255,7 +268,7 @@ import axios from 'axios';
 }
 
 .goodslist_div {
-  width: 100%;
+  width: 97%;
   height: 420px;
   display: flex;
   flex-direction: row;
@@ -280,6 +293,14 @@ import axios from 'axios';
 
 .item_container p {
   margin-top:10px;
+}
+
+.mypageContainer{
+    justify-content: right;
+} 
+.more {
+    float: right;
+    margin-right: 15px;
 }
 
 </style>
