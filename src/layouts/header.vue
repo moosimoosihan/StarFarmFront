@@ -20,6 +20,7 @@
                         <li @click="gotoMypage()">마이페이지</li>
                         <li @click="gotoUpload()">상품등록</li>
                         <li @click="gotoMyChat()">1:1채팅</li>
+                        <li v-if="loginUser.user_tp===1" @click="gotoAdmin()">관리페이지</li>
                         <li @click="logout()">로그아웃</li>
                       </ul>  
                   </li>
@@ -112,21 +113,12 @@ export default {
     name: 'header',
     data() {
       return {
-        // loginUser: {user_id:'abc',user_no:1},
         loginUser: {},
       }
     },
     computed: {
       user() {
         return this.$store.state.user;
-        // return this.loginUser
-      }
-    },
-    mounted() {
-      if(this.user.user_id==''){
-        // 로그인 체크
-      } else {
-        // 어드민 체크
       }
     },
     created() {
@@ -140,6 +132,24 @@ export default {
                 this.loginUser = response.data[0];
             } catch (error) {
                 console.error(error);
+            }
+            if(this.loginUser.user_ban===1){
+              this.$swal({
+                position: 'top',
+                icon: 'warning',
+                title: '정지된 계정입니다.',
+                showConfirmButton: false,
+                timer: 1000
+                }).then(() => {
+                  if(this.loginUser.user_social_tp==1){
+                    window.Kakao.Auth.logout()
+                  }
+                    this.$store.commit("user", {
+                      user_no: '',
+                      user_id: '',
+                    })
+                    window.location.href="http://localhost:8080";
+                })
             }
           }
         },
@@ -158,11 +168,17 @@ export default {
         gotoMypage() {
           this.$router.push('/mypage')
         },
+        gotoAdmin() {
+          this.$router.push('/admin')
+        },
         logout() {
           if(this.loginUser.user_social_tp==1){
                     window.Kakao.Auth.logout()
                 }
-                this.$store.commit("user", {})
+                this.$store.commit("user", {
+                  user_no: '',
+                  user_id: '',
+                })
                 this.$swal({
                     position: 'top',
                     icon: 'success',
@@ -244,8 +260,10 @@ input[type='text'] {
   outline: none;
   background-color: rgb(230, 255, 219);
   border: none;
-  margin-top: 17px;
   margin-right: 8px;
+  margin-left: 20px;
+  border-radius: 30px;
+
 }
 
 input[type='text']:focus {
@@ -410,7 +428,6 @@ a {
   
   .mypageMenu {
     height: 0; /*ul의 높이를 안보이게 처리*/
-   
   }
 
   .mymenu > li:hover {
@@ -419,7 +436,7 @@ a {
   }
   
   .mymenu:hover {
-    height: 250px; /*서브메뉴 li한개의 높이 50*5*/
+    height: 300px; /*서브메뉴 li한개의 높이 50*5*/
     transition-duration: 1s;
   }
   .search_btncontainer {

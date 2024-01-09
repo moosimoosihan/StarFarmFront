@@ -1,105 +1,105 @@
 <template>
     <div class="container">
-    <div id="store_upload_wrapper">
-        <div class="mb-3 row">
-            <label class="col-md-3 col-form-label">상품 이미지</label>
-            <div class="col-md-9">
-                <input type="file" class="form-control" accept="image/png,image/jpeg" @change="multiUploadFile($event.target.files)" multiple>
-                <div class="imgContainer">
-                    <img v-if="goods_img_src[0]!=''" :src="goods_img_src[0]" />
-                    <img v-if="goods_img_src[1]!=''" :src="goods_img_src[1]" />
-                    <img v-if="goods_img_src[2]!=''" :src="goods_img_src[2]" />
-                    <img v-if="goods_img_src[3]!=''" :src="goods_img_src[3]" />
-                    <img v-if="goods_img_src[4]!=''" :src="goods_img_src[4]" />
-                </div>
-                <div class="alert alert-secondary" role="alert">
-                    <ul>
-                        <li>이미지 사이즈 : 700*700</li>
-                        <li>파일 사이즈 : 1M 이하</li>
-                        <li>파일 확장자 : png, jpg만 가능</li>
-                    </ul>
+        <div id="store_upload_wrapper">
+            <div class="mb-3 row">
+                <label class="col-md-3 col-form-label">상품 이미지</label>
+                <div class="col-md-9">
+                    <input type="file" class="form-control" accept="image/png,image/jpeg" @change="multiUploadFile($event.target.files)" multiple>
+                    <div class="imgContainer">
+                        <img v-if="goods_img_src[0]!=''" :src="goods_img_src[0]" />
+                        <button v-if="goods_img_src[0]!=''" @click="deleteImage(0)">X</button>
+                        <img v-if="goods_img_src[1]!=''" :src="goods_img_src[1]" />
+                        <button v-if="goods_img_src[1]!=''" @click="deleteImage(1)">X</button>
+                        <img v-if="goods_img_src[2]!=''" :src="goods_img_src[2]" />
+                        <button v-if="goods_img_src[2]!=''" @click="deleteImage(2)">X</button>
+                        <img v-if="goods_img_src[3]!=''" :src="goods_img_src[3]" />
+                        <button v-if="goods_img_src[3]!=''" @click="deleteImage(3)">X</button>
+                        <img v-if="goods_img_src[4]!=''" :src="goods_img_src[4]" />
+                        <button v-if="goods_img_src[4]!=''" @click="deleteImage(4)">X</button>
+                    </div>
                 </div>
             </div>
         </div>
-    <div id="store_product_name">
-      <p>상품명</p>
-      <input v-model="product_name" type="text" placeholder="상품명을 입력해주세요." style="width: 100%;" required>
-   </div>
-   <div id="store_product_category1">
-     <p>카테고리</p>
-     <select style="width: 100%;" v-model="product_category1" required @change="cate2Change()">
-        <option value="의류">의류</option>
-        <option value="뷰티">뷰티</option>
-        <option value="생활/가전">생활/가전</option>
-        <option value="취미">취미</option>
-        <option value="기타">기타</option>
-     </select>
-   </div>
-   <div id="store_product_category2">
-        <p>세부 카테고리</p>
-        <select v-if="product_category1==='의류'" style="width: 100%;" v-model="product_category2" required>
-            <option value="1" selected>상의</option>
-            <option value="2">하의</option>
-            <option value="3">신발</option>
-            <option value="4">외투</option>
-            <option value="5">가방</option>
-        </select>
-        <select v-if="product_category1==='뷰티'" style="width: 100%;" v-model="product_category2" required>
-            <option value="1" selected>악세사리</option>
-            <option value="2">화장품</option>
-            <option value="3">향수</option>
-        </select>
-        <select v-if="product_category1==='생활/가전'" style="width: 100%;" v-model="product_category2" required>
-            <option value="1" selected>주방용품</option>
-            <option value="2">가전제품</option>
-            <option value="3">생필품</option>
-        </select>
-        <select v-if="product_category1==='취미'" style="width: 100%;" v-model="product_category2" required>
-            <option value="1" selected>스포츠</option>
-            <option value="2">게임</option>
-            <option value="3">음악</option>
-            <option value="4">미술</option>
-        </select>
-        <select v-if="product_category1==='기타'" style="width: 100%;" v-model="product_category2" required>
-            <option value="1" selected>기타</option>
-        </select>
-    </div>
-    <div id="store_price_trade">
-        <div>
-            시작가
-            <input type="text" placeholder="경매 시작가를 입력해주세요." style="width: 100%;" v-model="price_trade" required @input="validateNumber('price_trade')">
+        <div id="store_product_name">
+            <p>상품명</p>
+            <input v-model="product_name" type="text" placeholder="상품명을 입력해주세요." style="width: 100%;" required>
         </div>
-        <div>
-            거래유형
-            <select style="width: 100%;" v-model="goods_trade">
-                <option value="택배거래" selected>택배거래</option>
-                <option value="직거래">직거래</option>
+        <div id="store_product_category1">
+            <p>카테고리</p>
+            <select style="width: 100%;" v-model="product_category1" required @change="cate2Change()">
+                <option value="의류">의류</option>
+                <option value="뷰티">뷰티</option>
+                <option value="생활/가전">생활/가전</option>
+                <option value="취미">취미</option>
+                <option value="기타">기타</option>
             </select>
         </div>
-    </div>
+        <div id="store_product_category2">
+            <p>세부 카테고리</p>
+            <select v-if="product_category1==='의류'" style="width: 100%;" v-model="product_category2" required>
+                <option value="1" selected>상의</option>
+                <option value="2">하의</option>
+                <option value="3">신발</option>
+                <option value="4">외투</option>
+                <option value="5">가방</option>
+            </select>
+            <select v-if="product_category1==='뷰티'" style="width: 100%;" v-model="product_category2" required>
+                <option value="1" selected>악세사리</option>
+                <option value="2">화장품</option>
+                <option value="3">향수</option>
+            </select>
+            <select v-if="product_category1==='생활/가전'" style="width: 100%;" v-model="product_category2" required>
+                <option value="1" selected>주방용품</option>
+                <option value="2">가전제품</option>
+                <option value="3">생필품</option>
+            </select>
+            <select v-if="product_category1==='취미'" style="width: 100%;" v-model="product_category2" required>
+                <option value="1" selected>스포츠</option>
+                <option value="2">게임</option>
+                <option value="3">음악</option>
+                <option value="4">미술</option>
+            </select>
+            <select v-if="product_category1==='기타'" style="width: 100%;" v-model="product_category2" required>
+                <option value="1" selected>기타</option>
+            </select>
+        </div>
+        <div id="store_price_trade">
+            <div>
+                <p>시작가</p>
+                <input type="text" placeholder="경매 시작가를 입력해주세요." style="width: 100%;" v-model="price_trade" required @input="validateNumber('price_trade')">
+            </div>
+        </div>
+        <div id="store_trade">
+            <div>
+                <p>거래유형</p>
+                <select style="width: 100%;" v-model="goods_trade">
+                    <option value="택배거래" selected>택배거래</option>
+                    <option value="직거래">직거래</option>
+                </select>
+            </div>
+        </div>
         <div id="store_timer_deliv">
             <div>
-                마감 시간
+                <p>마감 시간</p>
                 <input type="datetime-local" required v-model="goods_timer">
             </div>
             <div v-if="goods_trade==='택배거래'">
-                택배 비용
+                <p>택배 비용</p>
                 <input type="text" placeholder="0" value="0" style="width: 100%;" v-model="goods_deliv_price" @input="validateNumber('goods_deliv_price')">
             </div>
             <div v-else>
                 <input type="text" style="width: 100%;" placeholder="0" value="0" disabled>
-             </div>
             </div>
-            <div id="store_product_content">
+        </div>
+        <div id="store_product_content">
             <p>설명</p>
-            <textarea style="width: 100%; height: 400px;" placeholder="상품 설명을 입력해주세요. (최소 10글자)" v-model="product_content"></textarea>
+            <textarea style="height: 400px;" placeholder="상품 설명을 입력해주세요. (최소 10글자)" v-model="product_content"></textarea>
         </div>
         <div id="store_submit">
             <input type="button" value="취소" class="cancel-btn">
             <button class="btn" @click="product_add()">상품 등록</button>
         </div>
     </div>
-   </div>
 </template>
 <script>
 import axios from 'axios'
@@ -292,7 +292,7 @@ import moment from 'moment'
                     return false;
                 }
             },
-            deleteImage(id,name){
+            deleteImage(index){
                 this.$swal.fire({
                     title:'정말 삭제하시겠습니까?',
                     showCancelButton: true,
@@ -300,15 +300,16 @@ import moment from 'moment'
                     cancelButtonText: `취소`
                 }).then(async (result) => {
                     if(result.isConfirmed){
+                        const img = this.goods_img[index]
+                        this.goods_img_src[index] = ''
+                        this.goods_img[index] = ''
                         await axios({
-                            url:'/goods/imageDelete',
+                            url:'http://localhost:3000/goods/delete_img',
                             method:'POST',
                             data:{
-                                id:id,
-                                name:name
+                                pastname: img
                             }
                         })
-                        this.$swal.fire('삭제되었습니다.','','success')
                     }
                 })
             },
@@ -339,7 +340,6 @@ import moment from 'moment'
 /* ------------------------------------------------------------- */
 
 p {
-    float: left;
     width: 150px;
     height: 30px;
 }
@@ -356,42 +356,22 @@ select {
     height: 60%;
     margin: 0 auto;
 }
-#store_product_img {
-    width: 100%;
-    height: 230px;
-    line-height: 200px;
-    border-bottom: 1px solid black;
-    overflow: hidden;
-    padding-bottom: 30px;
-}
-#store_product_img div {
-    width: 170px;
-    height: 200px;
-    background-color: black;
-    float: left;
-    margin-left: 0px;
-}
-#store_product_img button {
-    width: 20px;
-    height: 20px;
-    position: relative;
-    top: -92px;
-    right: -150px;
-    background: none;
-    border-radius: 100%;
-    background-color: red;
-}
+
 #store_product_name,
 #store_product_category1,
 #store_product_category2,
 #store_price_trade,
+#store_trade,
+#store_product_content,
 #store_timer_deliv {
-    width: 100%;
+    width: 70%;
+    margin-left: 15%;
     height: auto;
 }
 
 #store_product_name input,
 #store_price_trade input,
+#store_timer_deliv input,
 #store_timer_deliv input {
     width: 100%;
     height: 40px;
@@ -399,11 +379,11 @@ select {
     border-radius: 5px;
 }
 
-#store_price_trade div:last-child,
+/* #store_price_trade div:last-child,
 #store_timer_deliv div:last-child {
     flex: 1;
     margin-left: 10px;
-}
+} */
 
 #store_timer_deliv div {
     flex: 1;
@@ -411,8 +391,7 @@ select {
 }
 
 #store_product_content textarea {
-    width: 90%;
-    height: 90%;
+    width: 100%;
     resize: none;
     text-align: center;
     font-size: large;
@@ -424,8 +403,17 @@ select {
     clear: both; /* Clear floats to ensure proper positioning */
     text-align: right; /* Align buttons to the right */
     margin-top: 20px; /* Add some top margin for spacing */
+    margin-right:20%;
   }
-
+  .btn{
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    background-color: black;
+    color: white; /* Ensure text is visible */
+    border-radius: 5px;
+    margin-left:10px;
+  }
  #store_submit input {
     padding: 10px 20px;
     background: none;
@@ -435,6 +423,7 @@ select {
     border-radius: 5px;
   }
   .imgContainer {
+    height: 100px;
     display: flex;
     flex-wrap: wrap;
   }
@@ -443,5 +432,16 @@ select {
     height: 100px;
     margin-right: 10px;
     margin-bottom: 10px;
+    border: 1px solid black;
+  }
+  .imgContainer button {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    border: none;
+    margin-left: -10px;
+    margin-top: -10px;
   }
 </style>
