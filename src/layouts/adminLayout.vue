@@ -58,7 +58,6 @@ export default {
             } else {
                 this.admin = false;
             }
-            console.log(this.admin);
           } else {
             alert('로그인 후 이용해주세요.');
             this.$router.push('/');

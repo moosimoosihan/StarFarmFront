@@ -113,14 +113,12 @@ export default {
     name: 'header',
     data() {
       return {
-        // loginUser: {user_id:'abc',user_no:1},
         loginUser: {},
       }
     },
     computed: {
       user() {
         return this.$store.state.user;
-        // return this.loginUser
       }
     },
     created() {
@@ -134,6 +132,24 @@ export default {
                 this.loginUser = response.data[0];
             } catch (error) {
                 console.error(error);
+            }
+            if(this.loginUser.user_ban===1){
+              this.$swal({
+                position: 'top',
+                icon: 'warning',
+                title: '정지된 계정입니다.',
+                showConfirmButton: false,
+                timer: 1000
+                }).then(() => {
+                  if(this.loginUser.user_social_tp==1){
+                    window.Kakao.Auth.logout()
+                  }
+                    this.$store.commit("user", {
+                      user_no: '',
+                      user_id: '',
+                    })
+                    window.location.href="http://localhost:8080";
+                })
             }
           }
         },

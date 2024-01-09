@@ -52,6 +52,8 @@ import axios from 'axios'
               this.$swal("존재하지 않는 아이디입니다.")
             } else if (res.data.message == 'incorrect_pw'){
               this.$swal("비밀번호가 일치하지 않습니다.")
+            } else if(res.data.message=='ban'){
+              this.$swal("정지된 계정입니다.")
             } else {
               this.$store.commit("user", { user_id: this.user_id, user_no: res.data.message })
               this.$swal({
