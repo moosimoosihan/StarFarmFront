@@ -23,7 +23,7 @@
   
   <style scoped>
   .default_content {
-    padding-top: 200px;
+    padding-top: 230px;
     margin: auto;
     height: 100%;
     position: relative;

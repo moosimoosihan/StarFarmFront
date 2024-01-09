@@ -20,6 +20,7 @@
                         <li @click="gotoMypage()">마이페이지</li>
                         <li @click="gotoUpload()">상품등록</li>
                         <li @click="gotoMyChat()">1:1채팅</li>
+                        <li v-if="loginUser.user_tp===1" @click="gotoAdmin()">관리페이지</li>
                         <li @click="logout()">로그아웃</li>
                       </ul>  
                   </li>
@@ -122,13 +123,6 @@ export default {
         // return this.loginUser
       }
     },
-    mounted() {
-      if(this.user.user_id==''){
-        // 로그인 체크
-      } else {
-        // 어드민 체크
-      }
-    },
     created() {
       this.getUser();
     },
@@ -158,11 +152,17 @@ export default {
         gotoMypage() {
           this.$router.push('/mypage')
         },
+        gotoAdmin() {
+          this.$router.push('/admin')
+        },
         logout() {
           if(this.loginUser.user_social_tp==1){
                     window.Kakao.Auth.logout()
                 }
-                this.$store.commit("user", {})
+                this.$store.commit("user", {
+                  user_no: '',
+                  user_id: '',
+                })
                 this.$swal({
                     position: 'top',
                     icon: 'success',
@@ -244,8 +244,10 @@ input[type='text'] {
   outline: none;
   background-color: rgb(230, 255, 219);
   border: none;
-  margin-top: 17px;
   margin-right: 8px;
+  margin-left: 20px;
+  border-radius: 30px;
+
 }
 
 input[type='text']:focus {
@@ -410,7 +412,6 @@ a {
   
   .mypageMenu {
     height: 0; /*ul의 높이를 안보이게 처리*/
-   
   }
 
   .mymenu > li:hover {
@@ -419,7 +420,7 @@ a {
   }
   
   .mymenu:hover {
-    height: 250px; /*서브메뉴 li한개의 높이 50*5*/
+    height: 300px; /*서브메뉴 li한개의 높이 50*5*/
     transition-duration: 1s;
   }
   .search_btncontainer {
