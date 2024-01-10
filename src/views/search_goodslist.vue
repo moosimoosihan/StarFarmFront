@@ -6,7 +6,7 @@
         <div class="search_goods">
             <div v-for="(goods,i) in goodsList" :key="i" @click="gotoProduct(goods.goods_no)">
                 <img :width="70" style="border-radius: 10px;"
-                    :src="order.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
+                    :src="goods.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
                     alt="상품 이미지"/>
                 <div class="search_goodsdetails">
                     <p>{{ goods.goods_nm }}</p>
@@ -16,9 +16,9 @@
             </div>
         </div>
         <div class="page">
-            <button v-if="page>1" class="page_btn" @click="getGoodsList(page-1)">이전</button>
+            <button v-if="page>1" class="page_btn" @click="prev()">이전</button>
             <button v-for="(num,i) in maxPage" :key="i" class="pageNum" @click="getGoodsList((num-1)*10)">{{num}}</button>
-            <button v-if="page<maxPage" class="page_btn" @click="getGoodsList(page+1)">다음</button>
+            <button v-if="page<maxPage" class="page_btn" @click="next()">다음</button>
         </div>
     </div>
 </template>
@@ -64,9 +64,12 @@ import axios from 'axios';
                         console.log(err);
                     })
                 }
+                this.nickList = [];
                 for(let y=0; y<this.goodsList.length; y++){
-                    const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.goodsList[y].user_no}`)
-                    this.nickList.push(response.data[0].user_nick);
+                    await axios.get(`http://localhost:3000/mypage/mypage/${this.goodsList[y].user_no}`)
+                    .then((res) => {
+                        this.nickList.push(res.data[0].user_nick);
+                    })
                 }
             },
             async getMaxPage() {
@@ -80,6 +83,14 @@ import axios from 'axios';
             gotoProduct(index) {
                 this.$router.push(`/product/${index}`);
             },
+            prev() {
+                this.page--;
+                this.getGoodsList((this.page-1)*10);
+            },
+            next() {
+                this.page++;
+                this.getGoodsList((this.page-1)*10);
+            }
         }
     }
 </script>
