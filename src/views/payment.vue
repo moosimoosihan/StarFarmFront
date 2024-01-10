@@ -79,6 +79,7 @@
             showSendDataButton: false, // 조건에 따라 버튼을 표시할지 여부를 결정하는 변수
             postcodeResult: null, // 우편번호 검색 결과를 저장할 변수 추가
             loginUser:{},
+            orderUser:{},
             products: [],
             goods_succ_bid: '',
             order_content:'',

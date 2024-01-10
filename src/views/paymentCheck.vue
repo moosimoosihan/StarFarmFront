@@ -81,10 +81,37 @@ methods: {
       pg: "nicepay",
     })
     console.log(response)
-    // switch(response.event) {
-    //   case 'succ':
-    //     console.log(response)
-    // }
+    switch(response.event) {
+      case 'done':
+        console.log(response)
+        this.$swal({
+          title:'결제가 완료되었습니다.',
+          confirmButtonText:'확인',
+          // 데이터베이스 orderpayment에 보내기
+        }).then((response)=>{
+          if(response.event=='done') {
+            try{
+              axios({
+                url:"http://localhost:3000/goods/addOrder",
+                method: "POST",
+                data: {
+
+                }
+              })
+            } catch(e) {
+              console.log(e);
+            }
+            this.$router.push()
+
+
+
+          }
+        }).then(()=>{
+          /*결제완료 버튼을 누르면 뒤로가기 불가:replace*/ 
+          this.$router.replace(`/paymentdetail/${this.products.goods_no}`);
+        })
+        break
+    }
   } catch(e) {
       console.log(e.message)
       switch (e.event) {

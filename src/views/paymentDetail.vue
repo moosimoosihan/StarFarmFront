@@ -26,9 +26,9 @@
           <div class="line"></div>
           <!--배송지 및 배송가격-->
              <div class="info-row">
-           <p><p1>상품가격*</p1>{{products.goods_succ_price }}</p>
-           <p><p1>배송비*</p1>{{ loginUser.goods_deliv_price }}</p>
-            <p><p1>총 금액*</p1></p>
+           <p><p1>상품가격*</p1>{{products.goods_succ_price}}</p>
+           <p><p1>배송비*</p1>{{products.goods_deliv_price}}</p>
+            <p><p1>총 금액*</p1>{{totalprice}}</p>
                   <!-- 배송 요청사항 -->
                   <p class="info-label">배송 요청사항</p>
                   <p class="info-value">{{ Order.Order_content }}</p>
