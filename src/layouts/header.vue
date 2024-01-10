@@ -32,9 +32,9 @@
             </div>
 
             <div class="navbar_search">
-                <input type="text">
+                <input type="text" v-model="searchKeyword">
                 <div class="search_btncontainer">
-                  <button class="search_btn">
+                  <button class="search_btn" @click="goSearch()">
                     <i class="fas fa-search"></i>
                   </button>
               </div>
@@ -114,6 +114,7 @@ export default {
     data() {
       return {
         loginUser: {},
+        searchKeyword: '',
       }
     },
     computed: {
@@ -188,7 +189,20 @@ export default {
                     }).then(() => {
                         window.location.href="http://localhost:8080";
                     })
+            },
+          goSearch() {
+            if(this.searchKeyword==''){
+              this.$swal({
+                position: 'top',
+                icon: 'warning',
+                title: '검색어를 입력해주세요.',
+                showConfirmButton: false,
+                timer: 1000
+                })
+            } else {
+              this.$router.push(`/search_goodslist/${this.searchKeyword}/1`)
             }
+          }
     },
 }
 </script>
