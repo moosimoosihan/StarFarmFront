@@ -39,11 +39,17 @@ export default {
       currentIndex: 0,
       goodsList: [],
       goods_succ_bid: [],
+      intervalId: null, // 자동 슬라이드를 위한 인터벌 ID
     }
   },
   created() {
     this.getGoods();
+    this.startAutoSlide(); // 페이지가 생성될 때 자동 슬라이드 시작
   },
+  beforeDestroy() {
+    this.stopAutoSlide(); // 페이지가 파괴될 때 자동 슬라이드 정지
+  },
+
   methods: {
     async getGoods(){
       await axios.get('http://localhost:3000/goods/maingoods')
@@ -78,6 +84,15 @@ export default {
       this.$el.querySelector('.slide-wrapper').style.transform = `translateX(-${index * slideWidth}px)`;
       this.currentIndex = index;
     },
+    startAutoSlide() {
+      this.intervalId = setInterval(() => {
+        const nextIndex = (this.currentIndex + 1) % this.eventImageList.length;
+        this.moveToSlide(nextIndex);
+      }, 3000); // 3초마다 슬라이드 이동
+    },
+    stopAutoSlide() {
+      clearInterval(this.intervalId);
+    },
   },
   computed: {
     user() {
@@ -103,7 +118,7 @@ export default {
 
 
 .goodslist_div {
-  width: 80%;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -130,29 +145,29 @@ export default {
 
 /* 슬라이드 */
 .slide-imges_container {
-  width : 1200px;
+  width : 80%;
   height : 500px;
   display: flex;
+  justify-content: center;
   margin: 0 auto; /* 브라우저에서 가운데 정렬하기 위해 auto설정 */
   text-align: center; /* inline-block화 된 div들을 텍스트 마냥 center로 정렬*/
 }
 
 
 .slider-container {
-    width: 50%;
+    width: 70%;
     height: 500px;
     overflow: hidden;
-    width: 50%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    padding: 10px;
     box-sizing: border-box;
 
   }
 
   .slider-info-container {
-    width: 50%;
+    width: 30%;
     height: 500px;
-    margin-left: 120px;
+    margin-left: 50px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
 

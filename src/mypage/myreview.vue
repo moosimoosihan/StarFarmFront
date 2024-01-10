@@ -3,7 +3,7 @@
         <div class="container">
             <div class="myinfo">
                 <div class="review_title">
-                    <span>내가 쓴 리뷰</span>
+                    <span class="title">내가 쓴 리뷰</span>
                 </div>
                 <div class="review">
                     <table class="table" style="width:100%;">
@@ -176,7 +176,80 @@ import axios from 'axios'
 .review .detail {
     display: flex;
 }
+table {
+  border-collapse: collapse;
+  width: 500px;
+  margin-top: 20px;
+  background-color: white;
+}
+
+thead{
+  box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+}
+
+/* 테이블 행 */
+td {
+  padding: 1px;
+  text-align: left;
+  border-bottom: 1px solid #008d07f1;
+  text-align: center;
+  height: 40px;
+}
+
+th {
+  padding: 8px;
+  text-align: left;
+  text-align: center;
+  border-top: 2px solid #008807;
+  border-bottom: 2px solid #008807;
+  color: #189200;
+}
+
+/* 테이블 올렸을 때 */
+tbody tr:hover {
+  background-color: #e0ffae;
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+/* 테이블 비율 */
+th:nth-child(1),
+td:nth-child(1) {
+  width: 16%;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 16%;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 16%;
+}
+th:nth-child(4),
+td:nth-child(4) {
+  width: 16%;
+}
+th:nth-child(5),
+td:nth-child(5) {
+  width: 16%;
+}
+th:nth-child(6),
+td:nth-child(6) {
+  width: 16%;
+}
+
 th, td {
-    border: 1px solid #444444;
+  border-left: none;
+  border-right: none;
+  color: #008807;
+}
+
+tr {
+    height: 80px;
+}
+.title {
+    font-size: 24px;
 }
 </style>

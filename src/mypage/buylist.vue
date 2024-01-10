@@ -33,9 +33,9 @@
                                 </td>
                                 <td>
                                     <span>시작가 : {{ formatPrice(order.goods_start_price) }}</span><br>
-                                    <span>입찰가: {{ formatPrice(order.bid_amount) }}</span><br>
-                                    <span v-if="getOrderStatusText(order.goods_state)=='경매 중'">최고 입찰가:{{ formatPrice(succ_bidList[i]) }}</span>
-                                    <span v-else>낙찰가:{{ formatPrice(succ_bidList[i]) }}</span><br>
+                                    <span>입찰가 : {{ formatPrice(order.bid_amount) }}</span><br>
+                                    <span v-if="getOrderStatusText(order.goods_state)=='경매 중'">최고 입찰가 :{{ formatPrice(succ_bidList[i]) }}</span>
+                                    <span v-else>낙찰가 :{{ formatPrice(succ_bidList[i]) }}</span><br>
                                 </td>
                                 <td>
                                     <p>{{ getOrderStatusText(order.goods_state) }}</p>
@@ -197,7 +197,7 @@ import axios from 'axios'
 .goods .table {
     max-width: 1200px;
     text-align: center;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     border-radius: 10px;
 }
 
@@ -220,13 +220,6 @@ import axios from 'axios'
 .goods .detail {
     display: flex;
 }
-.trash_icon {
-    font-size: 20px;
-    
-}
-th, td {
-    border: 1px solid #444444;
-}
 
 #complete {
     background-color: #00bfa5;
@@ -245,4 +238,81 @@ th, td {
     font-size: 24px;
 }
 
+table {
+  border-collapse: collapse;
+  width: 500px;
+  margin-top: 20px;
+  background-color: white;
+}
+
+thead{
+  box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+}
+
+/* 테이블 행 */
+td {
+  padding: 1px;
+  text-align: left;
+  border-bottom: 1px solid #008d07f1;
+  text-align: center;
+  height: 40px;
+}
+
+th {
+  padding: 8px;
+  text-align: left;
+  text-align: center;
+  border-top: 2px solid #008807;
+  border-bottom: 2px solid #008807;
+  color: #189200;
+}
+
+/* 테이블 올렸을 때 */
+tbody tr:hover {
+  background-color: #e0ffae;
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+/* 테이블 비율 */
+th:nth-child(1),
+td:nth-child(1) {
+  width: 5%;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 10%;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 20%;
+}
+th:nth-child(4),
+td:nth-child(4) {
+  width: 35%;
+}
+th:nth-child(5),
+td:nth-child(5) {
+  width: 5%;
+}
+th:nth-child(6),
+td:nth-child(6) {
+  width: 15%;
+}
+th:nth-child(7),
+td:nth-child(7) {
+  width: 10%;
+}
+
+th, td {
+  border-left: none;
+  border-right: none;
+  color: #008807;
+}
+
+tr {
+    height: 80px;
+}
 </style>

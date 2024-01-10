@@ -232,7 +232,7 @@ html {
   width: 450px;
   height: 600px;
   margin: 6% auto;
-  border: solid 2px rgb(237, 237, 237);
+  border: solid 2px rgb(8, 94, 0);
   border-radius: 30px;
   align-items: center;
 }
@@ -243,7 +243,7 @@ html {
   font-size: 16px;
   margin-left: 50px;
   margin-bottom: 10px;
-  border: solid 1.5px rgb(230, 230, 230);
+  border: solid 1.5px  rgb(8, 94, 0);
   text-align: center; 
   border-radius: 8px;
   position: relative;
@@ -258,7 +258,7 @@ html {
   border-radius: 15px;
   color: white;
   font-weight: bold;
-  background-color: rgb(255, 217, 251);
+  background-color:  rgb(8, 94, 0);
   cursor: pointer;
   outline: none;
   margin-bottom: 10px;
@@ -282,7 +282,7 @@ html {
 
 .btn_naver {
   width: 300px;
-  height: 75px;
+  height: 85px;
   padding: 7px;
   cursor: pointer;
   outline: none;
@@ -298,7 +298,7 @@ html {
   border-radius: 15px;
   color: white;
   font-weight: bold;
-  background-color: rgb(255, 217, 251);
+  background-color: rgb(8, 94, 0);
   cursor: pointer;
   outline: none;
   margin-bottom: 10px;
@@ -308,7 +308,7 @@ html {
 
 .btn_kakao {
   width: 300px;
-  height: 75px;
+  height: 85px;
   padding: 7px;
   cursor: pointer;
   outline: none;
