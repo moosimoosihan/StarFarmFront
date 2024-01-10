@@ -133,9 +133,6 @@ created() {
   this.updateTimer();
   // this.getChatRoomNo();
 },
-updated() {
-  
-},
 beforeUpdate() {
   if(this.currentTime !== '경매가 종료되었습니다.'){
     this.getBidList()

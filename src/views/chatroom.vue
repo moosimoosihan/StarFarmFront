@@ -82,7 +82,6 @@ import axios from "axios";
 
             const response = await axios.get(`http://localhost:3000/chat/getChatRoom/${user_no}`);
             this.chatroom = response.data[0];
-            console.log(this.chatroom);
           } catch (error) {
             console.error(error);
           }
@@ -96,13 +95,13 @@ import axios from "axios";
           }
         },
         async getAnothorUser() {
-          try {
-            const another_no = this.$route.params.id;
-            const response = await axios.get(`http://localhost:3000/mypage/mypage/${another_no}`);
-            this.anothorUser = response.data[0];
-          } catch (error) {
-            console.error(error);
-          }
+            try {
+                const another_no = this.$route.params.id;
+                const response = await axios.get(`http://localhost:3000/mypage/mypage/${another_no}`);
+                this.anothorUser = response.data[0];
+            } catch (error) {
+                console.error(error);
+            }
         },
         async getChat() {
           try {
@@ -124,11 +123,17 @@ import axios from "axios";
                     chat_content,
                     user_no
                 });
+                if(response.data.message === 'success') {
+                    this.content = '';
+                    await this.getChat();
+                    const scroll = document.getElementById('scroll');
+                    scroll.scrollTop = scroll.scrollHeight;
+                } else {
+                    console.log('전송 실패');
+                }
             } catch (error) {
                 console.error(error);
             }
-            this.content = '';
-            await this.getChat();
         },
         formatDateTime(dateTime) {
             const date = new Date(dateTime);
@@ -145,7 +150,7 @@ import axios from "axios";
         },
         exitChat() {
             window.close();
-        }
+        },
       }
     }
 </script>
@@ -193,6 +198,7 @@ import axios from "axios";
     height: 450px;
     background-color: rgb(183, 179, 179);
     margin-left: 25px;
+    overflow-y: scroll;
 }
 
 .chat_profile_img {

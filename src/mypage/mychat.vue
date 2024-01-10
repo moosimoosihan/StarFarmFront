@@ -16,9 +16,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(chatroom, i) in roomList" :key="i" @click="gotoChatRoom(chatroom.CHATROOM_USER1 === user.user_no? chatroom.CHATROOM_USER2:chatroom.CHATROOM_USER1)">
+                        <tr v-for="(chatroom, i) in roomList" :key="i">
                             <td>{{ chatroom.CHATROOM_NO }}</td>
-                            <td>
+                            <td @click="gotoChatRoom(chatroom.CHATROOM_USER1 === user.user_no? chatroom.CHATROOM_USER2:chatroom.CHATROOM_USER1)">
                                 <img :width="70" style="border-radius: 10px;"
                                     :src="userImgList[i] ? require(`../../../StarFarmBack/uploads/userImg/${chatroom.CHATROOM_USER1 === user.user_no? chatroom.CHATROOM_USER2:chatroom.CHATROOM_USER1}/${userImgList[i]}`) : require(`../assets/profile.png`)"
                                     alt="프로필 이미지" />
@@ -29,10 +29,8 @@
                             <td>
                                 {{ commentList[i] }}
                             </td>
-                            <td>
-                                <div @click="outChatRoom(chatroom.CHATROOM_NO)">
-                                    <i class="fas fa-solid fa-comments"></i><!-- 임시 -->
-                                </div>
+                            <td @click="outChatRoom(chatroom.CHATROOM_NO)">
+                                <i class="fas fa-solid fa-comments"></i><!-- 임시 -->
                             </td>
                         </tr>
                         <tr v-if="roomList.length === 0">
@@ -91,8 +89,16 @@ import axios from 'axios'
                     console.error(error);
                 }
                 for(var i = 0; i < this.roomList.length; i++) {
-                    this.getComment(this.roomList[i].CHATROOM_NO)
-                    this.getChatUser(this.roomList[i].CHATROOM_USER1 === this.user.user_no? this.roomList[i].CHATROOM_USER2:this.roomList[i].CHATROOM_USER1)
+                    if(this.roomList[i].CHATROOM_USER1===this.user.user_no && this.roomList[i].CHATROOM_OUT1 === 1){
+                        console.log(`${this.roomList[i].CHATROOM_NO}번 채팅방 나감`)
+                        this.roomList.splice(i, 1);
+                    } else if(this.roomList[i].CHATROOM_USER2===this.user.user_no && this.roomList[i].CHATROOM_OUT2 === 1) {
+                        console.log(`${this.roomList[i].CHATROOM_NO}번 채팅방 나감`)
+                        this.roomList.splice(i, 1);
+                    } else {
+                        this.getComment(this.roomList[i].CHATROOM_NO)
+                        this.getChatUser(this.roomList[i].CHATROOM_USER1 === this.user.user_no? this.roomList[i].CHATROOM_USER2:this.roomList[i].CHATROOM_USER1)
+                    }
                 }
             },
             async getComment(room_no) {
@@ -112,23 +118,37 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
-            async outChatRoom(room_no) {
-                try{
-                    const response = await axios({
-                        url:`http://localhost:3000/chat/outChatRoom`,
-                        method: 'POST',
-                        data: {
-                            room_no: room_no,
-                            user_no: this.user.user_no,
+            outChatRoom(room_no) {
+                // 채팅방에서 나가시겠습니까? 확인 후 삭제
+                this.$swal.fire({
+                    title: '채팅방 나가기',
+                    text: '채팅방을 나가시겠습니까?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '나가기',
+                    cancelButtonText: '취소',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        try{
+                            axios({
+                                url:"http://localhost:3000/chat/outChatRoom",
+                                method: "POST",
+                                data: {
+                                    room_no: room_no,
+                                    user_no: this.user.user_no,
+                                }
+                            })
+                                .then((res)=>{
+                                    if(res.data.message === 'success') {
+                                    this.$swal('채팅방에서 나갔습니다.');
+                                    this.getRoomList();
+                                }
+                            })
+                        } catch(error) {
+                            console.error(error);
                         }
-                    });
-                    if(response.data === 'success') {
-                        this.$swal('채팅방에서 나갔습니다.');
-                        this.getRoomList();
                     }
-                } catch(error) {
-                    console.error(error);
-                }
+                });
             }
         }
     }
