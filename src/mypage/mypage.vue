@@ -43,8 +43,8 @@
             <p class="more" @click="gotoLike()">+more</p> 
         </div> 
         <div class="goodslist_div">
-            <div class="item_container" v-for="(goods, i) in goodsList" :key="i" @click="gotoAuction(goods.goods_no)">
-              <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
+            <div class="item_container" v-for="(goods, i) in likeList" :key="i" @click="gotoAuction(goods.GOODS_NO)">
+              <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.GOODS_NO}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
               <p class="goodsname">{{ goods.goods_nm }}</p>
               <p class="price">시작가 : {{ goods.goods_start_price }}</p>
               <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
@@ -55,7 +55,7 @@
             <p class="more" @click="gotoBuylist()">+more</p>
         </div>
         <div class="goodslist_div">
-            <div class="item_container" v-for="(goods, i) in goodsList" :key="i" @click="gotoAuction(goods.goods_no)">
+            <div class="item_container" v-for="(goods, i) in orderList" :key="i" @click="gotoAuction(goods.goods_no)">
               <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
               <p class="goodsname">{{ goods.goods_nm }}</p>
               <p class="price">시작가 : {{ goods.goods_start_price }}</p>
@@ -67,10 +67,10 @@
             <p class="more" @click="gotoSalelist()">+more</p>
         </div>
         <div class="goodslist_div">
-            <div class="item_container" v-for="(goods, i) in goodsList" :key="i" @click="gotoAuction(goods.goods_no)">
-              <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
-              <p class="goodsname">{{ goods.goods_nm }}</p>
-              <p class="price">시작가 : {{ goods.goods_start_price }}</p>
+            <div class="item_container" v-for="(goods, i) in saleList" :key="i" @click="gotoAuction(goods.GOODS_NO)">
+              <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.GOODS_NO}/${goods.GOODS_IMG.split(',')[0]}`)" alt="상품 이미지">
+              <p class="goodsname">{{ goods.GOODS_NM }}</p>
+              <p class="price">시작가 : {{ goods.GOODS_START_PRICE }}</p>
               <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
             </div>
         </div>
@@ -86,6 +86,9 @@ import axios from 'axios';
             return {
                 loginUser: {},
                 goodsList: [],
+                likeList: [],
+                orderList: [],
+                saleList: [],
                 goods_succ_bid: [],
             }
         },
@@ -97,6 +100,9 @@ import axios from 'axios';
         created() {
             this.getUser();
             this.getGoods();
+            this.getLikelist();
+            this.getOrderlist();
+            this.getSalelist();
         },
         methods: {
             async getUser() {
@@ -144,6 +150,37 @@ import axios from 'axios';
             gotoSalelist() {
                     this.$router.push(`/mypage/Salelist`);
             },
+            async getLikelist() {
+              const user_no = this.user.user_no;
+
+              try {
+                const response = await axios.get(`http://localhost:3000/mypage/likelist_preview/${user_no}`);
+                this.likeList = response.data;
+              } catch (error) {
+                console.error(error);
+              }
+            },
+          async getOrderlist() {
+              const user_no = this.user.user_no;
+
+              try {
+                const response = await axios.get(`http://localhost:3000/mypage/orderlist_preview/${user_no}`);
+                this.orderList = response.data;
+              } catch (error) {
+                console.error(error);
+              }
+          },
+          async getSalelist() {
+              const user_no = this.user.user_no;
+
+              try {
+                const response = await axios.get(`http://localhost:3000/mypage/salelist_preview/${user_no}`);
+                this.saleList = response.data;
+                console.log(this.saleList);
+              } catch (error) {
+                console.error(error);
+              }
+          },
 
 
 
@@ -301,6 +338,10 @@ import axios from 'axios';
 .more {
     float: right;
     margin-right: 15px;
+}
+.more:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 </style>

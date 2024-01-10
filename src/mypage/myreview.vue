@@ -133,6 +133,9 @@ import axios from 'axios'
                 const formattedDateTime = date.toLocaleDateString("ko-KR", options);
                 return formattedDateTime;
             },
+          gotoProduct(goods_no) {
+            this.$router.push(`/product/${goods_no}`);
+          },
         }
     }
 </script>

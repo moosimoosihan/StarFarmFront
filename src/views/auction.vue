@@ -10,7 +10,7 @@
             <div class="profile_img_box">
               <img :width="70" style="border-radius: 10px;"
                       :src="goodsUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${goodsUser.user_no}/${goodsUser.user_img}`) : require(`../assets/profile.png`)"
-                      alt="프로필 사진 미리보기" />
+                      alt="프로필 사진 미리보기" @click="gotoUserpage(goodsUser.user_no)" />
             </div>
             <span class="profile_nick">{{ goodsUser.user_nick }}</span>
           </div>
@@ -387,6 +387,9 @@ methods: {
   },
   async gotoPayment() {
     this.$router.push(`/payment/${this.goods.goods_no}`);
+  },
+  gotoUserpage(user_no) {
+    this.$router.push(`/userpage/${user_no}`);
   }
 }
 }
