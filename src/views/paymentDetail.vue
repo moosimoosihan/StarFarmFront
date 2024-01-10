@@ -31,7 +31,7 @@
             <p><p1>총 금액*</p1>{{totalprice}}</p>
                   <!-- 배송 요청사항 -->
                   <p class="info-label">배송 요청사항</p>
-                  <p class="info-value">{{ Order.Order_content }}</p>
+                  <p class="info-value">{{ Order.ORDER_CONTENT }}</p>
              </div>
         <div id="payment_submit">
           <button id="home_button" @click="gotoHome()">
@@ -51,6 +51,7 @@ export default {
       loginUser: {},
       products: {}, // 제품 속성을 추가합니다.
       Order: {},
+      totalprice:0,
     };
   },
   computed: {
@@ -62,6 +63,7 @@ export default {
     this.getUser();
     this.getProduct(); // 제품 정보를 가져 오기
     this.getOrder();
+    this.getTotalPrice();
   },
   methods: {
     async getUser() {
@@ -77,20 +79,35 @@ export default {
        try {
         const goodsno = this.$route.params.id;
         const response = await axios.get(`http://localhost:3000/goods/goodsInfo/${goodsno}`);
-        console.log(response.data[0]);
         this.products = response.data[0];
         } catch (error) {
           console.error(error);
         }
     },
-    getOrder() {
-      
+    async getOrder() {
+      try{
+        const order_no = this.$route.params.order_no;
+        const response = await axios.get(`http://localhost:3000/order/orderInfo/${order_no}`);
+        this.Order = response.data[0];
+      } catch (error) {
+        console.error(error);
+      }
     },
     gotoHome() {
       this.$router.push('/');
-    }
+    },
+    getTotalPrice(){
+      if(this.goods.goods_trade==0){
+        this.totalPrice = Number(this.goods_succ_bid) + Number(this.goods.goods_deliv_price)
+      } else {
+        this.totalPrice = this.goods_succ_bid
+      }
   },
-};
+  getBid() {
+    this.totalprice = this.$route.params.totalprice;
+  }
+}
+}
 </script>
 
 <style scoped>

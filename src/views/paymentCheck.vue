@@ -10,16 +10,16 @@
           <p><p1>이름</p1> {{ loginUser.user_id }}</p>
           <p><p1>전화번호</p1> {{ loginUser.user_mobile }}</p>
           <p><p1>이메일</p1> {{ loginUser.user_email }}</p>
-          <p> <p1>주소</p1> {{ loginUser.user_adr1 }}</p>
+          <p> <p1>주소</p1> {{ loginUser.user_zipcode }} {{ loginUser.user_adr1 }} {{ loginUser.user_adr2 }}</p> 
         </div>
       </div>
       <div class="info_section">
         <div class="section_title">상품 정보</div>
         <div class="payment_list">
-          <p><p1>상품명</p1> {{ products.goods_nm }}</p>
-          <p><p1>상품설명</p1> {{ products.goods_content }}</p>
+          <p><p1>상품명</p1> {{ goods.goods_nm }}</p>
+          <p><p1>상품설명</p1> {{ goods.goods_content }}</p>
           <p><p1>상품금액</p1> {{ goods_succ_bid }}</p>
-          <p><p1>배송비</p1> +{{products.goods_deliv_price}}</p>
+          <p><p1>배송비</p1> {{goods.goods_deliv_price}}</p>
         </div>
         <div class="payment_list1">      
           <p><p1>총 금액</p1> {{ totalPrice }}원</p>
@@ -36,14 +36,28 @@
 import axios from 'axios';
 import { Bootpay } from '@bootpay/client-js'
 
+
 export default {
 data() {
   return {
-    loginUser:{},
-    products: [],
-    goods_succ_bid: '',
+    loginUser:{
+      user_id:'',
+      user_mobile:'',
+      user_email:'',
+      user_zipcode:'',
+      user_adr1:'',
+      user_adr2:'',
+    },
+    goods: {
+      goods_nm:'',
+      goods_content:'',
+      goods_trade:'',
+      goods_deliv_price:0,
+    },
+    goods_succ_bid: 0,
     order_content:'',
-    totalPrice:'',
+    adr:'',
+    totalPrice:0,
   };
 },
 computed: {
@@ -62,107 +76,74 @@ mounted() {
 methods: {
     /*총 금액*/
     getTotalPrice(){
-    if(this.products.goods_trade==0){
-      this.totalPrice = this.goods_succ_bid + this.products.goods_deliv_price
+    if(this.goods.goods_trade==0){
+      this.totalPrice = Number(this.goods_succ_bid) + Number(this.goods.goods_deliv_price)
     }
     else {
       this.totalPrice = this.goods_succ_bid
     }
-
   },
   /*결제상세정보확인*/
   async gotoPayAPI() {
     try{
-    const response = await Bootpay.requestPayment({
-      price:`${this.totalPrice}`,
-      application_id: "65996d8600c78a0023346015",
-      order_name: `${this.loginUser.user_nick}`,
-      order_id: `${this.loginUser.user_id}`,
-      pg: "nicepay",
-    })
-    console.log(response)
-    switch(response.event) {
-      case 'done':
-        console.log(response)
-        this.$swal({
-          title:'결제가 완료되었습니다.',
-          confirmButtonText:'확인',
-          // 데이터베이스 orderpayment에 보내기
-        }).then((response)=>{
-          if(response.event=='done') {
-            try{
               axios({
-                url:"http://localhost:3000/goods/addOrder",
+                url:"http://localhost:3000/goods/orderPayment",
                 method: "POST",
                 data: {
-
+                  order_receive_nm: this.loginUser.user_id,
+                  order_mobile: this.loginUser.user_mobile,
+                  order_addr1: this.loginUser.user_adr1,
+                  order_addr2: this.loginUser.user_adr2,
+                  order_zipcode: this.loginUser.user_zipcode,
+                  order_content: this.order_content,
+                  user_no: this.user.user_no,
                 }
               })
+                .then((response)=>{
+                  if(response.data.message=='완료'){
+                    this.$swal({
+                      title:'결제가 완료되었습니다.',
+                      confirmButtonText:'확인',
+                    })
+                    .then(()=>{
+                      this.$router.replace(`/paymentdetail/${this.products.goods_no}/${response.data.order_no}/${this.totalPrice}`);
+                    })
+                  }
+                  else {
+                    this.$swal({
+                      title:'결제가 실패하였습니다.',
+                      confirmButtonText:'확인',
+                    })
+                  }
+                })
+                
             } catch(e) {
               console.log(e);
             }
-            this.$router.push()
-
-
-
-          }
-        }).then(()=>{
-          /*결제완료 버튼을 누르면 뒤로가기 불가:replace*/ 
-          this.$router.replace(`/paymentdetail/${this.products.goods_no}`);
-        })
-        break
-    }
-  } catch(e) {
-      console.log(e.message)
-      switch (e.event) {
-        case 'cancel':
-            // 사용자가 결제창을 닫을때 호출
-            console.log(e.message);
-            this.$swal({
-              title:'결제가 취소었습니다.',
-              confirmButtonText:'확인',
-            })
-            break
-        case 'error':
-            // 결제 승인 중 오류 발생시 호출
-            console.log(e);
-            this.$swal({
-              title:'오류가 발생하였습니다.',
-            })
-            break
-          }
-        }
+            return
       },
-  async getUser() {
-    try {
-        const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
-        this.loginUser = response.data[0];
-        console.log(this.loginUser);
-    } catch (error) {
-        console.error(error);
-    }
+  getUser() {
+    this.loginUser.user_id = this.$route.params.user_id
+    this.loginUser.user_mobile = this.$route.params.user_mobile
+    this.loginUser.user_email = this.$route.params.user_email
+    this.loginUser.user_zipcode = this.$route.params.user_zipcode
+    this.loginUser.user_adr1 = this.$route.params.user_adr1
+    this.loginUser.user_adr2 = this.$route.params.user_adr2
+    this.order_content = this.$route.params.order_content
   },
-  async getGoods() {
-    try {
-      const goodsno = this.$route.params.goods_no;
-      const response = await axios.get(`http://localhost:3000/goods/goodsInfo/${goodsno}`);
-      this.products = response.data[0];
-      } catch (error) {
-        console.error(error);
-      }
+  getGoods() {
+    this.goods.goods_nm = this.$route.params.goods_nm
+    this.goods.goods_content = this.$route.params.goods_content
+    this.goods.goods_trade = this.$route.params.goods_trade
+    this.goods.goods_deliv_price = this.$route.params.goods_deliv_price
   },
-  async getBid() {
-    try{
-      const response_bid = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.$route.params.goods_no}`)
-      this.goods_succ_bid = response_bid.data[0].succ_bid
-    } catch (error) {
-      console.error(error)
-    }
+  getBid() {
+    this.goods_succ_bid = this.$route.params.goods_succ_bid
     this.getTotalPrice()
   },
   gotoBack() {
     this.$router.back();
-  }
+  },
 }
 }
 

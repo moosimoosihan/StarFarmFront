@@ -87,12 +87,12 @@ const routes = [
         component: userpage
       },
       {
-        path: '/paymentdetail/:id',
+        path: '/paymentdetail/:id/:order_no/:total_price',
         name: 'paymentdetail',
         component: paymentdetail
       },
       {
-        path: '/paymentCheck/:goods_no/:user_no/:goods_succ_bid/:content/:zipcode/:adr1/:adr2',
+        path: '/paymentCheck/:user_id/:user_mobile/:user_email/:goods_nm/:goods_content/:goods_trade/:goods_deliv_price/:goods_succ_bid/:order_content/:user_zipcode/:user_adr1/:user_adr2',
         name: 'paymentCheck',
         component: paymentCheck
       },

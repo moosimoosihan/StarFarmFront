@@ -1,99 +1,84 @@
 <template>
   <div class="container">
     <div id="payment_wrapper">
-      <div class="payment_form">
-      </div>
-        <h1>상품 결제</h1>
-        <div class="payment_product">
-          <!-- 상품 정보 표시 -->
-          <div class="product-card">
-              <div class="product-content">
-                <img class="product-image"
-                    :src="products.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${products.goods_no}/${products.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
-                    alt="상품 이미지" />
-              <div class="payment_product_content">
-                <h2>상품명 : {{ products.goods_nm }}</h2>
-                <p>상품설명: {{ products.goods_content}}</p>
-                <p>가격: {{ goods_succ_bid }}</p>
-              </div>
-              <!--판매자 닉네임 및 사진-->
-              <div class="profile_box">
-                <img :width="70" style="border-radius: 10px;"
-                            :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
-                            alt="프로필 사진 미리보기" />
-                            <span>{{ loginUser.user_nick }}</span>
-              </div>
-              </div>
+      <h1>상품 결제</h1>
+      <div class="payment_product">
+        <!-- 상품 정보 표시 -->
+        <div class="product-card">
+          <div class="product-content">
+            <img class="product-image"
+                :src="products.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${products.goods_no}/${products.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
+                alt="상품 이미지" />
+            <div class="payment_product_content">
+              <h2>상품명 : {{ products.goods_nm }}</h2>
+              <p>상품설명: {{ products.goods_content}}</p>
+              <p>가격: {{ goods_succ_bid }}</p>
+            </div>
+            <!--판매자 닉네임 및 사진-->
+            <div class="profile_box">
+              <img :width="70" style="border-radius: 10px;"
+                  :src="orderUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${orderUser.user_no}/${orderUser.user_img}`) : require(`../assets/profile.png`)"
+                  alt="프로필 사진 미리보기" />
+              <span>{{ orderUser.user_nick }}</span>
+            </div>
           </div>
         </div>
-        <!--수령자이름,전화번호-->
-        <div class="payment_name">
-          <label for="phoneNumber"> 수령자이름 *</label>
-          
-          <li></li>
-          <input type="text" v-model="loginUser.user_nick">
-        </div>
-        <div class="payment_phone">
-          <label for="phoneNumber">전화번호 *</label>
-          <li></li>
-          <input type="text" v-model="loginUser.user_mobile">
-        </div>
-        <div class="payment_deliv">
-          <p>배송지 *</p>
-          <input type="text" id="sample6_postcode" v-model="loginUser.user_zipcode">
-          <button @click="zipload()">우편번호 찾기</button><br>
-          <input type="text" id="sample6_address" v-model="loginUser.user_adr1"><br>
-          <input type="text" id="sample6_detailAddress" v-model="loginUser.user_adr2">
-         </div>
-         <div class="payment_request">
-           <li>배송 시 요청사항</li>
-           <textarea v-model="order_content" placeholder="배송 요청사항을 입력해주세요"></textarea>
-         </div>
-         <div id="payment_submit">
-         <div id="payment_pay_btn">
+      </div>
+      <!--수령자이름,전화번호-->
+      <div class="payment_name">
+        <label for="phoneNumber"> 수령자이름 *</label>  
+        <li></li>
+        <input type="text" v-model="loginUser.user_nick">
+      </div>
+      <div class="payment_phone">
+        <label for="phoneNumber">전화번호 *</label>
+        <li></li>
+        <input type="text" v-model="loginUser.user_mobile" @input="validateNumber()" maxlength="11">
+      </div>
+      <div class="payment_deliv">
+        <p>배송지 *</p>
+        <input type="text" id="sample6_postcode" v-model="loginUser.user_zipcode">
+        <button @click="zipload()">우편번호 찾기</button><br>
+        <input type="text" id="sample6_address" v-model="loginUser.user_adr1"><br>
+        <input type="text" id="sample6_detailAddress" v-model="loginUser.user_adr2">
+      </div>
+      <div class="payment_request">
+        <li>배송 시 요청사항</li>
+        <textarea v-model="order_content" placeholder="배송 요청사항을 입력해주세요"></textarea>
+      </div>
+      <div id="payment_submit">
+        <div id="payment_pay_btn">
           <a @click="gotoProduct()" style="text-decoration:none;color:black">취소</a>
-           <!--<a @click="gotoProduct()" style="text-decoration:none;color:black">취소</a>-->
-         </div>
-         <div id="payment_pay_btn">
-         <a @click="sendDataToBackend()" style="text-decoration:none;color:black">결제</a>
-         </div>
-         <div v-if="showSendDataButton">
         </div>
+        <div id="payment_pay_btn">
+          <a @click="sendDataToBackend()" style="text-decoration:none;color:black">결제</a>
         </div>
-        <div v-for="(item, index) in reports" :key="index">
-         {{ report.name }} 
-         {{ report.Num }}
-         {{ report.Address }}
-         {{ report.AddressHope }}
-         {{ report.price}}
+          <div v-if="showSendDataButton">
         </div>
-        
-        </div>
-        </div>
-        </template>
-        <script>
-        import axios from 'axios'
-        export default {
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import axios from 'axios'
+export default {
         data() {
         return {
             showSendDataButton: false, // 조건에 따라 버튼을 표시할지 여부를 결정하는 변수
             postcodeResult: null, // 우편번호 검색 결과를 저장할 변수 추가
             loginUser:{},
             orderUser:{},
-            products: [],
+            products: {},
             goods_succ_bid: '',
             order_content:'',
-            order_zipcode:'',
-            order_adr1: '',
-            order_adr2: '',
+            totalPrice:'',
           };
         },
         mounted() {
-     
-        const script = document.createElement("script");
-        script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
-        script.onload = this.initDaumPostcode;
-        document.head.appendChild(script);
+          const script = document.createElement("script");
+          script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+          script.onload = this.initDaumPostcode;
+          document.head.appendChild(script);
         },
         created() {
             this.getUser()
@@ -104,13 +89,11 @@
                 return this.$store.state.user
             }
         },
-
         methods: {
           async getUser() {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
                     this.loginUser = response.data[0];
-                    console.log(this.loginUser);
                 } catch (error) {
                     console.error(error);
                 }
@@ -118,36 +101,51 @@
                 this.order_adr1 = this.loginUser.user_adr1;
                 this.order_adr2 = this.loginUser.user_adr2;
             },
+            async getOrderUser() {
+              try {
+                const order_user_no = this.products.user_no;
+                const response = await axios.get(`http://localhost:3000/mypage/mypage/${order_user_no}`);
+                this.orderUser = response.data[0];
+              } catch (error) {
+                console.error(error);
+              }
+            },
             // 상품 정보 가져오기
             async getProduct(){
               try {
                 const goodsno = this.$route.params.id;
                 const response = await axios.get(`http://localhost:3000/goods/goodsInfo/${goodsno}`);
-                console.log(response.data[0]);
                 this.products = response.data[0];
-                } catch (error) {
-                  console.error(error);
-                }
-                try{
-                  const response_bid = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.products.goods_no}`)
-                  this.goods_succ_bid = response_bid.data[0].succ_bid
-                } catch (error) {
-                  console.error(error)
-                }
+              } catch (error) {
+                console.error(error);
+              }
+              try{
+                const response_bid = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.products.goods_no}`)
+                this.goods_succ_bid = response_bid.data[0].succ_bid
+              } catch (error) {
+                console.error(error)
+              }
+              this.getOrderUser()
             },
         sendDataToBackend() {
-         this.$swal({
-          title:'결제확인',
-          text:'상세정보확인',
-          confirmButtonText:'결제확인',
-          cancelButtonText:'취소',
-          showCancelButton: true,
-         }).then((result)=>{
-            if(result.isConfirmed){
-              this.$router.push(`/paymentCheck/${this.products.goods_no}/${this.loginUser.user_no}/${this.goods_succ_bid}/${this.order_content}/${this.order_zipcode}/${this.order_adr1}/${this.order_adr2}`)
-            }
-          })
-         },
+          if(this.order_content==''){
+            this.order_content='없음'
+          }
+          this.$swal({
+            title:'결제확인',
+            text:'결제를 진행하시겠습니까?',
+            confirmButtonText:'확인',
+            cancelButtonText:'취소',
+            showCancelButton: true,
+          }).then((result)=>{
+              if(result.isConfirmed){
+                this.$router.push(`/paymentCheck/${this.loginUser.user_id}/${this.loginUser.user_mobile}/${this.loginUser.user_email}/${this.products.goods_nm}/${this.products.goods_content}/${this.products.goods_trade}/${this.products.goods_deliv_price}/${this.goods_succ_bid}/${this.order_content}/${this.loginUser.user_zipcode}/${this.loginUser.user_adr1}/${this.loginUser.user_adr2}`)
+              }
+            })
+          },
+          validateNumber() {
+              this.loginUser.user_mobile = this.loginUser.user_mobile.replace(/\D/g, ''); // 숫자 이외의 문자 제거
+          },
          zipload() {
             new window.daum.Postcode({
                 oncomplete: (data) => {
@@ -176,11 +174,8 @@
                         }
                     }
                     this.loginUser.user_zipcode = data.zonecode;
-                    this.order_zipcode = data.zonecode;
                     this.loginUser.user_adr1 = addr;
-                    this.order_adr1 = addr;
                     this.loginUser.user_adr2 = extraAddr;
-                    this.order_adr2 = extraAddr;
                 }
             }).open();
          },gotoProduct(){
