@@ -400,9 +400,7 @@ a {
 
   .mymenu {
     width:100px;
-
     overflow: hidden;
-
     margin-top: 30px;
     margin-bottom: 30px;
     float:right;
@@ -415,6 +413,7 @@ a {
     line-height: 40px;
     background-color: #ffffff;
     cursor:pointer;
+    font-size: 14px;
   }
   
   .mymenu a {

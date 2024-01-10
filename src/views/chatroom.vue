@@ -2,64 +2,56 @@
     <div class="container">
         <div class="chatroom_container">
             <div class="chatroom_title">
-                <span>{{ you_nick.user_nick }}님과의 대화</span>
-                <button class="chatroom_exit">나가기</button>
+                <span>{{ anothorUser.user_nick }}님과의 대화</span>
+                <button class="chatroom_exit" @click="exitChat()">나가기</button>
             </div>
             <div class="chats_container" id="scroll">
                 <div v-for="(chat, i) in chatList" :key="i">
-                    <div v-if="chat.items[0].CHAT_USER===user.USER_ID" class="chat_me">
+                    <div v-if="chat.CHAT_USER===user.user_no" class="chat_me">
                         <div class="chat_container">
-                            <p class="chat_name">{{ chat.items[0].CHAT_NICK }}</p>
+                            <p class="chat_name">{{ loginUser.user_nick }}</p>
                             <div class="chat_content_container">
-                                <p class="chat_content">{{ chat.items[0].CHAT_CONTENT }}</p>
-                                <span class="chat_time">{{ chat.items[0].CHAT_DATE }}</span>
+                                <p class="chat_content">{{ chat.CHAT_CONTENT }}</p>
+                                <span class="chat_time">{{ formatDateTime(chat.CHAT_DATE) }}</span>
                             </div>
                         </div>
-                        <!-- <img :width="70" style="border-radius: 10px;"
-                            :src="chat.items[0].CHAT_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${chatroom.CHATROOM_IMG}`) : '../assets/profile.png'"
-                            alt="프로필 이미지" /> -->
                         <img :width="70" style="border-radius: 10px;"
-                            :src="'../assets/profile.png'"
+                            :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require('../assets/profile.png')"
                             alt="프로필 이미지" />
                     </div>
                     <div v-else class="chat_you">
-                        <!-- <img :width="70" style="border-radius: 10px;"
-                            :src="chat.items[0].CHAT_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${chatroom.CHATROOM_IMG}`) : '../assets/profile.png'"
-                            alt="프로필 이미지" /> -->
                         <img :width="70" style="border-radius: 10px;"
-                            :src="'../assets/profile.png'"
+                            :src="anothorUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${anothorUser.user_no}/${anothorUser.user_img}`) : require('../assets/profile.png')"
                             alt="프로필 이미지" />
                         <div class="chat_container">
-                            <p class="chat_name">{{ chat.items[0].CHAT_NICK }}</p>
+                            <p class="chat_name">{{ anothorUser.user_nick }}</p>
                             <div class="chat_content_container">
-                                <p class="chat_content">{{ chat.items[0].CHAT_CONTENT }}</p>
-                                <span class="chat_time">{{ chat.items[0].CHAT_DATE }}</span>
+                                <p class="chat_content">{{ chat.CHAT_CONTENT }}</p>
+                                <span class="chat_time">{{ formatDateTime(chat.CHAT_DATE) }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- <div>
-                    <hr id="left"><span class="hr_text"> 어제 </span><hr id="right">
-                </div> -->
             </div>
             <div class="chat_input_container">
-                <input class="chat_input" type="text" placeholder="메세지를 입력하세요.">
-                <button class="chat_send">전송</button>
+                <input class="chat_input" type="text" placeholder="메세지를 입력하세요." v-model="content">
+                <button class="chat_send" @click="send()">전송</button>
             </div>
         </div>
     </div>
 </template>
 <script>
 import axios from "axios";
+
     export default {
       name: 'chat',
       data() {
         return {
-          chatroom: [],
-          me_no: this.$store.state.user.user_no,
-          you_no: '',
-          me_nick: '',
-          you_nick: '',
+            loginUser: {},
+            anothorUser: {},
+            chatList: [],
+            chatroom: {},
+            content: '',
         }
       },
       computed: {
@@ -67,40 +59,92 @@ import axios from "axios";
           return this.$store.state.user;
         }
       },
-      created() {
-        this.getChatRoom()
-      },
       mounted() {
-        this.getUserNick()
+        this.getChatRoom()
+        this.getChat()
+        this.getUser()
+        this.getAnothorUser()
+      },
+      beforeUpdate() {
+        this.getChat()
       },
       methods: {
         async getChatRoom() {
           try {
-            const chatroom_no = this.$route.params.id;
+            const me_no = this.user.user_no;
+            const another_user_no = this.$route.params.id;
+            let user_no = '';
+            if(me_no > another_user_no) {
+                user_no = `${another_user_no}/${me_no}`;
+            } else {
+                user_no = `${me_no}/${another_user_no}`;
+            }
 
-            const response = await axios.get(`http://localhost:3000/chat/getChatRoom/${chatroom_no}`);
+            const response = await axios.get(`http://localhost:3000/chat/getChatRoom/${user_no}`);
             this.chatroom = response.data[0];
             console.log(this.chatroom);
           } catch (error) {
             console.error(error);
           }
-
-          if (this.me == this.chatroom.CHATROOM_USER1) {
-            this.you_no = this.chatroom.CHATROOM_USER2;
-          } else {
-            this.you_no = this.chatroom.CHATROOM_USER1;
-          }
         },
-        async getUserNick() {
+        async getUser() {
           try {
-            const user_no = this.you_no;
-
-            const response = await axios.get(`http://localhost:3000/chat/getUserNick/1`);
-            this.you_nick = response.data[0];
-            console.log(this.you_nick);
+            const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
+            this.loginUser = response.data[0];
           } catch(error) {
             console.error(error);
           }
+        },
+        async getAnothorUser() {
+          try {
+            const another_no = this.$route.params.id;
+            const response = await axios.get(`http://localhost:3000/mypage/mypage/${another_no}`);
+            this.anothorUser = response.data[0];
+          } catch (error) {
+            console.error(error);
+          }
+        },
+        async getChat() {
+          try {
+            const chatroom_no = this.chatroom.CHATROOM_NO;
+            const response = await axios.get(`http://localhost:3000/chat/getChat/${chatroom_no}`);
+            this.chatList = response.data;
+          } catch (error) {
+            console.error(error);
+          }
+        },
+        async send() {
+            try {
+                const chatroom_no = this.chatroom.CHATROOM_NO;
+                const chat_content = this.content;
+                const user_no = this.user.user_no;
+
+                const response = await axios.post(`http://localhost:3000/chat/send`, {
+                    chatroom_no,
+                    chat_content,
+                    user_no
+                });
+            } catch (error) {
+                console.error(error);
+            }
+            this.content = '';
+            await this.getChat();
+        },
+        formatDateTime(dateTime) {
+            const date = new Date(dateTime);
+            const options = {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
+            };
+            const formattedDateTime = date.toLocaleDateString("ko-KR", options);
+            return formattedDateTime;
+        },
+        exitChat() {
+            window.close();
         }
       }
     }

@@ -9,36 +9,34 @@
                     <thead>
                         <tr>
                             <th>번호</th>
-                            <th>상대</th>
-                            <th>내용</th>
+                            <th>프로필 이미지</th>
+                            <th>닉네임</th>
+                            <th>최근 대화 내용</th>
                             <th>나가기</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(chatroom, i) in chatroomList" :key="i" @click="gotoChatRoom(chatroom.CHATROOM_NO)">
+                        <tr v-for="(chatroom, i) in roomList" :key="i" @click="gotoChatRoom(chatroom.CHATROOM_USER1 === user.user_no? chatroom.CHATROOM_USER2:chatroom.CHATROOM_USER1)">
                             <td>{{ chatroom.CHATROOM_NO }}</td>
                             <td>
-                                <!-- <img :width="70" style="border-radius: 10px;"
-                                    :src="chatroom.items[0].CHATROOM_IMG ? require(`../../../StarFarmBack/uploads/user_img/${chatroom.CHATROOM_IMG}`) : '../assets/profile.png'"
-                                    alt="프로필 이미지" /> -->
                                 <img :width="70" style="border-radius: 10px;"
-                                    src="../assets/profile.png"
+                                    :src="userImgList[i] ? require(`../../../StarFarmBack/uploads/userImg/${chatroom.CHATROOM_USER1 === user.user_no? chatroom.CHATROOM_USER2:chatroom.CHATROOM_USER1}/${userImgList[i]}`) : require(`../assets/profile.png`)"
                                     alt="프로필 이미지" />
                             </td>
                             <td>
-                                {{ chatroom.items[0].USER_ID }}
+                                {{ userNickList[i] }}
                             </td>
                             <td>
-                                {{ getComment(chatroom.items[0].CHATROOM_NO) }}
+                                {{ commentList[i] }}
                             </td>
                             <td>
                                 <div @click="outChatRoom(chatroom.CHATROOM_NO)">
-                                    <i class="fas fa-solid fa-right-from-bracket"></i>
+                                    <i class="fas fa-solid fa-comments"></i><!-- 임시 -->
                                 </div>
                             </td>
                         </tr>
-                        <tr v-if="chatroomList.length === 0">
-                            <td colspan="4">채팅방이 없습니다.</td>
+                        <tr v-if="roomList.length === 0">
+                            <td colspan="5">채팅방이 없습니다.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -47,6 +45,8 @@
     </div>
 </template>
 <script>
+import axios from 'axios'
+
     export default {
         name: 'mychat',
         data() {
@@ -54,35 +54,18 @@
                 loginUser: {},
                 roomList: [],
                 commentList: [],
+                userImgList: [],
+                userNickList: [],
             }
         },
         computed: {
             user() {
                 return this.$store.state.user
             },
-            chatroomList() {
-                const chatroom = []
-                const chatroomNos = []
-
-                for(const room of this.roomList) {
-                    if(!chatroomNos.includes(room.CHATROOM_NO)) {
-                        chatroomNos.push({
-                            CHATROOM_NO: room.CHATROOM_NO,
-                            items: [room],
-                        })
-                        chatroom.push(room.CHATROOM_NO)
-                    } else {
-                        const index = chatroomNos.indexOf((o) => o.CHATROOM_NO === room.CHATROOM_NO)
-                        chatroomNos[index].items.push(room)
-                    }
-                }
-                return chatroom
-            }
         },
         created() {
             this.getUser();
             this.getRoomList();
-            this.getComment();
         },
         methods: {
             gotoChatRoom(index) {
@@ -102,20 +85,51 @@
             },
             async getRoomList() {
                 try {
-                    const response = await axios.get(`http://localhost:3000/mypage/chatroomlist/${this.user.user_no}`);
+                    const response = await axios.get(`http://localhost:3000/mypage/getChatRoom/${this.user.user_no}`);
                     this.roomList = response.data;
                 } catch (error) {
                     console.error(error);
                 }
+                for(var i = 0; i < this.roomList.length; i++) {
+                    this.getComment(this.roomList[i].CHATROOM_NO)
+                    this.getChatUser(this.roomList[i].CHATROOM_USER1 === this.user.user_no? this.roomList[i].CHATROOM_USER2:this.roomList[i].CHATROOM_USER1)
+                }
             },
-            async getComment(index) {
+            async getComment(room_no) {
                 try {
-                    const response = await axios.get(`http://localhost:3000/mypage/chatroomcomment/${index}`);
-                    this.commentList = response.data;
+                    const response = await axios.get(`http://localhost:3000/mypage/chatroomcomment/${room_no}`);
+                    this.commentList.push(response.data[0].CHAT_CONTENT);
                 } catch (error) {
                     console.error(error);
                 }
             },
+            async getChatUser(user_no){
+                try {
+                    const response = await axios.get(`http://localhost:3000/mypage/mypage/${user_no}`);
+                    this.userImgList.push(response.data[0].user_img);
+                    this.userNickList.push(response.data[0].user_nick);
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+            async outChatRoom(room_no) {
+                try{
+                    const response = await axios({
+                        url:`http://localhost:3000/chat/outChatRoom`,
+                        method: 'POST',
+                        data: {
+                            room_no: room_no,
+                            user_no: this.user.user_no,
+                        }
+                    });
+                    if(response.data === 'success') {
+                        this.$swal('채팅방에서 나갔습니다.');
+                        this.getRoomList();
+                    }
+                } catch(error) {
+                    console.error(error);
+                }
+            }
         }
     }
 </script>

@@ -134,11 +134,14 @@ created() {
   // this.getChatRoomNo();
 },
 updated() {
-  this.getSuccBid()
-  this.getBidList()
+  
 },
 beforeUpdate() {
-  this.checkBuyUser()
+  if(this.currentTime !== '경매가 종료되었습니다.'){
+    this.getBidList()
+    this.getSuccBid()
+    this.checkBuyUser()
+  }
 },
 methods: {
   goods_trade_(goods_trade){
