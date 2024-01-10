@@ -29,7 +29,7 @@
             <select style="width: 100%;" v-model="product_category1" required @change="cate2Change()">
                 <option value="의류">의류</option>
                 <option value="뷰티">뷰티</option>
-                <option value="생활/가전">생활/가전</option>
+                <option value="생활가전">생활/가전</option>
                 <option value="취미">취미</option>
                 <option value="기타">기타</option>
             </select>
@@ -317,7 +317,7 @@ import moment from 'moment'
                 switch(this.product_category1){
                     case '의류':
                     case '뷰티':
-                    case '생활/가전':
+                    case '생활가전':
                     case '취미':
                     case '기타':
                         this.product_category2 = 1

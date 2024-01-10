@@ -97,7 +97,7 @@ const routes = [
         component: paymentCheck
       },
       {
-        path: '/search_goodslist/:keyword/:page',
+        path: '/search_goodslist/:cate/:keyword/:page',
         name: 'search_goodslist',
         component: searchgoodslist
       }

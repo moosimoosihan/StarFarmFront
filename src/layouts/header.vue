@@ -12,7 +12,7 @@
               <div v-else>
                 <ul class="mymenu">
                   <li>
-                    <a1 href="#">
+                    <a1 @click="gotoSearch('의류',1)">
                       <img style="border-radius: 10px;" class="myPage"
                       :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
                       alt="프로필 이미지"/></a1>
@@ -32,11 +32,11 @@
             </div>
 
             <div class="navbar_search">
-                <input type="text" v-model="searchKeyword">
+                <input type="text" v-model="searchKeyword" @change="changeUrl()" placeholder="검색어를 입력해주세요.">
                 <div class="search_btncontainer">
-                  <button class="search_btn" @click="goSearch()">
+                  <a v-bind:href="url!=''? url:'#'"><button class="search_btn">
                     <i class="fas fa-search"></i>
-                  </button>
+                  </button></a>
               </div>
             </div>
         </div>
@@ -44,63 +44,53 @@
       <div>
             <ul class="menu">
               <li>
-                <a1 href="#">의류</a1>
+                <a class="cate" href="/search_goodslist/cate/의류/0">의류</a>
                 <ul class="submenu">
-                  <li><a href="#">상의</a></li>
-                  <li><a href="#">하의</a></li>
-                  <li><a href="#">신발</a></li>
-                  <li><a href="#">외투</a></li>
-                  <li><a href="#">가방</a></li>
+                  <li><a href="/search_goodslist/cate/의류/1">상의</a></li>
+                  <li><a href="/search_goodslist/cate/의류/2">하의</a></li>
+                  <li><a href="/search_goodslist/cate/의류/3">신발</a></li>
+                  <li><a href="/search_goodslist/cate/의류/4">외투</a></li>
+                  <li><a href="/search_goodslist/cate/의류/5">가방</a></li>
                 </ul>
               </li>
               <li>
-                <a1 href="#">뷰티</a1>
+                <a class="cate" href="/search_goodslist/cate/뷰티/0">뷰티</a>
                 <ul class="submenu">
-                  <li><a href="#">악세사리</a></li>
-                  <li><a href="#">화장품</a></li>
-                  <li><a href="#">향수</a></li>
-                  <li><a href="#">&nbsp;</a></li>
-                  <li><a href="#">&nbsp;</a></li>
-                </ul>
-              </li>
-              <li>
-                <a1 href="#">생활/가전</a1>
-                <ul class="submenu">
-                  <li><a href="#">주방용품</a></li>
-                  <li><a href="#">가전제품</a></li>
-                  <li><a href="#">자동차용품</a></li>
-                  <li><a href="#">생필품</a></li>
-                  <li><a href="#">&nbsp;</a></li>
-                </ul>
-              </li>
-              <li>
-                <a1 href="#">취미</a1>
-                <ul class="submenu">
-                  <li><a href="#">스포츠</a></li>
-                  <li><a href="#">게임</a></li>
-                  <li><a href="#">음악</a></li>
-                  <li><a href="#">미술</a></li>
-                  <li><a href="#">&nbsp;</a></li>
-                </ul>
-              </li>
-              <li>
-                <a1 href="#">기타</a1>
-                <ul class="submenu">
-                  <li><a href="#">&nbsp;</a></li>
-                  <li><a href="#">&nbsp;</a></li>
-                  <li><a href="#">&nbsp;</a></li>
+                  <li><a href="/search_goodslist/cate/뷰티/1">악세사리</a></li>
+                  <li><a href="/search_goodslist/cate/뷰티/2">화장품</a></li>
+                  <li><a href="/search_goodslist/cate/뷰티/3">향수</a></li>
                   <li><a href="#">&nbsp;</a></li>
                   <li><a href="#">&nbsp;</a></li>
                 </ul>
               </li>
               <li>
-                <a1 href="#">커뮤니티</a1>
+                <a class="cate" href="/search_goodslist/cate/생활가전/0">생활/가전</a>
                 <ul class="submenu">
-                  <li><a href="#">신고하기</a></li>
-                  <li><a href="#"></a>&nbsp;</li>
-                  <li><a href="#"></a>&nbsp;</li>
-                  <li><a href="#"></a>&nbsp;</li>
-                  <li><a href="#"></a>&nbsp;</li>
+                  <li><a href="/search_goodslist/cate/생활가전/1">주방용품</a></li>
+                  <li><a href="/search_goodslist/cate/생활가전/2">가전제품</a></li>
+                  <li><a href="/search_goodslist/cate/생활가전/3">자동차용품</a></li>
+                  <li><a href="/search_goodslist/cate/생활가전/4">생필품</a></li>
+                  <li><a href="#">&nbsp;</a></li>
+                </ul>
+              </li>
+              <li>
+                <a class="cate" href="/search_goodslist/cate/취미/0">취미</a>
+                <ul class="submenu">
+                  <li><a href="/search_goodslist/cate/취미/1">스포츠</a></li>
+                  <li><a href="/search_goodslist/cate/취미/2">게임</a></li>
+                  <li><a href="/search_goodslist/cate/취미/3">음악</a></li>
+                  <li><a href="/search_goodslist/cate/취미/4">미술</a></li>
+                  <li><a href="#">&nbsp;</a></li>
+                </ul>
+              </li>
+              <li>
+                <a class="cate" href="/search_goodslist/cate/기타/0">기타</a>
+                <ul class="submenu">
+                  <li><a href="#">&nbsp;</a></li>
+                  <li><a href="#">&nbsp;</a></li>
+                  <li><a href="#">&nbsp;</a></li>
+                  <li><a href="#">&nbsp;</a></li>
+                  <li><a href="#">&nbsp;</a></li>
                 </ul>
               </li>
             </ul>
@@ -115,6 +105,7 @@ export default {
       return {
         loginUser: {},
         searchKeyword: '',
+        url: '',
       }
     },
     computed: {
@@ -190,18 +181,8 @@ export default {
                         window.location.href="http://localhost:8080";
                     })
             },
-          goSearch() {
-            if(this.searchKeyword==''){
-              this.$swal({
-                position: 'top',
-                icon: 'warning',
-                title: '검색어를 입력해주세요.',
-                showConfirmButton: false,
-                timer: 1000
-                })
-            } else {
-              this.$router.push(`/search_goodslist/${this.searchKeyword}/1`)
-            }
+          changeUrl() {
+            this.url = `/search_goodslist/all/${this.searchKeyword}/1`
           }
     },
 }
@@ -456,7 +437,7 @@ a {
     scale: 150%;
   }
 
-  a1 {
+  .cate {
     font-size: 20px;
     font-weight: 700;
   }

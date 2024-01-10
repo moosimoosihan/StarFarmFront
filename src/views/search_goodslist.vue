@@ -1,5 +1,5 @@
 <template>
-    <div class="container" id="scroll">
+    <div class="container" id="scroll" v-if="maxPage!=0">
         <div class="search_title">
             <p>검색어 : {{keyword}}</p>
         </div>
@@ -21,6 +21,9 @@
             <button v-if="page<maxPage" class="page_btn" @click="next()">다음</button>
         </div>
     </div>
+    <div v-else>
+        <p>검색 결과가 없습니다.</p>
+    </div>
 </template>
 <script>
 import axios from 'axios';
@@ -34,21 +37,44 @@ import axios from 'axios';
                 nickList: [],
                 page:1,
                 maxPage: 0,
+
+                category: '',
+                categoryDetail: 0,
             }
         },
         mounted() {
-            this.keyword = this.$route.params.keyword;
-            this.page = this.$route.params.page;
+            if(this.$route.params.cate=='cate'){
+                this.category = this.$route.params.keyword;
+                this.categoryDetail = this.$route.params.page;
+                
+            } else {
+                this.keyword = this.$route.params.keyword;
+                this.page = this.$route.params.page;
+            }
             this.getGoodsList(0);
             this.getMaxPage();
         },
         methods: {
             async getGoodsList(nimNum) {
-                try{
-                    const response = await axios.get(`http://localhost:3000/goods/goodsSearch/${this.keyword}/${nimNum}`)
-                    this.goodsList = response.data;
-                } catch(err) {
-                    console.log(err);
+                if(this.$route.params.cate=='cate'){
+                    try{
+                        if(this,this.categoryDetail==0){
+                            const response = await axios.get(`http://localhost:3000/goods/category_search/${this.category}/${nimNum}`)
+                            this.goodsList = response.data;
+                        } else {
+                            const response = await axios.get(`http://localhost:3000/goods/category_detail_search/${this.category}/${this.categoryDetail}/${nimNum}`)
+                            this.goodsList = response.data;
+                        }
+                    } catch(err) {
+                        console.log(err);
+                    }
+                } else {
+                    try{
+                        const response = await axios.get(`http://localhost:3000/goods/goodsSearch/${this.keyword}/${nimNum}`)
+                        this.goodsList = response.data;
+                    } catch(err) {
+                        console.log(err);
+                    }
                 }
                 this.goods_succ_bid = [];
                 for(let i=0; i<this.goodsList.length; i++){
@@ -71,13 +97,28 @@ import axios from 'axios';
                         this.nickList.push(res.data[0].user_nick);
                     })
                 }
+                this.page = Math.ceil(nimNum/10)+1;
             },
             async getMaxPage() {
-                try{
-                    const response = await axios.get(`http://localhost:3000/goods/goodsSearchMax/${this.keyword}`)
-                    this.maxPage = Math.ceil(response.data[0].max_page/10);
-                } catch(err) {
-                    console.log(err);
+                if(this.$route.params.cate=='cate'){
+                    try{
+                        if(this,this.categoryDetail==0){
+                            const response = await axios.get(`http://localhost:3000/goods/category_search_max/${this.category}`)
+                            this.maxPage = Math.ceil(response.data[0].max_page/10);
+                        } else {
+                            const response = await axios.get(`http://localhost:3000/goods/category_detail_search_max/${this.category}/${this.categoryDetail}`)
+                            this.maxPage = Math.ceil(response.data[0].max_page/10);
+                        }
+                    } catch(err) {
+                        console.log(err);
+                    }
+                } else {
+                    try{
+                        const response = await axios.get(`http://localhost:3000/goods/goodsSearchMax/${this.keyword}`)
+                        this.maxPage = Math.ceil(response.data[0].max_page/10);
+                    } catch(err) {
+                        console.log(err);
+                    }
                 }
             },
             gotoProduct(index) {
