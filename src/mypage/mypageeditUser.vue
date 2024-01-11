@@ -10,7 +10,7 @@
 
                 <div class="profile-upload-content upload-img">
                 <div class="profile-img">
-                    <img v-if="loginUser.user_img" id="img-preview" :width="200" :src="require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`)">
+                    <img v-if="loginUser.user_img" id="img-preview" :width="200" :src="require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`)" >
                     <img v-else-if="profile_img_src != ''" id="img-preview" :width="200" :src="profile_img_src"
                             alt="프로필 사진 미리보기" />
                     <img v-else id="img-preview" :width="200" :src="require(`../assets/profile.png`)"
@@ -50,9 +50,9 @@
                 <input type="text" class="in2" placeholder="상세주소" v-model="loginUser.user_adr2" />
             </div>
 
-            <div class="pass" @click="goToPass">비밀번호 수정</div>
-
+            
             <div class="form4">
+                <button type="submit" class="pass" @click="goToPass">비밀번호 수정</button>
                 <button type="submit" class="btn2" @click="onSubmitForm">수정하기</button>
             </div>
         </div>
@@ -286,19 +286,13 @@ a {
     font-style: normal;
 }
 
-/* input {} */
-input:focus {
-    /* border: 2px solid #ffc905; */
-    outline: 2px solid rgb(255, 236, 253);
-}
-
 .container {
-    margin: 40px 30px;
+    margin: 50px 230px;
     font-family: GmarketSansMedium;
 }
 
 h2 {
-    margin: 20px 0 40px 0;
+    margin: 20px 0 70px 0;
 }
 
 /* form */
@@ -316,7 +310,7 @@ h2 {
 }
 
 .form .in {
-    margin-bottom: 10px;
+    margin-bottom: 30px;
     display: flex;
     height: 30px;
 }
@@ -325,7 +319,7 @@ h2 {
     display: flex;
     align-items: center;
     width: 300px;
-    height: 40px;
+    height: 50px;
     font-size: 1rem;
     font-family: GmarketSansMedium;
     padding-left: 20px;
@@ -337,7 +331,7 @@ h2 {
 
 .form .btn {
     /* display: flex; */
-    height: 42px;
+    height: 50px;
     width:120px;
     position: relative;
     padding: 8px 10px;
@@ -363,8 +357,8 @@ h2 {
 .form3 .in2 {
     display: block;
     align-items: center;
-    width: 400px;
-    height: 40px;
+    width: 427px;
+    height: 50px;
     font-size: 1rem;
     padding-left: 20px;
     font-family: GmarketSansMedium;
@@ -380,9 +374,20 @@ h2 {
 }
 
 .pass {
-    color:  rgb(255, 219, 251);
-    margin: 40px 0 10px 0;
+    height: 40px;
+    width:120px;
+    position: relative;
+    padding: 8px 10px;
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    font-family: GmarketSansMedium;
+    border: none;
+    background-color: rgb(1, 96, 15);
+    border-radius: 10px;
     cursor: pointer;
+    margin-top: 50px;
+    margin-left: 300px;
+    text-align: center;
 }
 
 input:focus {
@@ -392,8 +397,8 @@ input:focus {
 
 .form button:hover {
     color: rgb(255, 255, 255);
-    border: 2px solid rgb(253, 217, 249);
-    background-color: rgb(255, 236, 253);
+    border: 2px solid rgb(0, 104, 28);
+    background-color: rgb(6, 118, 0);
     border-radius: 10px;
     cursor: pointer;
 }
@@ -407,7 +412,8 @@ input:focus {
     border-radius: 10px;
     cursor: pointer;
     float: right;
-    margin-right: 50px;
+    margin-right: 590px;
+    margin-top: 50px;
 }
 .profile-img {
   width: 200px;
@@ -421,6 +427,7 @@ input:focus {
 }
 
 #profile-img {
-    margin-left: 250px;
+    margin-left: 280px;
+    border:none;
 }
 </style>
