@@ -29,7 +29,7 @@ import mypageSideBar from './mypageLeftBar.vue'
     padding-left: 10%;
     margin: auto;
     width: 90%;
-    height: 700px;
+    height: 1000px;
     overflow-y: scroll;
   }
 

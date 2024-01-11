@@ -29,6 +29,9 @@
               </button>
               </td>
              </tr>
+             <tr v-if="userList.length === 0">
+               <td colspan="7">회원이 없습니다.</td>
+              </tr>
           </tbody>
         </table>
       </div>

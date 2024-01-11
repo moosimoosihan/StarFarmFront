@@ -45,6 +45,9 @@ import adminUser from './admin/AdminUser.vue'
 // 채팅 페이지
 import chatroom from './views/chatroom.vue'
 
+// 신고상세보기 페이지
+import reportDetail from './admin/reportDetail.vue'
+
 const routes = [
   {
     path: '/',
@@ -161,7 +164,7 @@ const routes = [
           component: chatroom
         },
         {
-          path: 'find',
+          path: '/find',
           component: FindPage,
         },
       ]
@@ -184,6 +187,11 @@ const routes = [
           component: adminDeal,
         }
       ]
+    },
+    {
+      path: '/reportDetail/:id',
+      name: 'reportDetail',
+      component: reportDetail
     }
   ]
 

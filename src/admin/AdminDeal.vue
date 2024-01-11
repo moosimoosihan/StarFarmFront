@@ -36,6 +36,9 @@
                 </button>
               </td>
             </tr>
+            <tr v-if="productList.length === 0">
+              <td colspan="9">상품이 없습니다.</td>
+            </tr>
           </tbody>
         </table>
       </div>

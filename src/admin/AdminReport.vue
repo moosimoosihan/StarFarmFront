@@ -10,20 +10,21 @@
               <th>신고제목</th>
               <th>신고자</th>
               <th>피신고자</th>
-              <th>진행사항</th>
               <th>신고날짜</th>
-              <th>보기</th>
+              <th>상세보기</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(report, index) in reports" :key="index">
               <td>{{ index + 1 }}</td>
-              <td>{{ report.title }}</td>
-              <td>{{ report.reporter }}</td>
-              <td>{{ report.reported }}</td>
-              <td>{{ report.status }}</td>
-              <td>{{ report.date }}</td>
-              <td><button class="view-button" @click="viewReport(index)">보기</button></td>
+              <td>{{ report.REPORT_TITLE }}</td>
+              <td>{{ reported_userNames[index] }}</td>
+              <td>{{ report_userNames[index] }}</td>
+              <td>{{ report.REPORT_DATE }}</td>
+              <td><button class="view-button" @click="viewReport(report.REPORT_NO)">보기</button></td>
+            </tr>
+            <tr v-if="reports.length === 0">
+              <td colspan="6">신고된 내역이 없습니다.</td>
             </tr>
           </tbody>
         </table>
@@ -32,32 +33,61 @@
    </div>
  </template>
 <script>
-            export default {
-            data() {
-            return {
-              reports: [
-                {
-                        title: '(구매자신고) 마음에 안듬',
-                        reporter: 'B씨',
-                        reported: 'A씨',
-                        status: '처리중',
-                        date: '2023-01-01'
-                }
-                  ]
-              }
-            },
-                methods: {
-                  viewReport: function (index) {
-                    // 각 신고에 대한 상세 정보 보기 로직을 추가할 수 있습니다.
-                    console.log('View report:', this.reports[index]);
-               
-                
+import axios from 'axios';
 
-                }
-            }
+export default {
+  data() {
+    return {
+      reports: [],
+      reported_userNames: [],
+      report_userNames: [],
+    }
+  },
+  mounted() {
+    this.getReport();
+  },
+  methods: {
+    viewReport(report_no) {
+      let popupWindow = window.open(`http://localhost:8080/reportDetail/${report_no}`, '_blank', 'width=800', 'height=620', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
+        popupWindow.resizeTo(800, 620)
+        popupWindow.onresize = (_=>{
+          popupWindow.resizeTo(800, 620)
+        })
+    },
+    async getReport(){
+      try{
+        const res = await axios.get('http://localhost:3000/auth/admin/reportlistInfo');
+        this.reports = res.data;
+      } catch(err) {
+        console.log(err);
+      }
+      this.getReportedUserNames()
+      this.getReportUserNames()
+    },
+    async getReportedUserNames(){
+      try{
+        for(let i=0; i<this.reports.length; i++){
+          const res = await axios.get(`http://localhost:3000/mypage/mypage/${this.reports[i].USER_NO}`);
+          this.reported_userNames.push(res.data[0].user_nick);
         }
-     </script>
-    <style scoped>
+      } catch(err) {
+        console.log(err);
+      }
+    },
+    async getReportUserNames(){
+      try{
+        for(let i=0; i<this.reports.length; i++){
+          const res = await axios.get(`http://localhost:3000/mypage/mypage/${this.reports[i].REPORT_USER_NO}`);
+          this.report_userNames.push(res.data[0].user_nick);
+        }
+      } catch(err) {
+        console.log(err);
+      }
+    }
+  }
+}
+</script>
+<style scoped>
 body {
     margin: 0;
     padding: 0;
