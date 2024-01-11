@@ -40,6 +40,7 @@
     import axios from 'axios';
 
     export default {
+        name: 'pass',
         data() {
             return {
                 user_pw: '',          

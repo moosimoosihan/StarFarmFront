@@ -26,8 +26,7 @@
                   <p class="slider-name">{{ goods.goods_nm }}</p>
                   <p class="slider-startprice">시작가 : {{ goods.goods_start_price }}</p>
                   <p class="slider-nowprice">입찰가 : {{ main_goods_succ_bid[i] }}</p>
-                  <p class="slider-nowprice1" font-color:red> 타이머 : {{ main_goods_succ_bid[i] }}</p>
-
+                  <p class="slider-nowprice1" font-color:red v-if="goods.goods_timer">{{ eventGoodsTimer[i] }}</p>
                 </div>
               </div>
             </div>
@@ -43,7 +42,7 @@
               <p class="slider-name">{{ goods.goods_nm }}</p>
               <p class="slider-startprice">시작가 : {{ goods.goods_start_price }}</p>
               <p class="slider-nowprice">입찰가 : {{ goods_succ_bid[i] }}</p>
-              <p class="slider-nowprice1" font-color:red>타이머 : {{ main_goods_succ_bid[i] }}</p>
+              <p class="slider-nowprice1" font-color:red v-if="goods.goods_timer">{{ defaultGoodsTimer[i] }}</p>
               </div>
             </div>
           </div>
@@ -59,6 +58,7 @@
             <p class="goodsname">{{ goods.goods_nm }}</p>
             <p class="price">시작가 : {{ goods.goods_start_price }}</p>
             <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
+            <p class="time" v-if="goods.goods_timer">{{ goodsTimer[i] }}</p>
           </div>
       </div>
       <div v-else>
@@ -70,6 +70,7 @@
 import axios from 'axios';
 
 export default {
+  name: 'MainPage',
   data() {
     return {
       eventImageList: ['1-1.jpg','1-2.jpg','1-3.jpg','1-4.jpg'],
@@ -80,32 +81,38 @@ export default {
       goods_succ_bid: [],
       intervalId: null, // 자동 슬라이드를 위한 인터벌 ID
       main_goods_succ_bid: [],
+
+      eventGoodsTimer: [],
+      defaultGoodsTimer: [],
+      goodsTimer: [],
+      timer: null,
     }
   },
   created() {
     this.getGoods();
     this.getPopularProducts()
     this.startAutoSlide(); // 페이지가 생성될 때 자동 슬라이드 시작
+    this.allGoodsTimer()
   },
   beforeDestroy() {
     this.stopAutoSlide(); // 페이지가 파괴될 때 자동 슬라이드 정지
+    this.stopAutoTimer(); // 페이지가 파괴될 때 타이머 정지
   },
   methods: {
     async getGoods(){
       await axios.get('http://localhost:3000/goods/maingoods')
         .then((res) => {
-          console.log(res.data);
           this.goodsList = res.data;
+          this.goodsTimer = new Array(this.goodsList.length);
         })
         .catch((err) => {
           console.log(err);
         })
-        console.log(this.goodsList.length);
         for(let i=0; i<this.goodsList.length; i++){
             await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.goodsList[i].goods_no}`)
             .then((res) => {
               if(res.data[0].succ_bid==null){
-                this.goods_succ_bid.push('05:25');
+                this.goods_succ_bid.push('입찰 없음');
               } else {
                 this.goods_succ_bid.push(res.data[0].succ_bid);
               }
@@ -113,6 +120,7 @@ export default {
             .catch((err) => {
               console.log(err);
             })
+            
           }
     },
     //인기상품가져오기
@@ -122,6 +130,7 @@ export default {
         //백엔드에 대한 인기상품을 가져온다.
         const response = await axios.get(`http://localhost:3000/goods/PopularProducts`)
         this.mainEventGoods = response.data
+        this.eventGoodsTimer = new Array(this.mainEventGoods.length);
       }catch(err){
         console.log(err);
       }
@@ -132,7 +141,7 @@ export default {
           await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.mainEventGoods[i].goods_no}`)
           .then((res) => {
             if(res.data[0].succ_bid==null){
-              this.main_goods_succ_bid.push('05:25');
+              this.main_goods_succ_bid.push('입찰 없음');
             } else {
               this.main_goods_succ_bid.push(res.data[0].succ_bid);
             }
@@ -150,6 +159,7 @@ export default {
         try{
           const response_default = await axios.get(`http://localhost:3000/goods/DefaultProducts`)
           this.mainDefaultGoods = response_default.data
+          this.defaultGoodsTimer = new Array(this.mainDefaultGoods.length)
         } catch(err){
           console.log(err)
         }
@@ -180,12 +190,81 @@ export default {
     stopAutoSlide() {
       clearInterval(this.intervalId);
     },
+    stopAutoTimer() {
+      clearInterval(this.timer);
+    },
+    updateTimer(endTime) {
+      // 날짜를 초로 바꾸어 저장 후 계산
+      let countDownDate = new Date(endTime).getTime();
+      // 현재 시간을 초로 바꾸어 저장
+      let currentTime = new Date().getTime();
+      const distance = countDownDate - currentTime;
+      // 만약 종료시간이 지났다면 타이머를 종료하고 경매가 종료되었다는 메시지를 표시
+      if (distance < 0) {
+        return '경매가 종료되었습니다.';
+      }
+      // 남은 시간 계산
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      // 표시할 남은 시간 문자열 생성 포맷은 무조건 해당 포맷 하나만 '00일 남음' '00시간 남음' '00분 남음' '00초 남음' 으로만 표기
+      const daysStr = days > 0 ? `${days}일 남음` : '';
+      const hoursStr = hours > 0 ? `${hours}시간 남음` : '';
+      const minutesStr = minutes > 0 ? `${minutes}분 남음` : '';  
+      const secondsStr = seconds >= 0 ? `${seconds}초 남음` : '';
+      // 만약 00일 남음이라면
+      if (daysStr === '') {
+        // 00시간 남음이라면
+        if (hoursStr === '') {
+          // 00분 남음이라면
+          if (minutesStr === '') {
+            // 00초 남음이라면
+            if (secondsStr === '') {
+              // 경매가 종료되었다는 메시지를 표시
+              return '경매가 종료되었습니다.';
+            }
+            // 00초 남음이 아니라면 00초 남음을 표시
+            return secondsStr;
+          }
+          // 00분 남음이 아니라면 00분 남음을 표시
+          return minutesStr;
+        }
+        // 00시간 남음이 아니라면 00시간 남음을 표시
+        return hoursStr;
+      }
+      // 00일 남음이 아니라면 00일 남음을 표시
+      return daysStr;
+    },
+    allGoodsTimer(){
+      this.timer = setInterval(()=>{
+        if(this.goodsList.length>0){
+          for(let i=0; i<this.goodsList.length; i++){
+            if(this.goodsTimer[i]!='경매가 종료되었습니다.')
+              this.goodsTimer[i] = this.updateTimer(this.goodsList[i].goods_timer);
+          }
+        }
+        if(this.mainEventGoods.length>0){
+          for(let y=0; y<this.mainEventGoods.length; y++){
+            if(this.eventGoodsTimer[y]!='경매가 종료되었습니다.')
+              this.eventGoodsTimer[y] = this.updateTimer(this.mainEventGoods[y].goods_timer);
+          }
+        }
+        if(this.mainDefaultGoods.length>0){
+          for(let z=0; z<this.mainDefaultGoods.length; z++){
+            if(this.defaultGoodsTimer[z]!='경매가 종료되었습니다.')
+              this.defaultGoodsTimer[z] = this.updateTimer(this.mainDefaultGoods[z].goods_timer);
+          }
+        }
+      }, 1000);
+    }
   },
   computed: {
     user() {
       return this.$store.state.user;
     },
-  }
+  },
+
 }
 </script>
 <style scoped>
@@ -220,7 +299,7 @@ export default {
 }
 .item_container {
   width: 200px;
-  height: 350px;
+  height: 380px;
   background-color: rgb(255, 255, 255);
   border-style: solid;
   border-width: 2px;
@@ -255,6 +334,13 @@ export default {
   position: relative;
   left: 5px;
   top: 25px;
+}
+
+.time {
+  position: relative;
+  left: 5px;
+  top: 30px;
+  color : red;
 }
 
 .goods_img {

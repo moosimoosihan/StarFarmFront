@@ -15,12 +15,12 @@
   import Footer from './footer.vue'
   
   export default {
+    name: 'defaultLayout',
     components: {
       Header, Footer
     }
   }
   </script>
-  
   <style scoped>
   .default_content {
     padding-top: 230px;

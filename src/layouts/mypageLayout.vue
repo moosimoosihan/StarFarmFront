@@ -17,7 +17,7 @@ import Footer from './footer.vue'
 import mypageSideBar from './mypageLeftBar.vue'
   
     export default {
-    name: 'app',
+    name: 'mypageLayout',
     components: {
       mypageSideBar, Header, Footer
     }

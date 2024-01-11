@@ -71,7 +71,6 @@ import axios from 'axios';
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
                     this.loginUser = response.data[0];
-                    console.log(this.loginUser);
                 } catch (error) {
                     console.error(error);
                 }
@@ -79,7 +78,6 @@ import axios from 'axios';
             async getGoods(){
                 await axios.get('http://localhost:3000/goods/maingoods')
                     .then((res) => {
-                    console.log(res.data);
                     this.goodsList = res.data;
                 })
                 .catch((err) => {
@@ -138,7 +136,6 @@ import axios from 'axios';
               try {
                 const response = await axios.get(`http://localhost:3000/mypage/salelist_preview/${user_no}`);
                 this.saleList = response.data;
-                console.log(this.saleList);
               } catch (error) {
                 console.error(error);
               }

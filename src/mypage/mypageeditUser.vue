@@ -63,6 +63,7 @@
 import axios from 'axios';
 
 export default {
+    name: 'mypageeditUser',
     data() {
         return {
             loginUser: {},
