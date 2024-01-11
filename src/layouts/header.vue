@@ -24,17 +24,14 @@
                         <li @click="logout()">로그아웃</li>
                       </ul>  
                   </li>
-                  </ul>
-
-                <!-- <button @click="gotoUpload()" class="storeupload_btn"><img src="../assets/storeupload.png" height="50px" width="120px" ></button>
-                <button class="chat_btn" @click="gotoMyChat()"><img src="../assets/chatting.png" height="50px" width="120px" ></button> -->
+                </ul>
               </div>
             </div>
 
             <div class="navbar_search">
-                <input type="text" v-model="searchKeyword" @change="changeUrl()" placeholder="검색어를 입력해주세요.">
+                <input type="text" v-model="searchKeyword">
                 <div class="search_btncontainer">
-                  <a v-bind:href="url!=''? url:'#'"><button class="search_btn">
+                  <a @click="gotoSearch()"><button class="search_btn">
                     <i class="fas fa-search"></i>
                   </button></a>
               </div>
@@ -44,47 +41,47 @@
       <div>
             <ul class="menu">
               <li>
-                <a class="cate" href="/search_goodslist/cate/의류/0">의류</a>
+                <a class="cate" @click="gotoCate('의류',0)">의류</a>
                 <ul class="submenu">
-                  <li><a href="/search_goodslist/cate/의류/1">상의</a></li>
-                  <li><a href="/search_goodslist/cate/의류/2">하의</a></li>
-                  <li><a href="/search_goodslist/cate/의류/3">신발</a></li>
-                  <li><a href="/search_goodslist/cate/의류/4">외투</a></li>
-                  <li><a href="/search_goodslist/cate/의류/5">가방</a></li>
+                  <li><a @click="gotoCate('의류',1)">상의</a></li>
+                  <li><a @click="gotoCate('의류',2)">하의</a></li>
+                  <li><a @click="gotoCate('의류',3)">신발</a></li>
+                  <li><a @click="gotoCate('의류',4)">외투</a></li>
+                  <li><a @click="gotoCate('의류',5)">가방</a></li>
                 </ul>
               </li>
               <li>
-                <a class="cate" href="/search_goodslist/cate/뷰티/0">뷰티</a>
+                <a class="cate" @click="gotoCate('뷰티',0)">뷰티</a>
                 <ul class="submenu">
-                  <li><a href="/search_goodslist/cate/뷰티/1">악세사리</a></li>
-                  <li><a href="/search_goodslist/cate/뷰티/2">화장품</a></li>
-                  <li><a href="/search_goodslist/cate/뷰티/3">향수</a></li>
+                  <li><a @click="gotoCate('뷰티',1)">악세사리</a></li>
+                  <li><a @click="gotoCate('뷰티',2)">화장품</a></li>
+                  <li><a @click="gotoCate('뷰티',3)">향수</a></li>
                   <li><a href="#">&nbsp;</a></li>
                   <li><a href="#">&nbsp;</a></li>
                 </ul>
               </li>
               <li>
-                <a class="cate" href="/search_goodslist/cate/생활가전/0">생활/가전</a>
+                <a class="cate" @click="gotoCate('생활가전',0)">생활/가전</a>
                 <ul class="submenu">
-                  <li><a href="/search_goodslist/cate/생활가전/1">주방용품</a></li>
-                  <li><a href="/search_goodslist/cate/생활가전/2">가전제품</a></li>
-                  <li><a href="/search_goodslist/cate/생활가전/3">자동차용품</a></li>
-                  <li><a href="/search_goodslist/cate/생활가전/4">생필품</a></li>
+                  <li><a @click="gotoCate('생활가전',1)">주방용품</a></li>
+                  <li><a @click="gotoCate('생활가전',2)">가전제품</a></li>
+                  <li><a @click="gotoCate('생활가전',3)">자동차용품</a></li>
+                  <li><a @click="gotoCate('생활가전',4)">생필품</a></li>
                   <li><a href="#">&nbsp;</a></li>
                 </ul>
               </li>
               <li>
-                <a class="cate" href="/search_goodslist/cate/취미/0">취미</a>
+                <a class="cate" @click="gotoCate('취미',0)">취미</a>
                 <ul class="submenu">
-                  <li><a href="/search_goodslist/cate/취미/1">스포츠</a></li>
-                  <li><a href="/search_goodslist/cate/취미/2">게임</a></li>
-                  <li><a href="/search_goodslist/cate/취미/3">음악</a></li>
-                  <li><a href="/search_goodslist/cate/취미/4">미술</a></li>
+                  <li><a @click="gotoCate('취미',1)">스포츠</a></li>
+                  <li><a @click="gotoCate('취미',2)">게임</a></li>
+                  <li><a @click="gotoCate('취미',3)">음악</a></li>
+                  <li><a @click="gotoCate('취미',4)">미술</a></li>
                   <li><a href="#">&nbsp;</a></li>
                 </ul>
               </li>
               <li>
-                <a class="cate" href="/search_goodslist/cate/기타/0">기타</a>
+                <a class="cate" @click="gotoCate('기타',0)">기타</a>
                 <ul class="submenu">
                   <li><a href="#">&nbsp;</a></li>
                   <li><a href="#">&nbsp;</a></li>
@@ -132,16 +129,16 @@ export default {
                 title: '정지된 계정입니다.',
                 showConfirmButton: false,
                 timer: 1000
-                }).then(() => {
-                  if(this.loginUser.user_social_tp==1){
-                    window.Kakao.Auth.logout()
-                  }
-                    this.$store.commit("user", {
-                      user_no: '',
-                      user_id: '',
-                    })
-                    window.location.href="http://localhost:8080";
+              }).then(() => {
+                if(this.loginUser.user_social_tp==1){
+                  window.Kakao.Auth.logout()
+                }
+                this.$store.commit("user", {
+                  user_no: '',
+                  user_id: '',
                 })
+                window.location.href="http://localhost:8080";
+              })
             }
           }
         },
@@ -165,25 +162,41 @@ export default {
         },
         logout() {
           if(this.loginUser.user_social_tp==1){
-                    window.Kakao.Auth.logout()
-                }
-                this.$store.commit("user", {
-                  user_no: '',
-                  user_id: '',
-                })
-                this.$swal({
-                    position: 'top',
-                    icon: 'success',
-                    title: '로그아웃 성공!',
-                    showConfirmButton: false,
-                    timer: 1000
-                    }).then(() => {
-                        window.location.href="http://localhost:8080";
-                    })
-            },
-          changeUrl() {
-            this.url = `/search_goodslist/all/${this.searchKeyword}/1`
+            window.Kakao.Auth.logout()
           }
+          this.$store.commit("user", {
+            user_no: '',
+            user_id: '',
+          })
+          this.$swal({
+            position: 'top',
+            icon: 'success',
+            title: '로그아웃 성공!',
+            showConfirmButton: false,
+            timer: 1000
+          }).then(() => {
+            window.location.href="http://localhost:8080";
+          })
+        },
+        changeUrl() {
+          this.url = `/search_goodslist/all/${this.searchKeyword}/1`
+        },
+        gotoSearch() {
+          if(this.searchKeyword==''){
+            this.$swal({
+              position: 'top',
+              icon: 'warning',
+              title: '검색어를 입력해주세요.',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            return
+          }
+          window.location.href=`http://localhost:8080/search_goodslist/all/${this.searchKeyword}/1`
+        },
+        gotoCate(cate, cate2) {
+          window.location.href=`http://localhost:8080/search_goodslist/cate/${cate}/${cate2}`
+        },
     },
 }
 </script>
@@ -358,8 +371,8 @@ a {
     justify-content:center;
     margin-top: 100px;
     margin-bottom: 30px;
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-left: 15%;
+    margin-right: 5%;
   }
   .menu > li {
     width: 16%;

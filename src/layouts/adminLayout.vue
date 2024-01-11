@@ -3,6 +3,11 @@
         <div class="container" v-if="admin">
             <div class="menu-container">
                 <div class="management-box ">
+                    <router-link to="/">
+                        <h3>메인으로</h3>
+                    </router-link>
+                </div>
+                <div class="management-box ">
                     <router-link to="/admin/">
                         <h3>회원관리</h3>
                     </router-link>
@@ -18,7 +23,9 @@
                     </router-link>
                 </div>
             </div>
-            <router-view></router-view>
+            <div>
+                <router-view></router-view>
+            </div>
         </div>
         <div v-else>
             <h1>접근 권한이 없습니다.</h1>
@@ -78,11 +85,12 @@ export default {
 .menu-container {
     display: flex;
     flex-direction: column;
-    width: 350px;
+    width: 400px;
     padding: 20px;
     border: 1px solid #000000; /* 검은선 */
 }
 .management-box {
+    width: 100px;
     background-color: #f57575;
     padding: 3px;
     margin-bottom: 90px;

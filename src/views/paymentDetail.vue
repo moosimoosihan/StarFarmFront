@@ -1,15 +1,15 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="Order">
     <div id="payment_wrapper">
       <!--선라인-->
       <div class="line">
       </div>
         <h1>주문 상세 보기</h1>
         <div class="info-row">
-          <p><p1>수령자 이름*</p1> {{ loginUser.user_id }}</p>
-          <p><p1>전화번호*</p1>   {{ loginUser.user_mobile }}</p>
-          <p><p1>상세주소*</p1>  {{ loginUser.user_adr1 + ' ' + loginUser.user_adr2 }}</p>
-          <p><p1> 우편번호*</p1>   {{ loginUser.user_zipcode }}</p>
+          <p><p1>수령자 이름</p1> {{ Order.ORDER_RECEIVE_NM }}</p>
+          <p><p1>전화번호</p1>   {{ Order.ORDER_MOBILE }}</p>
+          <p><p1>우편번호</p1>   {{ Order.ORDER_ZIPCODE }}</p>
+          <p><p1>상세주소</p1>  {{ Order.ORDER_ADDR1 + ' ' + Order.ORDER_ADDR2 }}</p>
         </div>
            <div class="line">
            </div>
@@ -26,18 +26,24 @@
           <div class="line"></div>
           <!--배송지 및 배송가격-->
              <div class="info-row">
-           <p><p1>상품가격*</p1>{{products.goods_succ_price}}</p>
-           <p><p1>배송비*</p1>{{products.goods_deliv_price}}</p>
-            <p><p1>총 금액*</p1>{{totalprice}}</p>
-                  <!-- 배송 요청사항 -->
-                  <p class="info-label">배송 요청사항</p>
-                  <p class="info-value">{{ Order.ORDER_CONTENT }}</p>
+           <p><p1>상품가격</p1>{{products.goods_succ_price}}</p>
+           <p><p1>배송비</p1>{{products.goods_deliv_price}}</p>
+            <p><p1>총 금액</p1>{{getTotalPrice()}}</p>
+            <p class="info-label"><p1>배송 요청사항</p1>{{ Order.ORDER_CONTENT }}</p>
              </div>
         <div id="payment_submit">
           <button id="home_button" @click="gotoHome()">
             홈으로
           </button>
         </div>
+    </div>
+  </div>
+  <div v-else>
+    <h1>주문이 없습니다.</h1>
+    <div id="payment_submit">
+      <button id="home_button" @click="gotoHome()">
+        홈으로
+      </button>
     </div>
   </div>
 </template>
@@ -60,26 +66,30 @@ export default {
     },
   },
   created() {
-    this.getUser();
-    this.getProduct(); // 제품 정보를 가져 오기
-    this.getOrder();
-    this.getTotalPrice();
+    this.getUser()
+    this.getProduct()
+    this.getOrder()
   },
   methods: {
     async getUser() {
       try {
         const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
         this.loginUser = response.data[0];
-        console.log(this.loginUser);
       } catch (error) {
         console.error(error);
       }
     },
     async getProduct() {
        try {
-        const goodsno = this.$route.params.id;
-        const response = await axios.get(`http://localhost:3000/goods/goodsInfo/${goodsno}`);
-        this.products = response.data[0];
+          const goodsno = this.$route.params.id;
+          axios({
+            url:`http://localhost:3000/goods/goodsInfo/${goodsno}`,
+            method:'get',
+          })
+            .then((response) => {
+              this.products = response.data[0];
+              this.getTotalPrice()
+            })
         } catch (error) {
           console.error(error);
         }
@@ -87,7 +97,7 @@ export default {
     async getOrder() {
       try{
         const order_no = this.$route.params.order_no;
-        const response = await axios.get(`http://localhost:3000/order/orderInfo/${order_no}`);
+        const response = await axios.get(`http://localhost:3000/goods/orderInfo/${order_no}`);
         this.Order = response.data[0];
       } catch (error) {
         console.error(error);
@@ -97,15 +107,12 @@ export default {
       this.$router.push('/');
     },
     getTotalPrice(){
-      if(this.goods.goods_trade==0){
-        this.totalPrice = Number(this.goods_succ_bid) + Number(this.goods.goods_deliv_price)
+      if(this.products.goods_trade==0){
+        return Number(this.products.goods_succ_price) + Number(this.products.goods_deliv_price)
       } else {
-        this.totalPrice = this.goods_succ_bid
+        return Number(this.products.goods_succ_price)
       }
   },
-  getBid() {
-    this.totalprice = this.$route.params.totalprice;
-  }
 }
 }
 </script>

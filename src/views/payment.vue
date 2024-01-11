@@ -12,7 +12,7 @@
             <div class="payment_product_content">
               <h2>상품명 : {{ products.goods_nm }}</h2>
               <p>상품설명: {{ products.goods_content}}</p>
-              <p>가격: {{ goods_succ_bid }}</p>
+              <p>가격: {{ products.goods_succ_price }}</p>
             </div>
             <!--판매자 닉네임 및 사진-->
             <div class="profile_box">
@@ -69,7 +69,6 @@ export default {
             loginUser:{},
             orderUser:{},
             products: {},
-            goods_succ_bid: '',
             order_content:'',
             totalPrice:'',
           };
@@ -119,12 +118,6 @@ export default {
               } catch (error) {
                 console.error(error);
               }
-              try{
-                const response_bid = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.products.goods_no}`)
-                this.goods_succ_bid = response_bid.data[0].succ_bid
-              } catch (error) {
-                console.error(error)
-              }
               this.getOrderUser()
             },
         sendDataToBackend() {
@@ -139,7 +132,7 @@ export default {
             showCancelButton: true,
           }).then((result)=>{
               if(result.isConfirmed){
-                this.$router.push(`/paymentCheck/${this.loginUser.user_id}/${this.loginUser.user_mobile}/${this.loginUser.user_email}/${this.products.goods_nm}/${this.products.goods_content}/${this.products.goods_trade}/${this.products.goods_deliv_price}/${this.goods_succ_bid}/${this.order_content}/${this.loginUser.user_zipcode}/${this.loginUser.user_adr1}/${this.loginUser.user_adr2}`)
+                this.$router.push(`/paymentCheck/${this.loginUser.user_id}/${this.loginUser.user_mobile}/${this.loginUser.user_email}/${this.products.goods_no}/${this.order_content}/${this.loginUser.user_zipcode}/${this.loginUser.user_adr1}/${this.loginUser.user_adr2}`)
               }
             })
           },
@@ -197,6 +190,7 @@ export default {
 </script>
 
 <style scoped>
+
 * {
     margin: 0;
     padding: 0;
@@ -237,7 +231,7 @@ export default {
 .payment_product_content {
     width: 70%;
     height: 150px;
-    background-color:rgb(255, 236, 253);
+    background-color:rgb(242, 255, 245);
     float:right;
     flex:1;
 }
@@ -312,7 +306,7 @@ export default {
     background: none;
     float: right;
     border: 0;
-    background-color: rgb(255, 236, 253);
+    background-color:rgb(242, 255, 245);
     margin-left: 30px;
     text-align: center;
     font-size:17px
@@ -345,7 +339,8 @@ li {
     height: 150px;
     float:right;
     align-items:center;
-    background-color: rgb(255, 236, 253);
+    background-color:rgb(242, 255, 245);
+    text-align: center;
 }
 .paymentCheck {
   margin-top: 20px;

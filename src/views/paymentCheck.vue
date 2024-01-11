@@ -18,11 +18,11 @@
         <div class="payment_list">
           <p><p1>상품명</p1> {{ goods.goods_nm }}</p>
           <p><p1>상품설명</p1> {{ goods.goods_content }}</p>
-          <p><p1>상품금액</p1> {{ goods_succ_bid }}</p>
+          <p><p1>상품금액</p1> {{ goods.goods_succ_price }}</p>
           <p><p1>배송비</p1> {{goods.goods_deliv_price}}</p>
         </div>
         <div class="payment_list1">      
-          <p><p1>총 금액</p1> {{ totalPrice }}원</p>
+          <p><p1>총 금액</p1> {{ getTotalPrice() }}원</p>
         </div>
       </div>
       <div class="payment_check2">
@@ -48,16 +48,8 @@ data() {
       user_adr1:'',
       user_adr2:'',
     },
-    goods: {
-      goods_nm:'',
-      goods_content:'',
-      goods_trade:'',
-      goods_deliv_price:0,
-    },
-    goods_succ_bid: 0,
+    goods: {},
     order_content:'',
-    adr:'',
-    totalPrice:0,
   };
 },
 computed: {
@@ -68,7 +60,6 @@ computed: {
 created() {
   this.getUser()
   this.getGoods()
-  this.getBid()
 },
 mounted() {
   // this.gotoPayAPI()
@@ -77,77 +68,104 @@ methods: {
     /*총 금액*/
     getTotalPrice(){
     if(this.goods.goods_trade==0){
-      this.totalPrice = Number(this.goods_succ_bid) + Number(this.goods.goods_deliv_price)
+      return Number(this.goods.goods_succ_price) + Number(this.goods.goods_deliv_price)
     }
     else {
-      this.totalPrice = this.goods_succ_bid
+      return Number(this.goods.goods_succ_price)
     }
   },
   /*결제상세정보확인*/
   async gotoPayAPI() {
     try{
-              axios({
-                url:"http://localhost:3000/goods/orderPayment",
-                method: "POST",
-                data: {
-                  order_receive_nm: this.loginUser.user_id,
-                  order_mobile: this.loginUser.user_mobile,
-                  order_addr1: this.loginUser.user_adr1,
-                  order_addr2: this.loginUser.user_adr2,
-                  order_zipcode: this.loginUser.user_zipcode,
-                  order_content: this.order_content,
-                  user_no: this.user.user_no,
-                }
-              })
-                .then((response)=>{
-                  if(response.data.message=='완료'){
-                    this.$swal({
-                      title:'결제가 완료되었습니다.',
-                      confirmButtonText:'확인',
-                    })
-                    .then(()=>{
-                      this.$router.replace(`/paymentdetail/${this.products.goods_no}/${response.data.order_no}/${this.totalPrice}`);
-                    })
-                  }
-                  else {
-                    this.$swal({
-                      title:'결제가 실패하였습니다.',
-                      confirmButtonText:'확인',
-                    })
+      const response = await Bootpay.requestPayment({
+        price:`${this.totalPrice}`,
+        application_id: "65996d8600c78a0023346015",
+        order_name: `${this.loginUser.user_nick}`,
+        order_id: `${this.loginUser.user_id}`,
+        pg: "nicepay",
+      })
+      switch(response.event) {
+        case 'done':
+          console.log(response)
+          this.$swal({
+            title:'결제가 완료되었습니다.',
+            confirmButtonText:'확인',
+            // 데이터베이스 orderpayment에 보내기
+          }).then((response)=>{
+            if(response.event=='done') {
+              try{
+                axios({
+                  url:"http://localhost:3000/goods/addOrder",
+                  method: "POST",
+                  data: {
+                    order_receive_nm: this.loginUser.user_id,
+                    order_mobile: this.loginUser.user_mobile,
+                    order_addr1: this.loginUser.user_adr1,
+                    order_addr2: this.loginUser.user_adr2,
+                    order_zipcode: this.loginUser.user_zipcode,
+                    order_content: this.order_content,
+                    user_no: this.user.user_no,
                   }
                 })
-                
-            } catch(e) {
-              console.log(e);
+              } catch(e) {
+                console.log(e);
+              }
             }
-            return
+          }).then(()=>{
+            /*결제완료 버튼을 누르면 뒤로가기 불가:replace*/ 
+            this.$router.replace(`/paymentdetail/${this.products.goods_no}`);
+          })
+          break
+        }
+      } catch(e) {
+        console.log(e.message)
+        switch (e.event) {
+          case 'cancel':
+            // 사용자가 결제창을 닫을때 호출
+            console.log(e.message);
+            this.$swal({
+              title:'결제가 취소었습니다.',
+              confirmButtonText:'확인',
+            })
+            break
+          case 'error':
+            // 결제 승인 중 오류 발생시 호출
+            console.log(e);
+            this.$swal({
+              title:'오류가 발생하였습니다.',
+            })
+            break
+          }
+        }
       },
-  getUser() {
-    this.loginUser.user_id = this.$route.params.user_id
-    this.loginUser.user_mobile = this.$route.params.user_mobile
-    this.loginUser.user_email = this.$route.params.user_email
-    this.loginUser.user_zipcode = this.$route.params.user_zipcode
-    this.loginUser.user_adr1 = this.$route.params.user_adr1
-    this.loginUser.user_adr2 = this.$route.params.user_adr2
-    this.order_content = this.$route.params.order_content
-  },
-  getGoods() {
-    this.goods.goods_nm = this.$route.params.goods_nm
-    this.goods.goods_content = this.$route.params.goods_content
-    this.goods.goods_trade = this.$route.params.goods_trade
-    this.goods.goods_deliv_price = this.$route.params.goods_deliv_price
-  },
-  getBid() {
-    this.goods_succ_bid = this.$route.params.goods_succ_bid
-    this.getTotalPrice()
-  },
-  gotoBack() {
-    this.$router.back();
-  },
-}
-}
-
-
+      getUser() {
+        this.loginUser.user_id = this.$route.params.user_id
+        this.loginUser.user_mobile = this.$route.params.user_mobile
+        this.loginUser.user_email = this.$route.params.user_email
+        this.loginUser.user_zipcode = this.$route.params.user_zipcode
+        this.loginUser.user_adr1 = this.$route.params.user_adr1
+        this.loginUser.user_adr2 = this.$route.params.user_adr2
+        this.order_content = this.$route.params.order_content
+      },
+      async getGoods() {
+        try {
+          const goodsno = this.$route.params.goods_no;
+          axios({
+            url:`http://localhost:3000/goods/goodsInfo/${goodsno}`,
+            method:'get',
+          })
+            .then((response) => {
+              this.goods = response.data[0];
+            })
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      gotoBack() {
+        this.$router.back();
+      },
+    }
+  }
 </script>
 <style scoped>
 *{
