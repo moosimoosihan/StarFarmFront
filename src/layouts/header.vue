@@ -254,12 +254,12 @@ a {
   display: flex;
   width: 20%;
   max-width: 100%;
-  outline: rgb(0, 0, 0) solid 2px;
+  outline: rgb(0, 0, 0) solid 1px;
   background-color: rgb(230, 255, 219);
   float : right;
   margin-right: 55px;
   margin-top: 50px;
-  border-radius: 30px;
+  border-radius: 20px;
 }
 
 input[type='text'] {

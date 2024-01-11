@@ -1,43 +1,5 @@
 <template>
-    <div class="container">
-        <div class="mypage_topbar_container">
-            <div class="profile_lapper">
-                <!-- 프로필 사진, 닉네임 -->
-                <div class="profile_box">
-                    <div class="profile_img_box">
-                        <!-- <div class="profile-icon">
-                            <i class="fas fa-user-circle"></i>
-                        </div> -->
-                        <img :width="150" style="border-radius: 10px;"
-                            :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
-                            alt="프로필 사진 미리보기" />
-                    </div>
-                    <span class="profile_nick">{{ loginUser.user_nick }}</span>
-                </div>
-            </div>
-
-            <div class="friendly_lapper">
-                <!-- 친밀도 -->
-                <div class="friendly_box">
-                    <span class="friendly_text">친밀도</span>
-                    <div class="friendly_img_box">
-                        <div class="progressBar">
-                            <div id="bar" class="innerbar"></div>
-                        </div>
-                        <span class="friendly_score">{{ loginUser.user_fr }}점</span>
-                        <p>ID : {{ loginUser.user_id }}</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="logout_lapper">
-                <!-- 로그아웃 버튼 -->
-                <div class="logout_box">
-                    <button class="logout_btn" @click="logout()"><img src="../assets/Logout.png" height="40px" width="100px" ></button>
-                </div>
-            </div>
-            
-        </div>
+    <div>
         <div class="mypageContainer">
             <p class="p1">내가 찜한 상품</p>
             <p class="more" @click="gotoLike()">+more</p> 
@@ -280,8 +242,7 @@ import axios from 'axios';
 
 
 .progressBar {
-  max-width: 330px;
-  width: 90%;
+  max-width: 150px;
   margin: 10px auto;
   margin-top: 20px;
   height: 8px;
@@ -290,8 +251,8 @@ import axios from 'axios';
 }
 
 .innerbar {
-  max-width: 330px;
-  height: 100%;
+  max-width: 150px;
+  height: 20px;
   text-align: right;
   height: 8px; /* same as #progressBar height if we want text middle aligned */
   width: 30%;
@@ -305,35 +266,44 @@ import axios from 'axios';
 }
 
 .goodslist_div {
-  width: 97%;
-  height: 420px;
+  width: 85%;
+  height: 330px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-evenly;
   margin: auto;
+  margin-top: 15px;
   overflow: hidden;
 }
 .item_container {
   width: 200px;
-  height: 400px;
-  margin-top: 15px;
-  margin-right: 30px;
-  background-color: rgb(135, 135, 162);
-  text-align: center;
+  height: 300px;
+  background-color: rgb(255, 255, 255);
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 25px;
+  border-color: rgb(219, 219, 219);
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 15px;
+  margin-right: 25px;
+  overflow: hidden;
+  box-shadow: 5px 5px 5px gray;
 }
 
 .goods_img {
   width: 200px;
-  height: 250px;
+  height: 200px;
 }
 
 .item_container p {
-  margin-top:10px;
+  margin-top: 7px;
+  margin-left: 15px;
 }
 
-.mypageContainer{
+.mypageContainer {
     justify-content: right;
+    margin-left: 20px;
 } 
 .more {
     float: right;
