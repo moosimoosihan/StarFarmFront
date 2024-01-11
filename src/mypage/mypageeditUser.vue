@@ -7,6 +7,17 @@
                 <label class="te">닉네임</label>
                 <div class="in">
                     <input type="text" class="form-control" placeholder="닉네임" v-model="loginUser.user_nick" />
+
+                <div class="profile-upload-content upload-img">
+                <div class="profile-img">
+                    <img v-if="loginUser.user_img" id="img-preview" :width="200" :src="require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`)">
+                    <img v-else-if="profile_img_src != ''" id="img-preview" :width="200" :src="profile_img_src"
+                            alt="프로필 사진 미리보기" />
+                    <img v-else id="img-preview" :width="200" :src="require(`../assets/profile.png`)"
+                            alt="프로필 사진 미리보기" />
+                </div>
+                    <input id="profile-img" type="file" placeholder="이미지" @change="uploadFile($event.target.files)">
+                </div>
                 </div>
             </div>
 
@@ -14,20 +25,22 @@
                 <label class="te">이메일</label>
                 <div class="in">
                     <input type="email" class="form-control" placeholder="이메일" v-model="loginUser.user_email" />
+
                 </div>
             </div>
 
-            <div class="form2">
-                <label class="te2">휴대전화번호</label>
-                <div class="in3">
+            <div class="form">
+                <label class="te">휴대전화번호</label>
+                <div class="in">
                     <input type="tel" class="form-control" placeholder="휴대전화번호" maxlength="11" @input="validatePhoneNumber" v-model="loginUser.user_mobile" />
                     <button class="btn" @click="mobile_check()">중복확인</button>
+                   
                 </div>
             </div>
 
-            <div class="form2">
-                <label class="te2">우편번호</label>
-                <div class="in3">
+            <div class="form">
+                <label class="te">우편번호</label>
+                <div class="in">
                     <input type="text" class="form-control" v-model="loginUser.user_adr1" />
                     <button class="btn" type="button" v-on:click="zipload">우편번호 찾기</button>
                 </div>
@@ -39,10 +52,9 @@
 
             <div class="pass" @click="goToPass">비밀번호 수정</div>
 
-            <div class="form">
-                <button type="submit" class="btn" @click="onSubmitForm">수정하기</button>
+            <div class="form4">
+                <button type="submit" class="btn2" @click="onSubmitForm">수정하기</button>
             </div>
-
         </div>
     </main>
 </template>
@@ -53,7 +65,8 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            loginUser: {}
+            loginUser: {},
+            profile_img_src : ''
         };
     },
     computed: {
@@ -84,6 +97,7 @@ export default {
                             user_adr2: this.loginUser.user_adr2,
 
                             user_no: this.user.user_no,
+                            user_img:this.loginUser.user_img
                         }
                     })
                     .then((res) => {
@@ -136,6 +150,69 @@ export default {
                 }
             }).open();
         },
+        async uploadFile(file) {
+                let name = "";
+                if (file) {
+                    name = file[0].name;
+                }
+                else {
+                    return;     // 파일 미선택 시 반환
+                }
+
+                const formData = new FormData();
+                this.profile_img_src = ''
+                formData.append('img', file[0]);
+
+                this.profile_img_src = URL.createObjectURL(file[0]);
+
+                for (let key of formData.keys()) {
+                    console.log(key, ":", formData.get(key));
+                }
+                try {
+                    axios({
+                        url: `http://localhost:3000/mypage/upload_img`,
+                        method: 'POST',
+                        headers: {'Content-Type': 'multipart/form-data'},
+                        data: formData
+                    })
+                        .then ((res) => {
+                            if (res.data.message == 'success'){
+                                this.loginUser.user_img = name;
+                            }
+                            else {
+                                this.$swal("DB 에러");
+                            }
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        })
+                    return true;
+
+                } catch(err){
+                    console.log(err);
+                    return false;
+                }
+            },
+            deleteImage(id,name){
+                this.$swal.fire({
+                    title:'정말 삭제하시겠습니까?',
+                    showCancelButton: true,
+                    confirmButtonText: `삭제`,
+                    cancelButtonText: `취소`
+                }).then(async (result) => {
+                    if(result.isConfirmed){
+                      await axios({
+                            url:'/auth/imageDelete',
+                            method:'POST',
+                            data:{
+                                id:id,
+                                name:name
+                            }
+                        })
+                        this.$swal.fire('삭제되었습니다.','','success')
+                    }
+                })
+            },
 
         validatePhoneNumber() {
             this.loginUser.user_mobile = this.loginUser.user_mobile.replace(/\D/g, ''); // 숫자 이외의 문자 제거
@@ -177,6 +254,7 @@ export default {
             try {
                 const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
                 this.loginUser = response.data[0];
+                this.profile_img_src = this.loginUser.user_img
             } catch (error) {
                 console.error(error);
             }
@@ -226,6 +304,7 @@ h2 {
 .form {
     margin-bottom: 20px;
     display: flex;
+    width: 100%;
 }
 
 .form .te {
@@ -236,13 +315,15 @@ h2 {
 }
 
 .form .in {
-    width: 500px;
+    margin-bottom: 10px;
+    display: flex;
+    height: 30px;
 }
 
 .form input {
     display: flex;
     align-items: center;
-    width: 400px;
+    width: 300px;
     height: 40px;
     font-size: 1rem;
     font-family: GmarketSansMedium;
@@ -252,46 +333,11 @@ h2 {
     border-radius: 10px;
 }
 
-.form2 {
-    margin-bottom: 10px;
-    display: flex;
-    height: 50px;
-    /* border: 2px solid rgb(21, 29, 255); */
-}
 
-.form2 .te2 {
-    /* 우편번호 */
-    vertical-align: middle;
-    width: 140px;
-    padding: 14px 0;
-    /* background-color:  rgb(206, 165, 165); */
-}
-
-.form2 .in3 input {
-    display: flex;
-    align-items: center;
-    width: 400px;
-    height: 40px;
-    font-size: 1rem;
-    font-family: GmarketSansMedium;
-    padding-left: 20px;
-    margin: 0 10px 0 35px;
-    color: rgb(137, 137, 137);
-    border: 2px solid rgb(221, 221, 221);
-    border-radius: 10px;
-}
-
-.form2 .in3 {
-    display: flex;
-    width: 100%;
-    height: 40px;
-    /* border: 2px solid rgb(86, 222, 140); */
-}
-
-.form2 .btn {
+.form .btn {
     /* display: flex; */
     height: 42px;
-    width: 10rem;
+    width:120px;
     position: relative;
     padding: 8px 10px;
     font-size: 14px;
@@ -300,6 +346,7 @@ h2 {
     border: 2px solid rgb(221, 221, 221);
     border-radius: 10px;
     cursor: pointer;
+    margin-left: 5px;
 }
 
 .form3 {
@@ -315,7 +362,7 @@ h2 {
 .form3 .in2 {
     display: block;
     align-items: center;
-    width: 60%;
+    width: 400px;
     height: 40px;
     font-size: 1rem;
     padding-left: 20px;
@@ -323,7 +370,7 @@ h2 {
     color: rgb(137, 137, 137);
     border: 2px solid rgb(221, 221, 221);
     border-radius: 10px;
-    margin-right: 0px;
+    margin-left: 3px;
 }
 
 .form3 input:nth-last-child(2) {
@@ -341,18 +388,6 @@ input:focus {
     outline: 2px solid rgb(255, 236, 253);
 }
 
-.form button {
-    width: 69vw;
-    height: 50px;
-    margin: 60px 0;
-    font-family: GmarketSansMedium;
-    font-size: 18px;
-    color: rgb(255, 196, 249);
-    border: 2px solid rgb(255, 196, 249);
-    background-color: rgb(254, 242, 253);
-    border-radius: 10px;
-    cursor: pointer;
-}
 
 .form button:hover {
     color: rgb(255, 255, 255);
@@ -362,112 +397,29 @@ input:focus {
     cursor: pointer;
 }
 
-/* --------------------------------------------------------------------------------------------------------------- */
+.btn2 {
+    height: 42px;
+    width:120px;
+    font-size: 14px;
+    color: rgb(123, 123, 123);
+    border: 2px solid rgb(221, 221, 221);
+    border-radius: 10px;
+    cursor: pointer;
+    float: right;
+    margin-right: 50px;
+}
+.profile-img {
+  width: 200px;
+  height: 200px;
+  text-align: center;
+  border-radius: 70%;
+  border: 2px solid black;
+  overflow: hidden;
+  margin-left: 300px;
+  margin-bottom: 20px;
+}
 
-
-@media screen and (max-width: 768px) {
-
-    .form {
-        margin-bottom: 20px;
-        display: grid;
-    }
-
-    .form2 {
-        margin-bottom: 10px;
-        display: grid;
-        height: auto;
-        /* border: 2px solid rgb(21, 29, 255); */
-    }
-
-    .form2 .te2 {
-        /* 우편번호 */
-        width: 140px;
-        padding: 14px 0;
-    }
-
-    .form2 .in3 input {
-        display: flex;
-        /* align-items: center; */
-        width: 20vw;
-        height: 40px;
-        font-size: 1rem;
-        font-family: GmarketSansMedium;
-        /* padding-left: 20px; */
-        /* margin: 0 10px 0 30px; */
-        color: rgb(137, 137, 137);
-        border: 2px solid rgb(221, 221, 221);
-        border-radius: 10px;
-    }
-
-    .form2 .in3 {
-        display: flex;
-        width: 100%;
-        height: 40px;
-        margin-top: 10px;
-        /* border: 2px solid rgb(86, 222, 140); */
-    }
-
-    .form2 .in3 input {
-        margin: 0;
-        width: 22vw;
-    }
-
-    .form2 .btn {
-        height: 42px;
-        width: 24vw;
-        position: relative;
-        margin-left: 10px;
-        font-size: 14px;
-        font-family: GmarketSansMedium;
-        color: rgb(123, 123, 123);
-        border: 2px solid rgb(221, 221, 221);
-        border-radius: 10px;
-        cursor: pointer;
-    }
-
-    .form3 {
-        display: grid;
-        align-items: center;
-        position: relative;
-        width: 48vw;
-        height: 50px;
-        margin: 0px 0px 10px 0px;
-        padding: 0 0 0px 0px;
-    }
-
-    .form3 .in2 {
-        display: block;
-        align-items: center;
-        width: 100%;
-        height: 40px;
-        font-size: 1rem;
-        padding-left: 40px;
-        font-family: GmarketSansMedium;
-        color: rgb(137, 137, 137);
-        border: 2px solid rgb(221, 221, 221);
-        border-radius: 10px;
-        margin-right: 0px;
-    }
-
-    .form3 input:nth-last-child(2) {
-        margin-bottom: 10px;
-    }
-
-    .pass {
-        margin: 80px 0 20px 0;
-    }
-
-    .form button {
-        width: 52vw;
-        height: 50px;
-        margin: 60px 0;
-        font-family: GmarketSansMedium;
-        font-size: 18px;
-        color: rgb(255, 236, 253);
-        border: 2px solid #ffbc2b;
-        background-color: #fff2c9;
-        border-radius: 10px;
-        cursor: pointer;
-    }
-
-}</style>
+#profile-img {
+    margin-left: 250px;
+}
+</style>
