@@ -346,7 +346,7 @@ methods: {
       cancelButtonText: '취소',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.$router.push(`/report/${this.goods.goods_no}`);
+        this.$router.push(`/report/${this.goodsUser.user_no}`);
       }
     });
   },

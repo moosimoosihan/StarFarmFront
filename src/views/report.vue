@@ -53,16 +53,10 @@ export default {
     },
     methods: {
         async getReportUser() {
+            this.reportUserNo = this.$route.params.id;
             try{
-                const goods_no = this.$route.params.id
-                const response = await axios.get(`http://localhost:3000/goods/getUserNo/${goods_no}`)
-                this.reportUserNo = response.data[0].user_no
-                try{
-                    const response1 = await axios.get(`http://localhost:3000/mypage/mypage/${this.reportUserNo}`)
-                    this.reportUser = response1.data[0]
-                } catch (error) {
-                    console.log(error)
-                }
+                const response1 = await axios.get(`http://localhost:3000/mypage/mypage/${this.reportUserNo}`)
+                this.reportUser = response1.data[0]
             } catch (error) {
                 console.log(error)
             }
@@ -98,7 +92,7 @@ export default {
                 .then((res) => {
                     if (res.data.message == 'success'){
                         this.$swal("신고 완료")
-                        this.$router.push(`/product/${this.$route.params.id}`)
+                        this.$router.push(`/userpage/${this.$route.params.id}`)
                     }
                     else {
                         this.$swal("DB 에러");

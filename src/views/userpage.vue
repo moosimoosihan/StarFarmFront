@@ -10,10 +10,12 @@
                 </div>
                 <div id="userpage_friendly">
                     <span>{{ userInfo.user_nick }}의 친밀도</span>
-                    <progress value="70" max="100"></progress>
-                    <a href="">1대1 채팅</a>
+                    <progress :value="userFr" max="100"></progress>
                 </div>
-                <a href="" id="userpage_report">신고</a>
+              <div v-if="user.user_no != userNo">
+                <button class="button" @click="gotoChatRoom(userNo), createChatRoom()">1대1 채팅</button>
+                <button class="button" id="userpage_report" @click="reportBtn()">신고</button>
+              </div>
             </div>
             <div class="wrap">
                 <div class="button_tab">
@@ -70,7 +72,14 @@ import axios from 'axios';
         userInfo: [],
         userReviewList: [],
         userProductList: [],
+        userFr: 0,
+        userNo: this.$route.params.id
         };
+    },
+    computed: {
+      user() {
+        return this.$store.state.user;
+      }
     },
     created() {
         this.getUserInfo();
@@ -83,6 +92,7 @@ import axios from 'axios';
                 const user_no = this.$route.params.id;
                 const response = await axios.get(`http://localhost:3000/mypage/mypage/${user_no}`);
                 this.userInfo = response.data[0];
+                this.userFr = parseInt(this.userInfo.user_fr);
             } catch (error) {
                 console.error(error);
             }
@@ -107,6 +117,45 @@ import axios from 'axios';
         },
         gotoAuction(goods_no) {
             this.$router.push(`/product/${goods_no}`);
+        },
+        reportBtn() {
+          this.$swal.fire({
+            title: '신고하기',
+            text: '신고하시겠습니까?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '신고하기',
+            cancelButtonText: '취소',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push(`/report/${this.$route.params.id}`);
+            }
+          });
+        },
+        async createChatRoom() {
+          try {
+            if (this.user.user_no == this.userNo) {
+              return this.$swal('본인과의 채팅은 불가능합니다.');
+            } else {
+              await axios({
+                url: `http://localhost:3000/chat/createChatRoom/${this.userNo}`,
+                method: "POST",
+                data: {
+                  buyer: this.user.user_no,
+                  seller: this.userNo,
+                }
+              })
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        },
+        async gotoChatRoom(index) {
+          let popupWindow = window.open(`/chatroom/${index}`, '_blank', 'width=800', 'height=620', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
+          popupWindow.resizeTo(800, 620);
+          popupWindow.onresize = () => {
+            popupWindow.resizeTo(800, 620);
+          };
         },
     },
     };
