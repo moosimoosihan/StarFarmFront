@@ -13,22 +13,43 @@
             <span class="dot" v-for="(img,i) in eventImageList" :key="i" @click="moveToSlide(i)"></span>
           </div>
         </div>
-        <!--이미지에 대한 상세정보가 들어가는 부분-->
+        <!-- 인기 혹은 최신 상품 -->
         <div class="slider-info-container">
-          <p class="slider-name">슬라이더에 떠있는 상품 이름</p>
-          <p class="slider-startprice">슬라이더에 떠있는 상품 시작가</p>
-          <p class="slider-nowprice">슬라이더에 떠있는 상품 입찰가</p>
-        </div>
-      </div>
-        <div class="goodslist_div">
-            <div class="item_container" v-for="(goods, i) in goodsList" :key="i" @click="gotoAuction(goods.goods_no)">
-              <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
-              <p class="goodsname">{{ goods.goods_nm }}</p>
-              <p class="price">시작가 : {{ goods.goods_start_price }}</p>
-              <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
+          <div v-if="mainEventGoods.length>0">
+            <h1>인기 상품</h1>
+            <div v-for="(goods,i) in mainEventGoods" :key="i" @click="gotoAuction(goods.goods_no)">
+              <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지" width="70">
+              <p class="slider-name">{{ goods.goods_nm }}</p>
+              <p class="slider-startprice">시작가 : {{ goods.goods_start_price }}</p>
+              <p class="slider-nowprice">입찰가 : {{ main_goods_succ_bid[i] }}</p>
             </div>
+          </div>
+          <div v-else-if="mainDefaultGoods.length>0">
+            <h1>최신 상품</h1>
+            <div v-for="(goods,i) in mainDefaultGoods" :key="i" @click="gotoAuction(goods.goods_no)">
+              <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지" width="70">
+              <p class="slider-name">{{ goods.goods_nm }}</p>
+              <p class="slider-startprice">시작가 : {{ goods.goods_start_price }}</p>
+              <p class="slider-nowprice">입찰가 : {{ goods_succ_bid[i] }}</p>
+            </div>
+          </div>
+          <div v-else>
+            <h1>상품이 없습니다.</h1>
+          </div>
         </div>
       </div>
+      <div class="goodslist_div" v-if="goodsList.length>0">
+          <div class="item_container" v-for="(goods, i) in goodsList" :key="i" @click="gotoAuction(goods.goods_no)">
+            <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
+            <p class="goodsname">{{ goods.goods_nm }}</p>
+            <p class="price">시작가 : {{ goods.goods_start_price }}</p>
+            <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
+          </div>
+      </div>
+      <div v-else>
+        <h1>상품이 없습니다.</h1>
+      </div>
+    </div>
 </template>
 <script>
 import axios from 'axios';
@@ -43,6 +64,7 @@ export default {
       goodsList: [],
       goods_succ_bid: [],
       intervalId: null, // 자동 슬라이드를 위한 인터벌 ID
+      main_goods_succ_bid: [],
     }
   },
   created() {
@@ -87,6 +109,25 @@ export default {
         this.mainEventGoods = response.data
       }catch(err){
         console.log(err);
+      }
+      // 인기상품 낙찰가 가져오기
+      this.main_goods_succ_bid = []
+      try{
+        for(let i=0; i<this.mainEventGoods.length; i++){
+          await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.mainEventGoods[i].goods_no}`)
+          .then((res) => {
+            if(res.data[0].succ_bid==null){
+              this.main_goods_succ_bid.push('입찰 없음');
+            } else {
+              this.main_goods_succ_bid.push(res.data[0].succ_bid);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+        }
+      } catch(err){
+        console.log(err)
       }
       if(this.mainEventGoods.length==0){
         // 일반 메인 상품 가져오기
