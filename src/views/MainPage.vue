@@ -208,32 +208,27 @@ export default {
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      // 표시할 남은 시간 문자열 생성 포맷은 무조건 해당 포맷 하나만 '00일 남음' '00시간 남음' '00분 남음' '00초 남음' 으로만 표기
+      // 표시할 남은 시간 문자열 생성 포맷은 무조건 해당 포맷 하나만 '00일 남음' '00시간 남음' '00분 00초 남음' 으로만 표기
       const daysStr = days > 0 ? `${days}일 남음` : '';
       const hoursStr = hours > 0 ? `${hours}시간 남음` : '';
-      const minutesStr = minutes > 0 ? `${minutes}분 남음` : '';  
+      const minutesStr = minutes > 0 ? `${minutes}분` : '';  
       const secondsStr = seconds >= 0 ? `${seconds}초 남음` : '';
       // 만약 00일 남음이라면
       if (daysStr === '') {
         // 00시간 남음이라면
         if (hoursStr === '') {
           // 00분 남음이라면
-          if (minutesStr === '') {
-            // 00초 남음이라면
-            if (secondsStr === '') {
-              // 경매가 종료되었다는 메시지를 표시
-              return '경매가 종료되었습니다.';
-            }
-            // 00초 남음이 아니라면 00초 남음을 표시
-            return secondsStr;
+          if (secondsStr === '') {
+            // 경매가 종료되었다는 메시지를 표시
+            return '경매가 종료되었습니다.';
           }
-          // 00분 남음이 아니라면 00분 남음을 표시
-          return minutesStr;
+          // 00시간 남음이 아니라면 00분 00초 남음을 표시
+          return minutesStr + ' ' + secondsStr;
         }
-        // 00시간 남음이 아니라면 00시간 남음을 표시
+        // 00일 남음이 아니라면 00시간 남음을 표시
         return hoursStr;
       }
-      // 00일 남음이 아니라면 00일 남음을 표시
+      // 00일 남음을 표시
       return daysStr;
     },
     allGoodsTimer(){

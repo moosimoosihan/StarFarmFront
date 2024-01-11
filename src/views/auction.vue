@@ -369,8 +369,16 @@ methods: {
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      // 표시할 남은 시간 문자열 생성
-      this.currentTime = `${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
+      // 표시할 남은 시간 문자열 생성 포맷은 무조건 해당 포맷 하나만 '00일 남음' '00시간 남음' '00분 00초 남음' 으로만 표기
+      if (days > 0) {
+        this.currentTime = `${days}일 남음`;
+      } else if (hours > 0) {
+        this.currentTime = `${hours}시간 남음`;
+      } else if (minutes > 0) {
+        this.currentTime = `${minutes}분 ${seconds}초 남음`;
+      } else {
+        this.currentTime = `${seconds}초 남음`;
+      }
     }, 1000);
   },
   async checkBuyUser() {
