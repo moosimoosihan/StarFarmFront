@@ -16,23 +16,38 @@
         <!-- 인기 혹은 최신 상품 -->
         <div class="slider-info-container">
           <div v-if="mainEventGoods.length>0">
-            <h1>인기 상품</h1>
-            <div v-for="(goods,i) in mainEventGoods" :key="i" @click="gotoAuction(goods.goods_no)">
-              <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지" width="70">
-              <p class="slider-name">{{ goods.goods_nm }}</p>
-              <p class="slider-startprice">시작가 : {{ goods.goods_start_price }}</p>
-              <p class="slider-nowprice">입찰가 : {{ main_goods_succ_bid[i] }}</p>
+            <h1>* 인기 상품 *</h1>
+            <div class="hot-Data" v-for="(goods, i) in mainEventGoods" :key="i" @click="gotoAuction(goods.goods_no)">
+              <div class="hot-container">
+                <div class="image-container">
+                  <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지" class="hot-img">
+                </div>
+                <div class="data-container">
+                  <p class="slider-name">{{ goods.goods_nm }}</p>
+                  <p class="slider-startprice">시작가 : {{ goods.goods_start_price }}</p>
+                  <p class="slider-nowprice">입찰가 : {{ main_goods_succ_bid[i] }}</p>
+                  <p class="slider-nowprice1" font-color:red> 타이머 : {{ main_goods_succ_bid[i] }}</p>
+
+                </div>
+              </div>
             </div>
           </div>
           <div v-else-if="mainDefaultGoods.length>0">
             <h1>최신 상품</h1>
-            <div v-for="(goods,i) in mainDefaultGoods" :key="i" @click="gotoAuction(goods.goods_no)">
-              <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지" width="70">
+            <div class="hot-Data" v-for="(goods,i) in mainDefaultGoods" :key="i" @click="gotoAuction(goods.goods_no)">
+              <div class="hot-container">
+                <div class="image-container">
+              <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지" class="hot-img">
+              </div>
+              <div class="data-container">
               <p class="slider-name">{{ goods.goods_nm }}</p>
               <p class="slider-startprice">시작가 : {{ goods.goods_start_price }}</p>
               <p class="slider-nowprice">입찰가 : {{ goods_succ_bid[i] }}</p>
+              <p class="slider-nowprice1" font-color:red>타이머 : {{ main_goods_succ_bid[i] }}</p>
+              </div>
             </div>
           </div>
+        </div>
           <div v-else>
             <h1>상품이 없습니다.</h1>
           </div>
@@ -90,7 +105,7 @@ export default {
             await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.goodsList[i].goods_no}`)
             .then((res) => {
               if(res.data[0].succ_bid==null){
-                this.goods_succ_bid.push('입찰 없음');
+                this.goods_succ_bid.push('05:25');
               } else {
                 this.goods_succ_bid.push(res.data[0].succ_bid);
               }
@@ -117,7 +132,7 @@ export default {
           await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.mainEventGoods[i].goods_no}`)
           .then((res) => {
             if(res.data[0].succ_bid==null){
-              this.main_goods_succ_bid.push('입찰 없음');
+              this.main_goods_succ_bid.push('05:25');
             } else {
               this.main_goods_succ_bid.push(res.data[0].succ_bid);
             }
@@ -181,7 +196,7 @@ export default {
   margin: 0 auto;
 }
 .container {
-  width: 80%;
+  width: 95%;
   height: 1500px;
   display: flex;
   justify-content: center;
@@ -259,7 +274,7 @@ export default {
   text-align: center; /* inline-block화 된 div들을 텍스트 마냥 center로 정렬*/
 }
 .slider-container {
-    width: 70%;
+    width: 75%;
     height: 500px;
     overflow: hidden;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -268,7 +283,7 @@ export default {
   }
 
   .slider-info-container {
-    width: 30%;
+    width: 50%;
     height: 500px;
     margin-left: 50px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -278,7 +293,7 @@ export default {
     width: 100%;
     overflow: hidden;
     position: relative;
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
   }
   .slide-wrapper {
     display: flex;
@@ -307,4 +322,45 @@ export default {
   margin-right: 10px;
   cursor: pointer;
 }
+.hot-Data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .hot-container {
+    display: flex;
+    width:200x;
+    align-items: center;
+  }
+
+  .image-container {
+    margin-right: 10px; /* Adjust the margin as needed */
+  }
+
+  .hot-img {
+    width: 180px; /* Adjust the width as needed */
+    height: 130px;
+  }
+
+  .data-container {
+    flex-grow: 1;
+    font-size: 20px;
+  }
+  .slider-name{
+    border:1px solid black;
+  }
+  
+  .slider-nowprice{
+    text-align: start;
+  }
+  
+  .slider-nowprice1{
+    text-align: start;
+    color:red; 
+  }
+  .slider-startprice{
+    text-align:start;
+  }
 </style>
