@@ -13,6 +13,7 @@
             <span class="dot" v-for="(img,i) in eventImageList" :key="i" @click="moveToSlide(i)"></span>
           </div>
         </div>
+        <!--이미지에 대한 상세정보가 들어가는 부분-->
         <div class="slider-info-container">
           <p class="slider-name">슬라이더에 떠있는 상품 이름</p>
           <p class="slider-startprice">슬라이더에 떠있는 상품 시작가</p>
@@ -36,6 +37,8 @@ export default {
   data() {
     return {
       eventImageList: ['1-1.jpg','1-2.jpg','1-3.jpg','1-4.jpg'],
+      mainEventGoods: [],
+      mainDefaultGoods: [],
       currentIndex: 0,
       goodsList: [],
       goods_succ_bid: [],
@@ -44,12 +47,12 @@ export default {
   },
   created() {
     this.getGoods();
+    this.getPopularProducts()
     this.startAutoSlide(); // 페이지가 생성될 때 자동 슬라이드 시작
   },
   beforeDestroy() {
     this.stopAutoSlide(); // 페이지가 파괴될 때 자동 슬라이드 정지
   },
-
   methods: {
     async getGoods(){
       await axios.get('http://localhost:3000/goods/maingoods')
@@ -75,6 +78,27 @@ export default {
             })
           }
     },
+    //인기상품가져오기
+    async getPopularProducts() {
+      this.mainEventGoods = []
+      try{
+        //백엔드에 대한 인기상품을 가져온다.
+        const response = await axios.get(`http://localhost:3000/goods/PopularProducts`)
+        this.mainEventGoods = response.data
+      }catch(err){
+        console.log(err);
+      }
+      if(this.mainEventGoods.length==0){
+        // 일반 메인 상품 가져오기
+        this.mainDefaultGoods=[]
+        try{
+          const response_default = await axios.get(`http://localhost:3000/goods/DefaultProducts`)
+          this.mainDefaultGoods = response_default.data
+        } catch(err){
+          console.log(err)
+        }
+      }
+    },
     gotoAuction(goods_no) {
       this.$router.push(`/product/${goods_no}`);
     },
@@ -85,10 +109,17 @@ export default {
       this.currentIndex = index;
     },
     startAutoSlide() {
+      var nextIndex = 0;
       this.intervalId = setInterval(() => {
-        const nextIndex = (this.currentIndex + 1) % this.eventImageList.length;
+        if(this.mainEventGoods.length>0){
+          nextIndex = (this.currentIndex + 1) % this.mainEventGoods.length;
+        } else if (this.mainDefaultGoods.length>0){
+          nextIndex = (this.currentIndex + 1) % this.mainDefaultGoods.length;
+        } else {
+          nextIndex = (this.currentIndex + 1) % this.eventImageList.length;
+        }
         this.moveToSlide(nextIndex);
-      }, 3000); // 3초마다 슬라이드 이동
+      }, 4000); // 4초마다 슬라이드 이동
     },
     stopAutoSlide() {
       clearInterval(this.intervalId);
@@ -106,16 +137,21 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  margin: 0 auto;
 }
 .container {
-  width: 100%;
+  width: 80%;
   height: 1500px;
   display: flex;
+  justify-content: center;
   overflow-y: scroll;
   flex-direction: column;
   margin-top: 30px;
 }
 
+.container::-webkit-scrollbar {
+  display: none;
+}
 
 .goodslist_div {
   width: 100%;
@@ -123,25 +159,54 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-evenly;
-  margin: auto;
+  justify-content: center;
+  margin-top: 45px;
 }
 .item_container {
-  width: 250px;
-  height: 450px;
-  margin : 20px 40px;
-  background-color: rgb(135, 135, 162);
-  text-align: center;
+  width: 200px;
+  height: 350px;
+  background-color: rgb(255, 255, 255);
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 25px;
+  border-color: rgb(219, 219, 219);
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 15px;
+  margin-right: 15px;
+  overflow: hidden;
+  box-shadow: 5px 5px 5px gray;
+}
+
+.item_container > p {
+  margin-left: 3px;
+}
+
+.goodsname {
+  font-size: 20px;
+  position: relative;
+  top: 15px;
+  left: 5px;
+}
+
+.price {
+  position: relative;
+  left: 5px;
+  top: 20px;
+}
+
+.sprice {
+  position: relative;
+  left: 5px;
+  top: 25px;
 }
 
 .goods_img {
-  width: 250px;
-  height: 250px;
+  width: 197.5px;
+  height: 240px;
 }
 
-.item_container p {
-  margin-top:10px;
-}
+
 
 /* 슬라이드 */
 .slide-imges_container {
@@ -152,8 +217,6 @@ export default {
   margin: 0 auto; /* 브라우저에서 가운데 정렬하기 위해 auto설정 */
   text-align: center; /* inline-block화 된 div들을 텍스트 마냥 center로 정렬*/
 }
-
-
 .slider-container {
     width: 70%;
     height: 500px;
@@ -161,7 +224,6 @@ export default {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 10px;
     box-sizing: border-box;
-
   }
 
   .slider-info-container {
@@ -193,7 +255,6 @@ export default {
 
 .dot-navigation {
   text-align: center;
-  margin-top: 10px;
 }
 
 .dot {
@@ -201,8 +262,8 @@ export default {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: black; /* 도트 색상 */
-  margin: 0 5px;
+  background-color: rgb(13, 109, 0); /* 도트 색상 */
+  margin-right: 10px;
   cursor: pointer;
 }
 </style>
