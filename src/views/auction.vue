@@ -137,7 +137,8 @@ beforeUpdate() {
   if(this.currentTime !== '경매가 종료되었습니다.'){
     this.getBidList()
     this.getSuccBid()
-    this.checkBuyUser()
+  } else {
+    this.checkBuyUser();
   }
 },
 methods: {
