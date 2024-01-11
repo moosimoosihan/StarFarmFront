@@ -12,7 +12,7 @@
               <div v-else>
                 <ul class="mymenu">
                   <li>
-                    <a1 @click="gotoSearch('의류',1)">
+                    <a1>
                       <img style="border-radius: 10px;" class="myPage"
                       :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
                       alt="프로필 이미지"/></a1>
