@@ -26,7 +26,7 @@ import mypageSideBar from './mypageLeftBar.vue'
   
   <style scoped>
 .mypage_container{
-    padding-left: 10%;
+    padding-left: 15%;
     margin: auto;
     width: 90%;
     height: 1000px;
