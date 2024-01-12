@@ -15,7 +15,7 @@
         </div>
         <!-- 인기 혹은 최신 상품 -->
         <div class="slider-info-container">
-          <div v-if="mainEventGoods.length>0">
+          <div class="goods" v-if="mainEventGoods.length>0">
             <h1>* 인기 상품 *</h1>
             <div class="hot-Data" v-for="(goods, i) in mainEventGoods" :key="i" @click="gotoAuction(goods.goods_no)">
               <div class="hot-container">
@@ -339,10 +339,14 @@ export default {
 }
 
 .goods_img {
-  width: 197.5px;
-  height: 240px;
+    max-width: 100%;
+  max-height: 100%;
 }
-
+.goods{
+   justify-content: center;
+    align-items:center;
+    text-align: center;
+}
 
 
 /* 슬라이드 */
@@ -404,8 +408,7 @@ export default {
   cursor: pointer;
 }
 .hot-Data {
-    display: flex;
-    justify-content: space-between;
+  
     align-items: center;
     margin-bottom: 10px;
   }

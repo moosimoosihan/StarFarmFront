@@ -1,26 +1,27 @@
 <template>
   <div class="container">
     <div id="payment_wrapper">
-      <h1>상품 결제</h1>
+      <h1 class="h1">상품 결제</h1>
       <div class="payment_product">
         <!-- 상품 정보 표시 -->
         <div class="product-card">
-          <div class="product-content">
-            <img class="product-image"
-                :src="products.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${products.goods_no}/${products.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
-                alt="상품 이미지" />
-            <div class="payment_product_content">
-              <h2>상품명 : {{ products.goods_nm }}</h2>
-              <p>상품설명: {{ products.goods_content}}</p>
-              <p>가격: {{ products.goods_succ_price }}</p>
-            </div>
+       <div class="product-content">
+        <div class="product-ima">
+    <img class="product-image"
+      :src="products.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${products.goods_no}/${products.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
+      alt="상품 이미지" /></div>
+  <div class="payment_product_content">
+    <h2>상품명 : {{ products.goods_nm }}</h2>
+    <p class="content">상품설명: {{ products.goods_content}}</p>
+    <p class="price">가격: {{ products.goods_succ_price }}</p>
+  </div>
             <!--판매자 닉네임 및 사진-->
-            <div class="profile_box">
-              <img :width="70" style="border-radius: 10px;"
+          <div class="profile_box">
+              <img  class="img" :width="70" style="border-radius: 10px;"
                   :src="orderUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${orderUser.user_no}/${orderUser.user_img}`) : require(`../assets/profile.png`)"
                   alt="프로필 사진 미리보기" />
-              <span>{{ orderUser.user_nick }}</span>
-            </div>
+              <span class="user_nick">{{ orderUser.user_nick }}</span>
+          </div>
           </div>
         </div>
       </div>
@@ -38,20 +39,20 @@
       <div class="payment_deliv">
         <p>배송지 *</p>
         <input type="text" id="sample6_postcode" v-model="loginUser.user_zipcode">
-        <button @click="zipload()">우편번호 찾기</button><br>
+        <button class="zipcode" @click="zipload()">우편번호 찾기</button><br>
         <input type="text" id="sample6_address" v-model="loginUser.user_adr1"><br>
         <input type="text" id="sample6_detailAddress" v-model="loginUser.user_adr2">
       </div>
       <div class="payment_request">
-        <li>배송 시 요청사항</li>
+        <li class="textarea">배송 시 요청사항 *</li>
         <textarea v-model="order_content" placeholder="배송 요청사항을 입력해주세요"></textarea>
       </div>
       <div id="payment_submit">
         <div id="payment_pay_btn">
-          <a @click="gotoProduct()" style="text-decoration:none;color:black">취소</a>
+           <a @click="sendDataToBackend()" style="text-decoration:none;">결제</a>
         </div>
         <div id="payment_pay_btn">
-          <a @click="sendDataToBackend()" style="text-decoration:none;color:black">결제</a>
+          <a @click="gotoProduct()" style="text-decoration:none;">취소</a>
         </div>
           <div v-if="showSendDataButton">
         </div>
@@ -195,10 +196,16 @@ export default {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    margin: 0 auto;
 }
 .container {
-    width: 100%;
-    height: 100%;
+  width: 80%;
+  height: 1500px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 10px;
+
 }
 /* ------------------------------------------------------------- */
 @media screen and(max-width: 1400px){
@@ -208,139 +215,175 @@ export default {
 .payment_name label,
 .payment_phone label {
   display: inline-block;
-  margin-bottom: 5px;
-  font-size: 20px;
+  margin-bottom: 15px;
+  font-size: 27px;
   font-weight: 700;
+}
+.h1{
+  margin-bottom:30px;
+  text-align: center;
 }
 
 #payment_wrapper {
-    width: 80%;
+    width: 60%;
     height: 100%;
     margin:  auto;
     padding-top: 2px;
-        margin-bottom: 40px;
-}
-#payment_form h1 {
-    margin-bottom: 20px;
+    margin-bottom: 100px;
+    padding : 31px;
+ 	  text-align: left;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    
 }
 .payment_product {
   width: 100%;
-  height: 170px;
+  height: 400px;
+  background-color: rgb(255, 255, 255);
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  border-color: rgb(219, 219, 219);
+  margin-top: 5px;
+  margin-bottom:35px;
+  margin-right: 15px;
+  overflow: hidden;
+  box-shadow: 1px 1px 1px gray; 
+  
 }
-
 .payment_product_content {
-    width: 70%;
-    height: 150px;
-    background-color:rgb(242, 255, 245);
-    float:right;
-    flex:1;
+    width: 100%;
+    height: 400px;
+    font-size:  16px;
+    background-color:white;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 18px;
 }
 .payment_phone {
-    height: 100px;
-    font-size: 20px;
-    font-weight: 700;
+    height: 110px;
+    font-size: 23px;
+    font-weight: 700;    
 }
-
 .payment_name {
-  height: 100px;
-  font-size: 20px;
+  height: 110px;
+  font-size: 23px;
   font-weight: 700;
 }
+.payment_name input{
+  width: 500px;
+   height: 30px;
+  font-size:  17px;
+}
 .payment_phone input {
-    width: 250px;
-    height: 30px;
+    width: 500px;
+    height: 25px;
     background: none;
     border: 0;
     border-bottom: 1px solid black;
     margin-top: 10px;
-    font-size: 15px;
+    font-size: 17px;
 }
 .payment_deliv {
     height: 100px;
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 700;
-}
-#payment_address1 {
-    width: 80%;
-    height: 40px;
-    background: none;
-    border: 0;
-    border-bottom: 1px solid black;
     margin-top: 10px;
-    font-size: 15px;
-
+    margin-bottom: 60px;
+}
+.payment_deliv input{
+  font-size: 18px;
+   height: 34px;
+    width: 500px;
 }
 .payment_address_btn {
     width: 80px;
     height: 30px;
+    font-size: 25px;
 }
-#payment_address2 {
-    width: 90%;
-    height: 40px;
-    background: none;
-    border: 0;
-    border-bottom: 1px solid black;
-    margin-top: 10px;
-    font-size: 15px;
+.zipcode{
+   display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #33cc00;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 강조된 그림자 */
+    margin-right:2px;
 }
 .payment_request {
     margin-top: 40px;
-    font-size: 20px;
+    margin-bottom: 10px;
+    font-size: 22px;
     font-weight: 700;
 }
 .payment_request textarea {
     width: 100%;
     height: 250px;
     resize: none;
-    font-size: 15px;
+    font-size: 18px;
     line-height: 100px;
     padding-left: 20%;
 }
-
 #payment_pay_btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
-    height: 35px;
-    background: none;
+    background-color: #33cc00;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
     float: right;
-    border: 0;
-    background-color:rgb(242, 255, 245);
-    margin-left: 30px;
-    text-align: center;
-    font-size:17px
-    
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 강조된 그림자 */
+    margin-right:2px;
 }
 .product-description {
   color: #555;
 }
-
 .product-price {
   font-weight: bold;
   margin-top: 10px;
 }
-.product-image {
-  width: 150px;
-  height: 150px;
-  float: left;
-  align-items: center;
+.product-ima {
+  flex: 1; /* 남은 공간 모두 차지하도록 설정 */
+  max-width: 100%; /* 이미지의 최대 너비 설정 */
+  max-height: 100%; 
 }
-
+.product-image {
+  width: 100%; /* 이미지의 가로 너비 100%로 설정 */
+  height: 400px;
+}
 li {
-    list-style-type: none;
+    list-style-type: none;  
 }
 .product-content {
-  display: flex;
+  display: flex; 
   align-items: center;
+  width: 100%;
 }
 .profile_box {
+  display: flex;
     width: 150px;
     height: 150px;
     float:right;
+    justify-content: center;
     align-items:center;
-    background-color:rgb(242, 255, 245);
+    background-color:white;
     text-align: center;
+}
+.user_nick{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 .paymentCheck {
   margin-top: 20px;
@@ -349,5 +392,22 @@ li {
   border-radius: 4px;
   background-color:blue;
 }
-
+.img{
+  max-width: 100%;
+  max-height: 100%;
+}
+.content{
+margin-top: 10px;
+}
+.price{
+margin-top: 10px;
+}
+.textarea{
+margin-bottom:10px;
+}
+.input{
+  width:200px;
+  height: 100px;
+  font-size:100px;
+}
 </style>

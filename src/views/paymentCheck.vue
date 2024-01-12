@@ -200,7 +200,7 @@ methods: {
   margin-bottom: 5px;
 }
 .payment_list{
-  width: 680px; /* 상자의 폭 */
+  width: 750px; /* 상자의 폭 */
   height: 147px; /* 상자의 높이 */
   background-color: #f0f0f0; /* 상자의 배경색 */
   justify-content: center; /* 수평 가운데 정렬 */
@@ -210,7 +210,7 @@ methods: {
   padding-left: 1%;
 }
 .payment_list1{
-  width: 680px; /* 상자의 폭 */
+  width: 750px; /* 상자의 폭 */
   height: 45px; /* 상자의 높이 */
   background-color: #f0f0f0; /* 상자의 배경색 */
   justify-content: center; /* 수평 가운데 정렬 */
@@ -222,7 +222,7 @@ methods: {
 }
 
 .payment_check2{
-  width: 680px; 
+  width: 750px; 
   height: 55px;
   background-color: #f9f9f9;
   border-radius: 10px;
