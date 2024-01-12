@@ -284,12 +284,12 @@ export default {
 }
 
 .goodslist_div {
-  width: 100%;
+  width: 82%;
   height: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: left;
   margin-top: 45px;
 }
 .item_container {

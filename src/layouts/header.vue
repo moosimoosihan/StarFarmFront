@@ -242,10 +242,10 @@ a {
 /* ------------------------------------------------------ logo */
 .logo_img {
   width: 200px;
-  height: 70px;
+  height: 85px;
   float: left;
   padding: 0 0 0 16px;
-  margin-top: 35px;
+  margin-top: 25px;
   margin-left: 35px;
 }
 
