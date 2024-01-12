@@ -1,17 +1,22 @@
 <template>
     <div class="container" id="scroll" v-if="maxPage!=0">
-        <div class="search_title">
+        <div v-if="$route.params.cate!='cate'" class="search_title">
             <p>검색어 : {{keyword}}</p>
         </div>
+        <div v-else class="search_title">
+            <p>카테고리 : {{category}} > {{ categoryDetailstr }}</p>
+        </div>
         <div class="search_goods">
-            <div v-for="(goods,i) in goodsList" :key="i" @click="gotoProduct(goods.goods_no)">
-                <img :width="70" style="border-radius: 10px;"
+            <div class="item_container" v-for="(goods,i) in goodsList" :key="i" @click="gotoProduct(goods.goods_no)">
+                <img :width="70" style="border-radius: 10px;" class="goods_img"
                     :src="goods.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
                     alt="상품 이미지"/>
                 <div class="search_goodsdetails">
-                    <p>{{ goods.goods_nm }}</p>
-                    <p>입찰가 : {{ goods_succ_bid[i] }}</p>
-                    <p>{{ nickList[i] }}</p>
+                    <p class="goodsname">{{ goods.goods_nm }}</p>
+                    <p class="price">시작가 : {{ goods.goods_start_price }}</p>
+                    <p class="price">입찰가 : {{ goods_succ_bid[i] }}</p>
+                    <p class="sprice">{{ nickList[i] }}</p>
+                    <p class="time" font-color:red v-if="goods.goods_timer">{{ goodsTimer[i] }}</p>
                 </div>
             </div>
         </div>
@@ -21,7 +26,13 @@
             <button v-if="page<maxPage" class="page_btn" @click="next()">다음</button>
         </div>
     </div>
-    <div v-else>
+    <div v-else class="empty_container">
+        <div v-if="$route.params.cate!='cate'" class="search_title">
+            <p>검색어 : {{keyword}}</p>
+        </div>
+        <div v-else class="search_title">
+            <p>카테고리 : {{category}} > {{ categoryDetailstr }}</p>
+        </div>
         <p>검색 결과가 없습니다.</p>
     </div>
 </template>
@@ -40,12 +51,62 @@ import axios from 'axios';
 
                 category: '',
                 categoryDetail: 0,
+                categoryDetailstr: '',
             }
         },
         mounted() {
             if(this.$route.params.cate=='cate'){
                 this.category = this.$route.params.keyword;
                 this.categoryDetail = this.$route.params.page;
+                if(this.category=='의류'){
+                    if(this.categoryDetail==0){
+                        this.categoryDetailstr = '의류';
+                    } else if(this.categoryDetail==1){
+                        this.categoryDetailstr = '상의';
+                    } else if(this.categoryDetail==2){
+                        this.categoryDetailstr = '하의';
+                    } else if(this.categoryDetail==3){
+                        this.categoryDetailstr = '신발';
+                    } else if(this.categoryDetail==4){
+                        this.categoryDetailstr = '외투';
+                    } else {
+                        this.categoryDetailstr = '가방';
+                    }
+                } else if (this.category=='뷰티'){
+                    if(this.categoryDetail==0){
+                        this.categoryDetailstr = '뷰티';
+                    } else if(this.categoryDetail==1){
+                        this.categoryDetailstr = '악세사리';
+                    } else if(this.categoryDetail==2){
+                        this.categoryDetailstr = '화장품';
+                    } else {
+                        this.categoryDetailstr = '향수';
+                    }
+                } else if (this.category=='생활가전'){
+                    if(this.categoryDetail==0){
+                        this.categoryDetailstr = '생활/가전';
+                    } else if(this.categoryDetail==1){
+                        this.categoryDetailstr = '주방용품';
+                    } else if(this.categoryDetail==2){
+                        this.categoryDetailstr = '가전제품';
+                    } else {
+                        this.categoryDetailstr = '생필품';
+                    }
+                } else if (this.category=='취미'){
+                    if(this.categoryDetail==0){
+                        this.categoryDetailstr = '취미';
+                    } else if(this.categoryDetail==1){
+                        this.categoryDetailstr = '스포츠';
+                    } else if(this.categoryDetail==2){
+                        this.categoryDetailstr = '게임';
+                    } else if(this.categoryDetail==3){
+                        this.categoryDetailstr = '음악';
+                    } else {
+                        this.categoryDetailstr = '미술';
+                    }
+                } else if (this.category=='기타'){
+                    this.categoryDetailstr = '기타';
+                }
                 
             } else {
                 this.keyword = this.$route.params.keyword;
@@ -148,28 +209,71 @@ import axios from 'axios';
 #scroll {
     overflow: scroll;
 }
+.empty_container {
+    width: 100%;
+    height: 500px;
+}
 /* -------------------- */
 
 .search_goods {
-    width: 150px;
-    height: 200px;
-    text-align: center;
-    margin-top: 20px;
-    margin-left: 10%;
-    background-color: #f5f5f5;
-    float : left;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 45px;
+}
+.item_container {
+    width: 200px;
+    height: 380px;
+    background-color: rgb(255, 255, 255);
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 25px;
+    border-color: rgb(219, 219, 219);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+    overflow: hidden;
+    box-shadow: 5px 5px 5px gray;
+}
+.item_container > p {
+  margin-left: 3px;
 }
 
-.search_goods_img {
-    width: 100px;
-    height: 100px;
-    margin-top: 5px;
-    margin-left: 20px;
-    background-color: red;
+.goodsname {
+  font-size: 20px;
+  position: relative;
+  top: 15px;
+  left: 5px;
 }
-.search_bigcate {
-    font-size: 25px;
+
+.price {
+  position: relative;
+  left: 5px;
+  top: 20px;
 }
+
+.sprice {
+  position: relative;
+  left: 5px;
+  top: 25px;
+}
+
+.time {
+  position: relative;
+  left: 5px;
+  top: 30px;
+  color : red;
+}
+
+.goods_img {
+  width: 197.5px;
+  height: 240px;
+}
+
 .search_title {
     margin-top: 10px;
     margin-left: 10px;

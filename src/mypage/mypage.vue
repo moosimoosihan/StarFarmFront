@@ -4,7 +4,7 @@
             <p class="p1">내가 찜한 상품</p>
             <p class="more" @click="gotoLike()">+more</p> 
         </div> 
-        <div class="goodslist_div">
+        <div class="goodslist_div" v-if="likeList.length>0">
             <div class="item_container" v-for="(goods, i) in likeList" :key="i" @click="gotoAuction(goods.GOODS_NO)">
               <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.GOODS_NO}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
               <p class="goodsname">{{ goods.goods_nm }}</p>
@@ -12,11 +12,14 @@
               <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
             </div>
         </div>
+        <div v-else class="goodslist_div">
+            <p>찜한 상품이 없습니다.</p>
+        </div>
         <div class="mypageContainer">
             <p class="p1">나의 입찰 상품</p>
             <p class="more" @click="gotoBuylist()">+more</p>
         </div>
-        <div class="goodslist_div">
+        <div class="goodslist_div" v-if="orderList.length>0">
             <div class="item_container" v-for="(goods, i) in orderList" :key="i" @click="gotoAuction(goods.goods_no)">
               <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
               <p class="goodsname">{{ goods.goods_nm }}</p>
@@ -24,11 +27,14 @@
               <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
             </div>
         </div>
+        <div v-else class="goodslist_div">
+            <p>입찰한 상품이 없습니다.</p>
+        </div>
         <div class="mypageContainer">
             <p class="p1">나의 판매 상품</p>
             <p class="more" @click="gotoSalelist()">+more</p>
         </div>
-        <div class="goodslist_div">
+        <div class="goodslist_div" v-if="saleList.length>0">
             <div class="item_container" v-for="(goods, i) in saleList" :key="i" @click="gotoAuction(goods.GOODS_NO)">
               <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.GOODS_NO}/${goods.GOODS_IMG.split(',')[0]}`)" alt="상품 이미지">
               <p class="goodsname">{{ goods.GOODS_NM }}</p>
@@ -36,7 +42,9 @@
               <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
             </div>
         </div>
-        
+        <div v-else class="goodslist_div">
+            <p>판매한 상품이 없습니다.</p>
+        </div>
     </div>
 </template>
 <script>

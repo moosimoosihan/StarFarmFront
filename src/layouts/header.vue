@@ -221,12 +221,12 @@ a {
 
 .header_wrapper {
   font-size: 15px;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   z-index: 20;
   width: 100%;
-  height: 200px;
+  height: 110px;
   background: #ffffff;
   box-shadow: 0 4px 5px -4px rgb(219, 219, 219);
 }
@@ -241,11 +241,11 @@ a {
 
 /* ------------------------------------------------------ logo */
 .logo_img {
-  width: 230px;
-  height: 100px;
+  width: 200px;
+  height: 70px;
   float: left;
   padding: 0 0 0 16px;
-  margin-top: 30px;
+  margin-top: 35px;
   margin-left: 35px;
 }
 
@@ -365,17 +365,15 @@ a {
 }
 
 .menu {
-    width: 80%;
-    position: fixed;
+    width: 45%;
+    position: absolute;
     overflow: hidden;
     justify-content:center;
-    margin-top: 100px;
-    margin-bottom: 30px;
-    margin-left: 15%;
+    margin-left: 20%;
     margin-right: 5%;
   }
   .menu > li {
-    width: 16%;
+    width: 20%;
     float: left;
     text-align: center;
     line-height: 40px;

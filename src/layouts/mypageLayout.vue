@@ -29,7 +29,7 @@ import mypageSideBar from './mypageLeftBar.vue'
     padding-left: 15%;
     margin: auto;
     width: 90%;
-    height: 1000px;
+    height: 800px;
     overflow-y: scroll;
   }
 
@@ -37,7 +37,7 @@ import mypageSideBar from './mypageLeftBar.vue'
     display: none; 
 }
   .mypage_content {
-    padding-top: 200px;
+    padding-top: 100px;
   }
 
   Footer {
@@ -46,5 +46,10 @@ import mypageSideBar from './mypageLeftBar.vue'
     position : relative;
     transform : translateY(-1%);
   }
-
+  mypage-side-bar {
+    width: 250px;
+    height: 100%;
+    -ms-overflow-style: none; /* 인터넷 익스플로러 */
+    scrollbar-width: none; /* 파이어폭스 */
+  }
   </style>

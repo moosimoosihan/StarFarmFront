@@ -23,7 +23,7 @@
   </script>
   <style scoped>
   .default_content {
-    padding-top: 230px;
+    padding-top: 120px;
     margin: auto;
     height: 100%;
     position: relative;

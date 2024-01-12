@@ -1,7 +1,9 @@
 <template>
     <div class="container">
         <div class="report_wrapper">
-            <h1>회원 신고</h1>
+            <div class="title">
+                <h1>회원 신고</h1>
+            </div>
             <div class="report_user">
                 <div class="report_user_box">
                     <p>신고 할 유저 :</p>
@@ -183,14 +185,20 @@ export default {
     box-sizing: border-box;
 }
 .container {
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    display: flex;
+    margin: auto;
+    border: 2px solid rgb(221, 221, 221);
+    flex-direction: row;
+    justify-content: center;
 }
 
 /* ------------------------------------------------------------- */
-
+.title {
+    margin-top: 30px;
+}
 .report_wrapper {
-    width: 60%;
+    width: 80%;
     height: 800px;
     margin:0 auto;
 }

@@ -111,11 +111,11 @@ import axios from 'axios'
 }
 
 .mypage-bar {
-  height: 58%;
+  height: 100%;
   width: 250px;
-  position: fixed; 
+  position:absolute; /* Stay in place */
   /* z-index: 2; /* Stay on top */
-  top: 170px; /* Stay at the top */
+  top: 80px; /* Stay at the top */
   left: 0;
   overflow-x: hidden; /* Disable horizontal scroll */
   margin-top: 35px;

@@ -47,7 +47,7 @@
             </div>
           </div>
         </div>
-          <div v-else>
+          <div class="hot-Data" v-else>
             <h1>상품이 없습니다.</h1>
           </div>
         </div>
@@ -61,7 +61,7 @@
             <p class="time" v-if="goods.goods_timer">{{ goodsTimer[i] }}</p>
           </div>
       </div>
-      <div v-else>
+      <div class="goodslist_div" v-else>
         <h1>상품이 없습니다.</h1>
       </div>
     </div>
