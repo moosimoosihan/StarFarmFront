@@ -85,7 +85,7 @@
             <!--금액창-->
             <input v-if="goods.goods_state===0 && this.currentTime !== '경매가 종료되었습니다.'" type="text" id="searchInput" autocomplete="off" size="50" name="bid_value" v-model="bidAmount" @input="validateNumber()">
             <!--입찰버튼-->
-            <input v-if="goods.goods_state===0 && this.currentTime !== '경매가 종료되었습니다.'" type="button" id="submit_button" value="입찰" @click="postBidding">
+            <input v-if="goods.goods_state===0 && this.currentTime !== '경매가 종료되었습니다.'" type="button" id="submit_button" value="입찰" @click="postBidding" @keydown.enter="postBidding()">
             <!-- 신고버튼 -->
             <button class="button" @click="reportBtn()">신고</button>
           </div>
@@ -311,28 +311,38 @@ methods: {
       });
       return;
     }
-    try {
-      const goodsno = this.$route.params.id;
-      await axios({
-        url: `http://localhost:3000/goods/goodsBidding/${goodsno}`,
-        method: "POST",
-        data: {
-          bid_amount: this.bidAmount,
-          goods_no: this.goods.goods_no,
-          user_no: this.user.user_no,
+    this.$swal.fire({
+      title: '입찰하기',
+      text: '입찰하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '입찰하기',
+      cancelButtonText: '취소',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const goodsno = this.$route.params.id;
+          await axios({
+            url: `http://localhost:3000/goods/goodsBidding/${goodsno}`,
+            method: "POST",
+            data: {
+              bid_amount: this.bidAmount,
+              goods_no: this.goods.goods_no,
+              user_no: this.user.user_no,
+            }
+          })
+          .then(res => {
+            if(res.data.message == 'bidding_fail'){
+              this.$swal("경매가 마감되었습니다.")
+            }
+          })
+          this.bidAmount = ''
+        } catch (error) {
+          console.error(error);
         }
-      })
-      .then(res => {
-        if(res.data.message == 'bidding_fail'){
-          this.$swal("경매가 마감되었습니다.")
-        }
-      })
-      this.bidAmount = ''
-    } catch (error) {
-      console.error(error);
-    }
-    this.getSuccBid();
-    // window.location.reload();
+        this.getSuccBid();
+      }
+    });
   },
   validateNumber() {
       this.bidAmount = this.bidAmount.replace(/\D/g, ''); // 숫자 이외의 문자 제거

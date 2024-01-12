@@ -3,8 +3,8 @@
     <div class="logo">
     <img src="../assets/logo.png" @click="gotoMain()"></div>
     
-    <input type="text" name="username" id="username-field" class="login-form-field" placeholder="ID" v-model="user_id">
-    <input type="password" name="password" id="password-field" class="login-form-field" placeholder="PW" v-model="user_pw">
+    <input type="text" name="username" id="username-field" class="login-form-field" placeholder="ID" v-model="user_id" @keyup.enter="localLogin()">
+    <input type="password" name="password" id="password-field" class="login-form-field" placeholder="PW" v-model="user_pw" @keydown.enter="localLogin()">
     <input type="submit" value="Login" id="login-form-submit" @click="localLogin()">
     <input type="submit" value="회원가입" id="join-form-submit" @click="gotoSignUp()">
     <img src="../assets/kakao.png" class="btn_kakao" @click="kakaoLogin">
