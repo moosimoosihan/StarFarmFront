@@ -320,6 +320,14 @@ methods: {
       cancelButtonText: '취소',
     }).then(async (result) => {
       if (result.isConfirmed) {
+        if(this.goodsSuccBid>=this.bidAmount){
+          this.$swal.fire({
+            icon: 'error',
+            title: '입찰금액이 입찰가 낮습니다.',
+            text: '다시 입력해주세요.',
+          });
+          return;
+        }
         try {
           const goodsno = this.$route.params.id;
           await axios({
