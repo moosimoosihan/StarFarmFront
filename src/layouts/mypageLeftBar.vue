@@ -40,6 +40,9 @@
             <router-link class="m" to="/mypage/buylist">
                 <p><i class="fa fa-shopping-cart"></i> 입찰 상품 이력</p>
             </router-link>
+            <router-link class="m" to="/mypage/orderlist">
+                <p><i class="fa fa-shopping-cart"></i> 구매 상품 이력</p>
+            </router-link>
             <router-link class="m" to="/mypage/salelist">
                 <p><i class="fas fa-solid fa-money-bill"></i> 판매 상품 관리</p>
             </router-link>
@@ -89,7 +92,6 @@ import axios from 'axios'
         try {
           const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
           this.loginUser = response.data[0];
-          console.log(this.loginUser);
         } catch (error) {
           console.error(error);
         }

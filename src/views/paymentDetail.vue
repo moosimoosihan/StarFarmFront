@@ -67,7 +67,6 @@ export default {
   },
   created() {
     this.getUser()
-    this.getProduct()
     this.getOrder()
   },
   methods: {
@@ -81,18 +80,13 @@ export default {
     },
     async getProduct() {
        try {
-          const goodsno = this.$route.params.id;
-          axios({
-            url:`http://localhost:3000/goods/goodsInfo/${goodsno}`,
-            method:'get',
-          })
-            .then((response) => {
-              this.products = response.data[0];
-              this.getTotalPrice()
-            })
+          const goodsno = this.Order.GOODS_NO;
+          const response = await axios.get(`http://localhost:3000/goods/goodsInfo/${goodsno}`)
+          this.products = response.data[0];
         } catch (error) {
           console.error(error);
         }
+        this.getTotalPrice()
     },
     async getOrder() {
       try{
@@ -102,6 +96,12 @@ export default {
       } catch (error) {
         console.error(error);
       }
+      // 만약 구매자가 보는 경우가 아니라면 홈으로 이동합니다.
+      if (this.user.user_no !== this.Order.USER_NO) {
+        this.$swal('잘못된 접근입니다.', '홈으로 이동합니다.', 'error')
+        this.$router.push('/');
+      }
+      this.getProduct()
     },
     gotoHome() {
       this.$router.push('/');
@@ -124,12 +124,16 @@ export default {
   box-sizing: border-box;
 }
 .container {
+  width: 80%;
   display: flex;
+  margin: auto;
+  border: 2px solid rgb(221, 221, 221);
+  flex-direction: row;
   justify-content: center;
-  align-items: center;
+  padding: 50px;
 }
 #payment_wrapper {
-  width: 70%;
+  width: 100%;
 }
 .info-row {
   margin-bottom: 40px;

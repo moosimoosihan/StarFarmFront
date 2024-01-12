@@ -78,7 +78,7 @@ methods: {
   async gotoPayAPI() {
     try{
       const response = await Bootpay.requestPayment({
-        price:`${this.totalPrice}`,
+        price:`${this.getTotalPrice()}`,
         application_id: "65996d8600c78a0023346015",
         order_name: `${this.loginUser.user_nick}`,
         order_id: `${this.loginUser.user_id}`,
@@ -104,6 +104,7 @@ methods: {
                     order_addr2: this.loginUser.user_adr2,
                     order_zipcode: this.loginUser.user_zipcode,
                     order_content: this.order_content,
+                    goods_no: this.goods.goods_no,
                     user_no: this.user.user_no,
                   }
                 })
@@ -172,50 +173,62 @@ methods: {
   margin:0;
   padding:0;
   box-sizing: border-box;
+  margin: 0 auto;
 }
 .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    overflow-y: scroll;
+    margin-top: 30px;
+}
+.container::-webkit-scrollbar {
+  display: none;
 }
 /*----------------------------------------------*/
 .payment_check {
   background-color: #f9f9f9;
-  border-radius: 8px;
-  padding: 20px;
+  border-radius: 15px;
+  padding: 40px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  margin-bottom: 45px;
 }
 .check1 {
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 .payment_list{
-  width: 600px; /* 상자의 폭 */
-  height: 130px; /* 상자의 높이 */
+  width: 680px; /* 상자의 폭 */
+  height: 147px; /* 상자의 높이 */
   background-color: #f0f0f0; /* 상자의 배경색 */
   justify-content: center; /* 수평 가운데 정렬 */
   align-items: center; /* 수직 가운데 정렬 */
   margin: 0 auto; /* 수평 가운데 정렬을 위한 margin 설정 */
   border: 2px solid black;
+  padding-left: 1%;
 }
 .payment_list1{
-  width: 600px; /* 상자의 폭 */
-  height: 40px; /* 상자의 높이 */
+  width: 680px; /* 상자의 폭 */
+  height: 45px; /* 상자의 높이 */
   background-color: #f0f0f0; /* 상자의 배경색 */
   justify-content: center; /* 수평 가운데 정렬 */
   align-items: center; /* 수직 가운데 정렬 */
   margin: 0 auto; /* 수평 가운데 정렬을 위한 margin 설정 */
   border: 2px solid black;
+  padding-left: 1%;
 
 }
 
 .payment_check2{
+  width: 680px; 
+  height: 55px;
   background-color: #f9f9f9;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 
 }
 p{
@@ -230,9 +243,10 @@ h1{
 }
 
 .section_title {
-  font-size: 22px;
+  font-size: 25px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 7px;
+  padding-left: 1%;
 }
 .left-button {
   background-color: #33cc00;;

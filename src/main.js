@@ -36,6 +36,7 @@ import myReview from './mypage/myreview.vue'
 import myChat from './mypage/mychat.vue'
 import myPage from './mypage/mypage.vue'
 import pass from './mypage/pass.vue'
+import orderlist from './mypage/orderlist.vue'
 
 // 관리자 페이지
 import adminDeal from './admin/AdminDeal.vue'
@@ -90,7 +91,7 @@ const routes = [
         component: userpage
       },
       {
-        path: '/paymentdetail/:id/:order_no',
+        path: '/paymentdetail/:order_no',
         name: 'paymentdetail',
         component: paymentdetail
       },
@@ -142,6 +143,10 @@ const routes = [
         {
           path: 'pass',
           component: pass,
+        },
+        {
+          path: 'orderlist',
+          component: orderlist,
         }
       ]
     },
