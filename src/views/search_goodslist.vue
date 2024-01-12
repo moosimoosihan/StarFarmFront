@@ -52,7 +52,13 @@ import axios from 'axios';
                 category: '',
                 categoryDetail: 0,
                 categoryDetailstr: '',
+
+                goodsTimer: [],
+                timer: null,
             }
+        },
+        beforeDestroy() {
+            this.stopAutoTimer(); // 페이지가 파괴될 때 타이머 정지
         },
         mounted() {
             if(this.$route.params.cate=='cate'){
@@ -114,6 +120,9 @@ import axios from 'axios';
             }
             this.getGoodsList(0);
             this.getMaxPage();
+        },
+        created() {
+            this.allGoodsTimer();
         },
         methods: {
             async getGoodsList(nimNum) {
@@ -192,6 +201,57 @@ import axios from 'axios';
             next() {
                 this.page++;
                 this.getGoodsList((this.page-1)*10);
+            },
+            stopAutoTimer() {
+                clearInterval(this.timer);
+            },
+            updateTimer(endTime) {
+                // 날짜를 초로 바꾸어 저장 후 계산
+                let countDownDate = new Date(endTime).getTime();
+                // 현재 시간을 초로 바꾸어 저장
+                let currentTime = new Date().getTime();
+                const distance = countDownDate - currentTime;
+                // 만약 종료시간이 지났다면 타이머를 종료하고 경매가 종료되었다는 메시지를 표시
+                if (distance < 0) {
+                    return '경매가 종료되었습니다.';
+                }
+                // 남은 시간 계산
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                // 표시할 남은 시간 문자열 생성 포맷은 무조건 해당 포맷 하나만 '00일 남음' '00시간 남음' '00분 00초 남음' 으로만 표기
+                const daysStr = days > 0 ? `${days}일 남음` : '';
+                const hoursStr = hours > 0 ? `${hours}시간 남음` : '';
+                const minutesStr = minutes > 0 ? `${minutes}분` : '';  
+                const secondsStr = seconds >= 0 ? `${seconds}초 남음` : '';
+                // 만약 00일 남음이라면
+                if (daysStr === '') {
+                    // 00시간 남음이라면
+                    if (hoursStr === '') {
+                    // 00분 남음이라면
+                    if (secondsStr === '') {
+                        // 경매가 종료되었다는 메시지를 표시
+                        return '경매가 종료되었습니다.';
+                    }
+                    // 00시간 남음이 아니라면 00분 00초 남음을 표시
+                    return minutesStr + ' ' + secondsStr;
+                    }
+                    // 00일 남음이 아니라면 00시간 남음을 표시
+                    return hoursStr;
+                }
+                // 00일 남음을 표시
+                return daysStr;
+                },
+                allGoodsTimer(){
+                this.timer = setInterval(()=>{
+                    if(this.goodsList.length>0){
+                        for(let i=0; i<this.goodsList.length; i++){
+                            if(this.goodsTimer[i]!='경매가 종료되었습니다.')
+                            this.goodsTimer[i] = this.updateTimer(this.goodsList[i].goods_timer);
+                        }
+                    }
+                }, 1000);
             }
         }
     }
@@ -226,7 +286,7 @@ import axios from 'axios';
 }
 .item_container {
     width: 200px;
-    height: 380px;
+    height: 400px;
     background-color: rgb(255, 255, 255);
     border-style: solid;
     border-width: 2px;
