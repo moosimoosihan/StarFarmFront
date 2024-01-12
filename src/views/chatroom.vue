@@ -9,32 +9,29 @@
                 <div v-for="(chat, i) in chatList" :key="i">
                     <div v-if="chat.CHAT_USER===user.user_no" class="chat_me">
                         <div class="chat_container">
-                            <p class="chat_name">{{ loginUser.user_nick }}</p>
+                            <p class="chat_name">나</p>
                             <div class="chat_content_container">
-                                <p class="chat_content">{{ chat.CHAT_CONTENT }}</p>
                                 <span class="chat_time">{{ formatDateTime(chat.CHAT_DATE) }}</span>
+                                <textarea class="chat_content" :rows="chat.CHAT_CONTENT.length/15" readonly v-model="chat.CHAT_CONTENT"></textarea>
                             </div>
                         </div>
-                        <img :width="70" style="border-radius: 10px;"
-                            :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require('../assets/profile.png')"
-                            alt="프로필 이미지" />
                     </div>
                     <div v-else class="chat_you">
-                        <img :width="70" style="border-radius: 10px;"
+                        <img :width="50" height="50" style="border-radius:10px"
                             :src="anothorUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${anothorUser.user_no}/${anothorUser.user_img}`) : require('../assets/profile.png')"
                             alt="프로필 이미지" />
-                        <div class="chat_container">
-                            <p class="chat_name">{{ anothorUser.user_nick }}</p>
-                            <div class="chat_content_container">
-                                <p class="chat_content">{{ chat.CHAT_CONTENT }}</p>
-                                <span class="chat_time">{{ formatDateTime(chat.CHAT_DATE) }}</span>
+                        <div class="chat_container1">
+                            <p class="chat_name1">{{ anothorUser.user_nick }}</p>
+                            <div class="chat_content_container1">
+                                <textarea class="chat_content1" :rows="chat.CHAT_CONTENT.length/15" readonly v-model="chat.CHAT_CONTENT"></textarea>
+                                <span class="chat_time1">{{ formatDateTime(chat.CHAT_DATE) }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="chat_input_container">
-                <input class="chat_input" type="text" placeholder="메세지를 입력하세요." v-model="content">
+                <input class="chat_input" type="text" placeholder="메세지를 입력하세요." v-model="content" @keyup.enter="send()"/>
                 <button class="chat_send" @click="send()">전송</button>
             </div>
         </div>
@@ -42,6 +39,7 @@
 </template>
 <script>
 import axios from "axios";
+import { ref } from "vue";
 
     export default {
       name: 'chat',
@@ -113,6 +111,10 @@ import axios from "axios";
           }
         },
         async send() {
+            if(this.content==''){
+                this.$swal('메시지를 입력하세요.')
+                return;
+            }
             try {
                 const chatroom_no = this.chatroom.CHATROOM_NO;
                 const chat_content = this.content;
@@ -137,20 +139,31 @@ import axios from "axios";
         },
         formatDateTime(dateTime) {
             const date = new Date(dateTime);
+            const now = new Date();
             const options = {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
             };
+            // 현재시간을 기점으로 보낸지 몇 초 안됬다면 '0초 전' 이런식으로 표시
+            if(now.getTime() - date.getTime() < 60000) return `방금 전`;
+            // 보낸지 1분 안됬다면 '0분 전' 이런식으로 표시
+            if(now.getTime() - date.getTime() < 3600000) return `${Math.floor((now.getTime() - date.getTime()) / 60000)}분 전`;
+            // 보낸지 1시간 안됬다면 '0시간 전' 이런식으로 표시
+            if(now.getTime() - date.getTime() < 86400000) return `${Math.floor((now.getTime() - date.getTime()) / 3600000)}시간 전`;
+            // 보낸지 1일 안됬다면 '0일 전' 이런식으로 표시
+            if(now.getTime() - date.getTime() < 2592000000) return `${Math.floor((now.getTime() - date.getTime()) / 86400000)}일 전`;
+            // 보낸지 1달 안됬다면 날짜로 표시
+
             const formattedDateTime = date.toLocaleDateString("ko-KR", options);
             return formattedDateTime;
         },
         exitChat() {
             window.close();
         },
+        resizeTextArea(content, isMe) {
+            
+        }
       }
     }
 </script>
@@ -174,97 +187,158 @@ import axios from "axios";
 /*------------*/
 
 .chatroom_container {
-    width: 800px;
+    width: 780px;
     height: 560px;
-    background-color: grey;
+    background-color: rgb(255, 255, 255);
 }
 .chatroom_title {
-    text-align: center;
+    margin-left: 300px;
+    height: 40px;
+    margin-top: 13px;
 }
-.chatroom_title button {
+.chatroom_exit {
     float: right;
-    margin-right: 30px;
-    margin-top: 2px;
-    position: apsolute;
+    width: 60px;
+    height: 43px;
+    align-items: center;
+    font-size: 1rem;
+    font-family: GmarketSansMedium;
+    color: rgb(137, 137, 137);
+    border: 2px solid rgb(221, 221, 221);
+    border-radius: 10px;
+    margin-right: 8px;
+    margin-top: -8px;
 }
 
 .chatroom_title span {
-    font-size: 20px;
-    margin-top: 20px;
+    font-size: 25px;
 }
 
 .chats_container {
     width: 750px;
     height: 450px;
-    background-color: rgb(183, 179, 179);
+    background-color: rgb(255, 255, 255);
     margin-left: 25px;
+    border: 0.5px solid black;
     overflow-y: scroll;
+    margin-top: 2px;
 }
 
-.chat_profile_img {
+/* .chat_profile_img {
     width: 100px;
     height: 100px;
-    background-color: blue;
-    margin-left: 10px;
-    margin-top: 10px;
+    background-color: rgb(255, 255, 255);
+    margin-top: 20px;
     float: left;
+} */
+
+.chat_input_container { 
+    width: 800px;
 }
 
 .chat_container {
-    width: 330px;
-    height: 130px;
-    margin-top: 10px;
-    margin-left: 10px;
-    float: left;
-    padding-top: 10px;
-}
-.chat_content_container{
-    width: 310px;
-    height: 100px;
-    margin-left: 10px;
+    width: 530px;
+    height: 100%;
+    position: relative;
+    float: right;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
-.chat_you {
+.chat_container1 {
+    width: 530px;
+    height: 70px;
+    position: relative;
+    margin-left: 13px;
     float: left;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.chat_content_container{
+    float: right;
+    display: flex;
+}
+.chat_content_container1 {
+    width: 310px;
+    margin-left: 2px;
+    display: flex;
+}
+.chat_content {
+    display:block; 
+    overflow:hidden; 
+    border:none; 
+    resize:none;
+    pointer-events: none;
+    background-color: rgb(203, 235, 147);
+    border-radius: 8px;
+    padding: 3px;
+}
+.chat_content1 {
+    display:block; 
+    overflow:hidden; 
+    border:none; 
+    resize:none;
+    pointer-events: none;
+    background-color: rgb(203, 235, 147);
+    border-radius: 8px;
+    padding: 5px;
+}
+.chat_you {
+    display: flex;
+    margin-top: 10px;
+    margin-left: 10px;
+    width: auto;
+    /* height: auto; */
 }
 .chat_me {
     float: right;
-    margin-right: 10px;
-    text-align: end;
+    margin-right: 20px;
+    text-align: right;
+    border: none;
+    width: auto;
+    /* height: auto; */
 }
 
-#left {
-    width: 40%;
-    margin-left: 40px;
-    border: solid 1px grey;
-    float: left;
-    margin-top: 10px;
-}
-
-#right {
-    width: 40%;
-    margin-right: 40px;
-    border: solid 1px grey;
-    float: right;
-    margin-top: 10px;
-}
-.hr_text {
-    width: 30px;
-    text-align: center;
-    float: left;
-    margin-left: 20px;
-}
-
-input {
-    width: 700px;
+.chat_input {
+    width: 650px;
     height: 40px;
-    margin-left: 20px;
+    margin-left: 25px;
     margin-top: 10px;
+    padding-left: 10px;
+    float: left;
 }
-button {
+
+.chat_send {
     width: 50px;
-    height: 40px;
-    margin-left: 10px;
+    height: 43px;
+    margin-left: 30px;
+    align-items: center;
+    font-size: 1rem;
+    font-family: GmarketSansMedium;
+    color: rgb(137, 137, 137);
+    border: 2px solid rgb(221, 221, 221);
+    border-radius: 10px;
     margin-top: 10px;
+}
+
+.chat_name {
+    font-weight: bold;
+}
+
+.chat_name1 {
+    margin-left: 2px;
+    margin-right: 2px;
+    font-weight: bold;
+}
+
+.chat_time1{
+    margin-left: 10px;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.chat_time{
+   font-size: 12px;
+   margin-right: 3px;
 }
 </style>
