@@ -1,37 +1,39 @@
 <template>
-    <div>
-        <div class="container" v-if="admin">
-            <div class="menu-container">
-                <div class="management-box ">
-                    <router-link to="/">
-                        <h3>메인으로</h3>
-                    </router-link>
-                </div>
-                <div class="management-box ">
-                    <router-link to="/admin/">
-                        <h3>회원관리</h3>
-                    </router-link>
-                </div>
-                <div class="management-box ">
-                    <router-link to="/admin/deal">
-                        <h3>거래관리</h3>
-                    </router-link>
-                </div>
-                <div class="management-box ">
-                    <router-link to="/admin/report">
-                        <h3>신고관리</h3>
-                    </router-link>
-                </div>
+  <main class="main, container" v-if="admin">
+    <aside class="sidebar">
+      <nav class="nav">
+        <ul>
+          <li><div class="management-box ">-->
+            <router-link to="/">
+              <h3>메인으로</h3>
+            </router-link>
             </div>
-            <div>
-                <router-view></router-view>
+          </li>
+          <li><div class="management-box ">
+            <router-link to="/admin/">
+              <h3>회원관리</h3>
+            </router-link>
             </div>
-        </div>
-        <div v-else>
-            <h1>접근 권한이 없습니다.</h1>
-            <button @click="gotoHome">홈으로</button>
-        </div>
-    </div>
+          </li>
+          <li>
+            <div class="management-box ">
+            <router-link to="/admin/deal/0">
+              <h3>거래관리</h3>
+            </router-link>
+            </div>
+          </li>
+          <li>
+            <div class="management-box ">
+              <router-link to="/admin/report">
+                <h3>신고관리</h3>
+              </router-link>
+              </div>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  </main>
+    <router-view></router-view>
 </template>
 
 <script>
@@ -77,7 +79,67 @@ export default {
 }
 </script>
 <style scoped>
-.container {
+@import url("https://fonts.googleapis.com/css?family=Open+Sans");
+html {
+  font-family: Arial;
+  font-size: 16px;
+  background: #5e42a6;
+}
+
+.sidebar {
+  position: fixed;
+  width: 20%;
+  height: 100vh;
+  background: #312450;
+  font-size: 0.65em;
+}
+
+.nav {
+  position: relative;
+  margin: 0 15%;
+  text-align: right;
+  top: 30%;
+  transform: translateY(-50%);
+  font-weight: bold;
+}
+
+.nav ul {
+  list-style: none;
+}
+.nav ul li {
+  position: relative;
+  margin: 8.2em 0;
+}
+.nav ul li a {
+  line-height: 5em;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.4em;
+  color: rgba(255, 255, 255, 0.35);
+  display: block;
+  transition: all ease-out 300ms;
+}
+.nav ul li.active a {
+  color: white;
+}
+.nav ul li:not(.active)::after {
+  opacity: 0.2;
+}
+.nav ul li:not(.active):hover a {
+  color: rgba(255, 255, 255, 0.75);
+}
+.nav ul li::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 0.2em;
+  background: black;
+  left: 0;
+  bottom: 0;
+  background-image: linear-gradient(to right, #5e42a6, #b74e91);
+}
+
+/* .container {
     display: flex;
     background-color: #ffffff;
     height: 100vh;
@@ -85,17 +147,19 @@ export default {
 .menu-container {
     display: flex;
     flex-direction: column;
-    width: 400px;
-    padding: 20px;
-    border: 1px solid #000000; /* 검은선 */
+    border: 1px solid #000000;
 }
 .management-box {
-    width: 100px;
+    width: 200px;
+    height: 80px;
     background-color: #f57575;
-    padding: 3px;
+    padding-top: 30px;
     margin-bottom: 90px;
-    border-radius: 5px;
     box-shadow: 0 0 2px rgba(50, 255, 118, 0.1);
-    text-align: center; 
+    text-align: center;
 }
+a {
+  text-decoration: none;
+  color: black;
+} */
 </style>

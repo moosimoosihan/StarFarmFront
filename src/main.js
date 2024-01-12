@@ -49,6 +49,7 @@ import chatroom from './views/chatroom.vue'
 // 신고상세보기 페이지
 import reportDetail from './admin/reportDetail.vue'
 
+
 const routes = [
   {
     path: '/',
@@ -188,7 +189,7 @@ const routes = [
           component: adminReport,
         },
         {
-          path: 'deal',
+          path: 'deal/:id',
           component: adminDeal,
         }
       ]
