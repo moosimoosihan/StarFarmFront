@@ -407,6 +407,7 @@ div {
 #img-preview{
     width: 200px;
     height: 200px;
+    margin-top: -20px;
 }
 #img-preview_default{
     width: 200px;

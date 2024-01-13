@@ -79,7 +79,7 @@
           </div>
           <div v-if="user.user_no != goodsUser.user_no">
             <!--1:1 채팅버튼-->
-            <button class="chatroom_container" @click="gotoChatRoom(goodsUser.user_no), createChatRoom()">1:1 채팅</button>
+            <button class="chatroom_container" @click="gotoChatRoom(goodsUser.user_no)">1:1 채팅</button>
             <!--결제페이지 이동버튼-->
             <button v-if="buyUser" class="button" @click="gotoPayment()">결제</button>
             <!--금액창-->
@@ -96,6 +96,7 @@
 </template>
 <script>
 import axios from 'axios';
+import io from 'socket.io-client'
 
 export default {
 data() {
@@ -117,6 +118,8 @@ data() {
     endTime: Date.now(),
     chatRoomNo: '',
     buyUser: false,
+
+    socket: io('http://localhost:3002')
   };
 },
 computed: {
@@ -132,11 +135,18 @@ created() {
   this.checkLikeGoods();
   this.updateTimer();
   // this.getChatRoomNo();
+  this.socket.on('auction', async (data) => {
+      if(data.goods_no === this.goods.goods_no){
+          console.log('상품 번호 일치');
+          await this.getSuccBid();
+          await this.getBidList();
+      }
+  })
 },
 beforeUpdate() {
   if(this.currentTime !== '경매가 종료되었습니다.'){
-    this.getBidList()
-    this.getSuccBid()
+    // this.getBidList()
+    // this.getSuccBid()
   } else {
     this.checkBuyUser();
   }
@@ -257,6 +267,10 @@ methods: {
     }
   },
   async getGoods() {
+    this.socket.on('connect', () => {
+        this.connected = true;
+        console.log('경매 연결됨');
+    })
     try {
       const goodsno = this.$route.params.id;
       const response = await axios.get(`http://localhost:3000/goods/goodsInfo/${goodsno}`);
@@ -342,6 +356,12 @@ methods: {
           .then(res => {
             if(res.data.message == 'bidding_fail'){
               this.$swal("경매가 마감되었습니다.")
+            } else {
+              this.socket.emit('auction', {
+                bid_amount: this.bidAmount,
+                goods_no: this.goods.goods_no,
+                user_no: this.user.user_no,
+              })
             }
           })
           this.bidAmount = ''
@@ -349,6 +369,7 @@ methods: {
           console.error(error);
         }
         this.getSuccBid();
+        this.getBidList();
       }
     });
   },
@@ -418,7 +439,13 @@ methods: {
   gotoUserpage(user_no) {
     this.$router.push(`/userpage/${user_no}`);
   }
-}
+},
+beforeDestroy() {
+  this.socket.on('disconnect', () => {
+      this.connected = false;
+      console.log('경매 연결 끊김');
+  })
+},
 }
 
 

@@ -31,15 +31,15 @@
                 </div>
             </div>
             <div class="chat_input_container">
-                <input class="chat_input" type="text" placeholder="메세지를 입력하세요." v-model="content" @keyup.enter="send()"/>
+                <input class="chat_input" type="text" placeholder="메세지를 입력하세요." v-model="content"/>
                 <button class="chat_send" @click="send()">전송</button>
             </div>
         </div>
     </div>
 </template>
 <script>
-import axios from "axios";
-import { ref } from "vue";
+import axios from "axios"
+import io from 'socket.io-client'
 
     export default {
       name: 'chat',
@@ -50,24 +50,42 @@ import { ref } from "vue";
             chatList: [],
             chatroom: {},
             content: '',
+            connected: false,
+            socket: io('http://localhost:3001')
         }
+      },
+      created() {
+        this.socket.on('chat', async (data) => {
+            if(data.chatroom_no === this.chatroom.CHATROOM_NO) {
+                console.log('채팅방 번호 일치');
+                await this.getChat();
+                this.scroll();
+            }
+        })
       },
       computed: {
         user() {
           return this.$store.state.user;
-        }
+        },
+      },
+      beforeMount() {
+        this.getChatRoom()
       },
       mounted() {
-        this.getChatRoom()
-        this.getChat()
-        this.getUser()
-        this.getAnothorUser()
-      },
-      beforeUpdate() {
-        this.getChat()
+        this.scroll()
       },
       methods: {
+        scroll() {
+            setTimeout(() => {
+                const scroll = document.getElementById('scroll');
+                scroll.scrollTop = scroll.scrollHeight;
+            }, 100);
+        },
         async getChatRoom() {
+            this.socket.on('connect', () => {
+                this.connected = true;
+                console.log('채팅방 연결됨');
+            })
           try {
             const me_no = this.user.user_no;
             const another_user_no = this.$route.params.id;
@@ -77,12 +95,14 @@ import { ref } from "vue";
             } else {
                 user_no = `${me_no}/${another_user_no}`;
             }
-
             const response = await axios.get(`http://localhost:3000/chat/getChatRoom/${user_no}`);
             this.chatroom = response.data[0];
           } catch (error) {
             console.error(error);
           }
+          await this.getChat()
+          await this.getUser()
+          await this.getAnothorUser()
         },
         async getUser() {
           try {
@@ -109,6 +129,8 @@ import { ref } from "vue";
           } catch (error) {
             console.error(error);
           }
+          const scroll = document.getElementById('scroll');
+          scroll.scrollTop = scroll.scrollHeight;
         },
         async send() {
             if(this.content==''){
@@ -126,10 +148,13 @@ import { ref } from "vue";
                     user_no
                 });
                 if(response.data.message === 'success') {
+                    this.socket.timeout(5000).emit('chat', {
+                        chatroom_no: this.chatroom.CHATROOM_NO,
+                        chat_content: this.content,
+                        user_no: this.user.user_no
+                    })
                     this.content = '';
                     await this.getChat();
-                    const scroll = document.getElementById('scroll');
-                    scroll.scrollTop = scroll.scrollHeight;
                 } else {
                     console.log('전송 실패');
                 }
@@ -161,10 +186,13 @@ import { ref } from "vue";
         exitChat() {
             window.close();
         },
-        resizeTextArea(content, isMe) {
-            
-        }
-      }
+      },
+      beforeDestroy() {
+        this.socket.on('disconnect', () => {
+            this.connected = false;
+            console.log('채팅방 연결 끊김');
+        })
+      },
     }
 </script>
 <style scoped>

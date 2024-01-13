@@ -88,6 +88,8 @@ import axios from 'axios'
                 } catch (error) {
                     console.error(error);
                 }
+                this.commentList = [];
+                this.userImgList = [];
                 for(var i = 0; i < this.roomList.length; i++) {
                     if(this.roomList[i].CHATROOM_USER1===this.user.user_no && this.roomList[i].CHATROOM_OUT1 === 1){
                         console.log(`${this.roomList[i].CHATROOM_NO}번 채팅방 나감`)
@@ -96,8 +98,8 @@ import axios from 'axios'
                         console.log(`${this.roomList[i].CHATROOM_NO}번 채팅방 나감`)
                         this.roomList.splice(i, 1);
                     } else {
-                        this.getComment(this.roomList[i].CHATROOM_NO)
-                        this.getChatUser(this.roomList[i].CHATROOM_USER1 === this.user.user_no? this.roomList[i].CHATROOM_USER2:this.roomList[i].CHATROOM_USER1)
+                        await this.getComment(this.roomList[i].CHATROOM_NO)
+                        await this.getChatUser(this.roomList[i].CHATROOM_USER1 === this.user.user_no? this.roomList[i].CHATROOM_USER2:this.roomList[i].CHATROOM_USER1)
                     }
                 }
             },
