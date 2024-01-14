@@ -1,14 +1,20 @@
 <template>
     <div class="container" id="scroll" v-if="maxPage!=0">
         <div v-if="$route.params.cate!='cate'" class="search_title">
-            <p>검색어 : {{keyword}}</p>
+            <p style="font-size: 30px; color: green ;">{{keyword}} </p><p style="font-size: 20px; margin-top: 10px;"> 의 검색 결과</p>
         </div>
         <div v-else class="search_title">
             <p>카테고리 : {{category}} > {{ categoryDetailstr }}</p>
         </div>
+        <div class="sort">
+            <a class="a">입찰가낮은순</a><a class="a">|</a>
+            <a class="a">시작가낮은순</a><a class="a">|</a>
+            <a class="a">최신등록순</a><a class="a">|</a>
+            <a class="a">정확도순</a>
+        </div>
         <div class="search_goods">
             <div class="item_container" v-for="(goods,i) in goodsList" :key="i" @click="gotoProduct(goods.goods_no)">
-                <img :width="70" style="border-radius: 10px;" class="goods_img"
+                <img class="goods_img"
                     :src="goods.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
                     alt="상품 이미지"/>
                 <div class="search_goodsdetails">
@@ -263,12 +269,19 @@ import axios from 'axios';
     box-sizing: border-box;
 }
 .container {
-    width: 100%;
+    width: 80%;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: auto;
+    overflow-y: scroll;
 }
-#scroll {
-    overflow: scroll;
+
+.container::-webkit-scrollbar {
+  display: none;
 }
+
 .empty_container {
     width: 100%;
     height: 500px;
@@ -276,17 +289,18 @@ import axios from 'axios';
 /* -------------------- */
 
 .search_goods {
-    width: 100%;
+    width: 80%;
     height: 100%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
+    margin: auto;
     margin-top: 45px;
 }
 .item_container {
-    width: 200px;
-    height: 400px;
+    width: 190px;
+    height: 340px;
     background-color: rgb(255, 255, 255);
     border-style: solid;
     border-width: 2px;
@@ -330,14 +344,38 @@ import axios from 'axios';
 }
 
 .goods_img {
-  min-width: 200px;
-  min-height: 200px;
-  max-width: 100%;
-  max-height: 100%;
+  width: 200px;
+  height: 200px;
 }
 
 .search_title {
     margin-top: 10px;
     margin-left: 10px;
+    display: flex;
 }
+
+.page {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.page_btn {
+    text-align: center;
+    border: #ffffff;
+    background-color: #ffffff;
+}
+
+.pageNum {
+    text-align: center;
+    border: #ffffff;
+    background-color: #ffffff;
+    font-size: 20px;
+}
+
+.a {
+    float: right;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 </style>

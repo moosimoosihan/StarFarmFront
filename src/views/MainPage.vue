@@ -294,7 +294,7 @@ export default {
 }
 .item_container {
   width: 200px;
-  height: 380px;
+  height: 350px;
   background-color: rgb(255, 255, 255);
   border-style: solid;
   border-width: 2px;
@@ -339,10 +339,8 @@ export default {
 }
 
 .goods_img {
-  min-width: 200px;
-  min-height: 200px;
-  max-width: 100%;
-  max-height: 100%;
+  width: 200px;
+  height: 200px;
 }
 .goods{
    justify-content: center;
