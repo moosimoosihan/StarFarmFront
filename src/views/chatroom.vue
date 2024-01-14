@@ -129,8 +129,7 @@ import io from 'socket.io-client'
           } catch (error) {
             console.error(error);
           }
-          const scroll = document.getElementById('scroll');
-          scroll.scrollTop = scroll.scrollHeight;
+          this.scroll()
         },
         async send() {
             if(this.content==''){
@@ -187,7 +186,8 @@ import io from 'socket.io-client'
             window.close();
         },
       },
-      beforeDestroy() {
+      destroyed() {
+        this.socket.off('chat')
         this.socket.on('disconnect', () => {
             this.connected = false;
             console.log('채팅방 연결 끊김');
@@ -268,17 +268,15 @@ import io from 'socket.io-client'
     width: 530px;
     height: 100%;
     position: relative;
-    float: right;
     margin-top: 20px;
     margin-bottom: 20px;
 }
 
 .chat_container1 {
     width: 530px;
-    height: 70px;
+    height: 100%;
     position: relative;
     margin-left: 13px;
-    float: left;
     margin-top: 20px;
     margin-bottom: 20px;
 }

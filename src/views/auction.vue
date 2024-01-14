@@ -443,7 +443,8 @@ methods: {
     this.$router.push(`/userpage/${user_no}`);
   }
 },
-beforeDestroy() {
+destroyed() {
+  this.socket.off('auction');
   this.socket.on('disconnect', () => {
       this.connected = false;
       console.log('경매 연결 끊김');

@@ -339,7 +339,9 @@ export default {
 }
 
 .goods_img {
-    max-width: 100%;
+  min-width: 200px;
+  min-height: 200px;
+  max-width: 100%;
   max-height: 100%;
 }
 .goods{

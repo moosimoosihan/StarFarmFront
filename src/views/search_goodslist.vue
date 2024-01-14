@@ -330,8 +330,10 @@ import axios from 'axios';
 }
 
 .goods_img {
-  width: 197.5px;
-  height: 240px;
+  min-width: 200px;
+  min-height: 200px;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .search_title {

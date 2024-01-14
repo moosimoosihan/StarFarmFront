@@ -12,6 +12,7 @@
                                 <th>입찰번호</th>
                                 <th>상품이미지</th>
                                 <th>상품명</th>
+                                <th>거래형태</th>
                                 <th>금액</th>
                                 <th>상품상태</th>
                                 <th>일시</th>
@@ -32,6 +33,9 @@
                                     <p>{{ order.goods_nm }}</p>
                                 </td>
                                 <td>
+                                    <p>{{ order.goods_trade===0 ? '택배' : '직거래' }}</p>
+                                </td>
+                                <td>
                                     <span>시작가 : {{ formatPrice(order.goods_start_price) }}</span><br>
                                     <span>입찰가 : {{ formatPrice(order.bid_amount) }}</span><br>
                                     <span v-if="getOrderStatusText(order.goods_state)=='경매 중'">최고 입찰가 :{{ formatPrice(succ_bidList[i]) }}</span>
@@ -44,12 +48,13 @@
                                     <p>{{ formatDateTime(order.goods_timer) }}</p>
                                 </td>
                                 <td>
-                                    <span v-if="order.goods_state===1" @click="saleComp(i)">거래 완료</span>
-                                    <span v-if="order.goods_state == 2" @click="writeReview(order.goods_no)">리뷰쓰기</span>
+                                    <span v-if="order.goods_state===1 && order.goods_trade===1" @click="saleComp(i)">거래 완료</span>
+                                    <span v-else-if="order.goods_state===1 && order.goods_trade===0 && succ_bid_user_no[i]===user.user_no" @click="gotoPay(i)">결제</span>
+                                    <span v-if="order.goods_state===2" @click="writeReview(order.goods_no)">리뷰쓰기</span>
                                 </td>
                             </tr>
                             <tr v-if="orderList.length === 0">
-                                <td colspan="7">입찰 상품이 없습니다.</td>
+                                <td colspan="8">입찰 상품이 없습니다.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -68,6 +73,7 @@ import axios from 'axios'
                 loginUser: {},
                 orderList: [],
                 succ_bidList: [],
+                succ_bid_user_no: [],
             }
         },
         computed: {
@@ -113,19 +119,20 @@ import axios from 'axios'
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/orderlist/${this.user.user_no}`);
                     this.orderList = response.data;
-                    for(let i=0; i<this.orderList.length; i++){
-                        this.succ_bidList.push(await this.getSuccBid(this.orderList[i].goods_no));
-                    }
                 } catch (error) {
                     console.error(error);
                 }
+                await this.getSuccBid()
             },
-            async getSuccBid(goods_no) {
-                try {
-                    const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goods_no}`);
-                    return response.data[0].succ_bid;
-                } catch (error) {
-                    console.error(error);
+            async getSuccBid() {
+                for(let i=0; i<this.orderList.length; i++){
+                    try {
+                        const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.orderList[i].goods_no}`);
+                        this.succ_bidList.push(response.data[0].succ_bid)
+                        this.succ_bid_user_no.push(response.data[0].user_no)
+                    } catch (error) {
+                        console.error(error);
+                    }
                 }
             },
             formatPrice(price) {
@@ -176,6 +183,9 @@ import axios from 'axios'
                 } else {
                     this.$swal("거래 완료 처리가 취소되었습니다.");
                 }
+            },
+            gotoPay(index) {
+                this.$router.push(`/payment/${this.orderList[index].goods_no}`);
             }
         }
     }
