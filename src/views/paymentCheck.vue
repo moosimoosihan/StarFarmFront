@@ -95,7 +95,7 @@ methods: {
             if(response.event=='done') {
               try{
                 axios({
-                  url:"http://localhost:3000/goods/addOrder",
+                  url:"http://localhost:3000/goods/orderPayment",
                   method: "POST",
                   data: {
                     order_receive_nm: this.loginUser.user_id,
