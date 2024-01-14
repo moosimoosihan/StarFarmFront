@@ -9,7 +9,7 @@
               <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.GOODS_NO}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
               <p class="goodsname">{{ goods.goods_nm }}</p>
               <p class="price">시작가 : {{ goods.goods_start_price }}</p>
-              <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
+              <p class="sprice">입찰가 : {{ like_goods_succ_bid[i] }}</p>
             </div>
         </div>
         <div v-else class="goodslist_div">
@@ -24,7 +24,7 @@
               <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
               <p class="goodsname">{{ goods.goods_nm }}</p>
               <p class="price">시작가 : {{ goods.goods_start_price }}</p>
-              <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
+              <p class="sprice">입찰가 : {{ order_goods_succ_bid[i] }}</p>
             </div>
         </div>
         <div v-else class="goodslist_div">
@@ -39,7 +39,7 @@
               <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.GOODS_NO}/${goods.GOODS_IMG.split(',')[0]}`)" alt="상품 이미지">
               <p class="goodsname">{{ goods.GOODS_NM }}</p>
               <p class="price">시작가 : {{ goods.GOODS_START_PRICE }}</p>
-              <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
+              <p class="sprice">입찰가 : {{ sale_goods_succ_bid[i] }}</p>
             </div>
         </div>
         <div v-else class="goodslist_div">
@@ -54,12 +54,13 @@ import axios from 'axios';
         name : 'mypage',
         data() {
             return {
-                loginUser: {},
-                goodsList: [],
                 likeList: [],
                 orderList: [],
                 saleList: [],
-                goods_succ_bid: [],
+                
+                like_goods_succ_bid: [],
+                order_goods_succ_bid: [],
+                sale_goods_succ_bid: []
             }
         },
         computed: {
@@ -68,43 +69,11 @@ import axios from 'axios';
             }
         },
         created() {
-            this.getUser();
-            this.getGoods();
             this.getLikelist();
             this.getOrderlist();
             this.getSalelist();
         },
         methods: {
-            async getUser() {
-                try {
-                    const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
-                    this.loginUser = response.data[0];
-                } catch (error) {
-                    console.error(error);
-                }
-            },
-            async getGoods(){
-                await axios.get('http://localhost:3000/goods/maingoods')
-                    .then((res) => {
-                    this.goodsList = res.data;
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-                for(let i=0; i<this.goodsList.length; i++){
-                 await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.goodsList[i].goods_no}`)
-                .then((res) => {
-                if(res.data[0].succ_bid==null){
-                    this.goods_succ_bid.push('입찰 없음');
-                } else {
-                    this.goods_succ_bid.push(res.data[0].succ_bid);
-                }
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-                }
-             },
             gotoAuction(goods_no) {
                     this.$router.push(`/product/${goods_no}`);
             },
@@ -119,33 +88,66 @@ import axios from 'axios';
             },
             async getLikelist() {
               const user_no = this.user.user_no;
-
               try {
                 const response = await axios.get(`http://localhost:3000/mypage/likelist_preview/${user_no}`);
                 this.likeList = response.data;
               } catch (error) {
                 console.error(error);
               }
+              for(let i=0; i<this.likeList.length; i++){
+                try {
+                  const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.likeList[i].GOODS_NO}`);
+                  if(response.data[0].succ_bid==null){
+                    this.like_goods_succ_bid.push('입찰없음');
+                  } else {
+                    this.like_goods_succ_bid.push(response.data[0].succ_bid);
+                  }
+                } catch (error) {
+                  console.error(error);
+                }
+              }
             },
           async getOrderlist() {
               const user_no = this.user.user_no;
-
               try {
                 const response = await axios.get(`http://localhost:3000/mypage/orderlist_preview/${user_no}`);
                 this.orderList = response.data;
               } catch (error) {
                 console.error(error);
               }
+                for(let i=0; i<this.orderList.length; i++){
+                    try {
+                    const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.orderList[i].goods_no}`);
+                    if(response.data[0].succ_bid==null){
+                        this.order_goods_succ_bid.push('입찰없음');
+                    } else {
+                        this.order_goods_succ_bid.push(response.data[0].succ_bid);
+                    }
+                    } catch (error) {
+                    console.error(error);
+                    }
+                }
           },
           async getSalelist() {
               const user_no = this.user.user_no;
-
               try {
                 const response = await axios.get(`http://localhost:3000/mypage/salelist_preview/${user_no}`);
                 this.saleList = response.data;
               } catch (error) {
                 console.error(error);
               }
+                for(let i=0; i<this.saleList.length; i++){
+                    try {
+                    const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.saleList[i].GOODS_NO}`);
+                    if(response.data[0].succ_bid==null){
+                        this.sale_goods_succ_bid.push('입찰없음');
+                    } else {
+                        this.sale_goods_succ_bid.push(response.data[0].succ_bid);
+                    }
+                    } catch (error) {
+                    console.error(error);
+                    }
+                }
           },
 
 

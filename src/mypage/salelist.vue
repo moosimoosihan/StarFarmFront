@@ -119,7 +119,7 @@ import axios from 'axios';
                 for(let i=0; i<this.saleList.length; i++){
                     let val = await this.getSuccBid(this.saleList[i].GOODS_NO)
                     if(val === undefined || val === null){
-                        val = 0;
+                        val = '입찰없음';
                     }
                     this.succ_bidList.push(val)
                 }
@@ -162,6 +162,9 @@ import axios from 'axios';
                 }
             },
             formatPrice(price) {
+                if(price === '입찰없음'){
+                    return price
+                }
                 if (price !== undefined && price !== null) {
                     const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     return `${formattedPrice} 원`;
