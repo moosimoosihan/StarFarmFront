@@ -91,7 +91,6 @@ import axios from 'axios';
                 .catch((err) => {
                     console.log(err);
                 })
-                console.log(this.goodsList.length);
                 for(let i=0; i<this.goodsList.length; i++){
                  await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.goodsList[i].goods_no}`)
                 .then((res) => {

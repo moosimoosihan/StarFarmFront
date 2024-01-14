@@ -16,24 +16,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(likegoods, i) in likegoodsList" :key="i" @click="gotoProduct(likegoods.items[0].GOODS_NO)">
+                            <tr v-for="(likegoods, i) in likeList" :key="i" @click="gotoProduct(likegoods.GOODS_NO)">
                                 <td>
                                     <img :width="70" style="border-radius: 10px;"
-                                        :src="likegoods.items[0].goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${likegoods.items[0].GOODS_NO}/${likegoods.items[0].goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
+                                        :src="likegoods.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${likegoods.GOODS_NO}/${likegoods.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
                                         alt="상품 이미지" />
                                 </td>
                                 <td>
-                                    {{ likegoods.items[0].goods_nm }}
+                                    {{ likegoods.goods_nm }}
                                 </td>
                                 <td>
-                                    <span>시작가 {{ formatPrice(likegoods.items[0].goods_start_price) }}</span><br>
+                                    <span>시작가 {{ formatPrice(likegoods.goods_start_price) }}</span><br>
                                     <span>입찰가 {{ formatPrice(succ_bidList[i]) }}</span>
                                 </td>
                                 <td>
-                                    {{ likegoods.items[0].user_nick }}
+                                    {{ likegoods.user_nick }}
                                 </td>
                             </tr>
-                            <tr v-if="likegoodsList.length === 0">
+                            <tr v-if="likeList.length === 0">
                                 <td colspan="4">관심 상품이 없습니다.</td>
                             </tr>
                         </tbody>
@@ -50,7 +50,6 @@ import axios from 'axios'
         name: 'likelist',
         data() {
             return {
-                loginUser: {},
                 likeList: [],
                 succ_bidList: [],
             }
@@ -59,40 +58,13 @@ import axios from 'axios'
             user() {
                 return this.$store.state.user
             },
-            likegoodsList() {
-                const likegoods = []
-                const tradeNos = []
-
-                for(const goods of this.likeList) {
-                    if(!tradeNos.includes(goods.GOODS_NO)){
-                        likegoods.push({
-                            ORDER_TRADE_NO: goods.ORDER_TRADE_NO,
-                            items:[goods],
-                        })
-                        tradeNos.push(goods.GOODS_NO)
-                    } else {
-                        const index = likegoods.findIndex((o) => o.ORDER_TRADE_NO === goods.ORDER_TRADE_NO)
-                        likegoods[index].items.push(goods)
-                    }
-                }
-                return likegoods;
-            }
         },
         created() {
-            this.getUser()
             this.getLikeGoods()
         },
         methods: {
             gotoProduct(index) {
                 this.$router.push(`/product/${index}`)
-            },
-            async getUser() {
-                try {
-                    const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
-                    this.loginUser = response.data[0];
-                } catch (error) {
-                    console.error(error);
-                }
             },
             async getLikeGoods() {
                 try {
@@ -130,7 +102,10 @@ import axios from 'axios'
                 try {
                     const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goods_no}`);
                     console.log(response.data[0].succ_bid);
-                    return response.data[0].succ_bid;
+                    if(response.data[0].succ_bid === null)
+                        return 0;
+                    else
+                        return response.data[0].succ_bid;
                 } catch (error) {
                     console.error(error);
                 }

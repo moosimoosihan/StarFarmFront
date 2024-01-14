@@ -123,17 +123,13 @@ data() {
   };
 },
 computed: {
-      user() {
-          return this.$store.state.user;
-      }
+  user() {
+      return this.$store.state.user;
+  }
 },
 created() {
   this.getGoods();
-  this.getGoodsUser();
-  this.getSuccBid();
-  this.getBidList();
-  this.checkLikeGoods();
-  this.updateTimer();
+  
   // this.getChatRoomNo();
   this.socket.on('auction', async (data) => {
       if(data.goods_no === this.goods.goods_no){
@@ -183,17 +179,20 @@ methods: {
     }
   },
   async checkLikeGoods() {
-    try {
-      const goodsno = this.$route.params.id;
-      const response = await axios.post(`http://localhost:3000/goods/likeCheck/${this.user.user_no}/${goodsno}`);
-      if(response.data.isLiked){
-        this.likeGoods = 1;
-      } else {
-        this.likeGoods = 0;
+    if(this.user.user_no != ''){
+      try {
+        const goodsno = this.$route.params.id;
+        const response = await axios.post(`http://localhost:3000/goods/likeCheck/${this.user.user_no}/${goodsno}`);
+        if(response.data.isLiked){
+          this.likeGoods = 1;
+        } else {
+          this.likeGoods = 0;
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
     }
+    this.updateTimer();
   },
   async likeDelete() {
     try {
@@ -280,6 +279,7 @@ methods: {
       } catch (error) {
         console.error(error);
       }
+      await this.getGoodsUser();
   },
   async getGoodsUser() {
     try {
@@ -289,6 +289,7 @@ methods: {
     } catch (error) {
       console.error(error);
     }
+    await this.getSuccBid();
   },
   async getSuccBid() {
     try {
@@ -298,6 +299,7 @@ methods: {
     } catch (error) {
       console.error(error);
     }
+    await this.getBidList();
   },
   async getBidList() {
     try {
@@ -307,6 +309,7 @@ methods: {
     } catch (error) {
       console.error(error);
     }
+    await this.checkLikeGoods()      
   },
   async postBidding() {
     if(this.goods.goods_start_price>=this.bidAmount){

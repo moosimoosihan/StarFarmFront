@@ -53,6 +53,7 @@
             
             <div class="form4">
                 <button type="submit" class="pass" @click="goToPass">비밀번호 수정</button>
+                <button class="delete" @click="userDelete">회원탈퇴</button>
                 <button type="submit" class="btn2" @click="onSubmitForm">수정하기</button>
             </div>
         </div>
@@ -259,6 +260,36 @@ export default {
             } catch (error) {
                 console.error(error);
             }
+        },
+        async userDelete() {
+            this.$swal.fire({
+                title: '정말 탈퇴하시겠습니까?',
+                showCancelButton: true,
+                confirmButtonText: `탈퇴`,
+                cancelButtonText: `취소`
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    if(this.loginUser.length == 0){
+                        this.$swal('데이터가 존재하지 않습니다.')
+                        return
+                    }
+                    try {
+                        const response = await axios.post(`http://localhost:3000/mypage/deleteUser/${this.user.user_no}`);
+                        if (response.data.message === 'delete_success') {
+                            this.$swal("한 달 뒤 탈퇴됩니다.");
+                            if(this.loginUser.user_social_tp==1){
+                                window.Kakao.Auth.logout()
+                            }
+                            this.$store.commit('user', {user_no:'', user_id:''})
+                            this.$router.push({ path: '/' });
+                        } else {
+                            this.$swal("탈퇴에 실패했습니다.");
+                        }
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            })
         }
     }
 }

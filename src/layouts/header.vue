@@ -116,6 +116,7 @@ export default {
     methods: {
         async getUser() {
           if(this.user.user_no!=''){
+            console.log(this.user.user_no)
             try {
                 const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
                 this.loginUser = response.data[0];
@@ -161,8 +162,10 @@ export default {
           this.$router.push('/admin')
         },
         logout() {
-          if(this.loginUser.user_social_tp==1){
-            window.Kakao.Auth.logout()
+          if(this.loginUser.length!=0){
+            if(this.loginUser.user_social_tp==1){
+              window.Kakao.Auth.logout()
+            }
           }
           this.$store.commit("user", {
             user_no: '',

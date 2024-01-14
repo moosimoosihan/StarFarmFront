@@ -54,6 +54,17 @@ import axios from 'axios'
               this.$swal("비밀번호가 일치하지 않습니다.")
             } else if(res.data.message=='ban'){
               this.$swal("정지된 계정입니다.")
+            } else if (res.data.message == 'deleted') {
+              // 탈퇴되는 날짜 출력
+              this.$swal.fire({
+                position: 'top',
+                icon: 'warning',
+                title: '탈퇴된 계정입니다.',
+                text: `탈퇴된 계정입니다. ${this.formatDateTime(res.data.date)}에 탈퇴될 예정입니다.`,
+                showConfirmButton: false,
+                confirmButtonText: '확인',
+              })
+              return
             } else {
               this.$store.commit("user", { user_id: this.user_id, user_no: res.data.message })
               this.$swal({
@@ -172,7 +183,17 @@ import axios from 'axios'
         naverBtnClick(){
           var btnNaverLogin = document.getElementById("naverIdLogin").firstChild;
           btnNaverLogin.click();
-        }
+        },
+        formatDateTime(dateTime) {
+          const date = new Date(dateTime);
+          const options = {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+          };
+          const formattedDateTime = date.toLocaleDateString("ko-KR", options);
+          return formattedDateTime;
+        },
     },
     computed: {
         user() {
