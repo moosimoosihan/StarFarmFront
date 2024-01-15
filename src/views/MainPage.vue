@@ -1,7 +1,31 @@
 <template>
     <div class="container">
       <div class="slide-imges_container">
-        <div class="slider-container">
+        <div class="slider-container" v-if="mainEventGoods.length>0">
+          <div class="slider">
+            <div class="slide-wrapper">
+              <div class="slide" v-for="(goods,i) in mainEventGoods" :key="i">
+                <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" width="550" @click="gotoAuction(goods.goods_no)">
+              </div>
+            </div>
+          </div>
+          <div class="dot-navigation">
+            <span class="dot" v-for="(goods,i) in mainEventGoods" :key="i" @click="moveToSlide(i)"></span>
+          </div>
+        </div>
+        <div class="slider-container" v-else-if="mainEventGoods.length===0">
+          <div class="slider">
+            <div class="slide-wrapper">
+              <div class="slide" v-for="(goods,i) in mainDefaultGoods" :key="i">
+                <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" width="550" @click="gotoAuction(goods.goods_no)">
+              </div>
+            </div>
+          </div>
+          <div class="dot-navigation">
+            <span class="dot" v-for="(goods,i) in mainDefaultGoods" :key="i" @click="moveToSlide(i)"></span>
+          </div>
+        </div>
+        <div class="slider-container" v-else>
           <div class="slider">
             <div class="slide-wrapper">
               <div class="slide" v-for="(img,i) in eventImageList" :key="i">
@@ -31,7 +55,7 @@
               </div>
             </div>
           </div>
-          <div v-else-if="mainDefaultGoods.length>0">
+          <div v-else-if="mainEventGoods.length===0">
             <h1>최신 상품</h1>
             <div class="hot-Data" v-for="(goods,i) in mainDefaultGoods" :key="i" @click="gotoAuction(goods.goods_no)">
               <div class="hot-container">
@@ -388,8 +412,8 @@ export default {
     flex: 0 0 100%;
   }
 .slide img {
-  max-width: 100%; /* 이미지가 부모 요소를 넘어가지 않도록 최대 너비 설정 */
-  max-height: 100%; /* 이미지가 부모 요소를 넘어가지 않도록 최대 높이 설정 */
+  width: 450px; /* 이미지가 부모 요소를 넘어가지 않도록 최대 너비 설정 */
+  height: 450px; /* 이미지가 부모 요소를 넘어가지 않도록 최대 높이 설정 */
   display: block; /* 이미지 간격을 없애기 위해 inline 속성 제거 */
   margin: auto; /* 가운데 정렬을 위한 마진 설정 */
 }

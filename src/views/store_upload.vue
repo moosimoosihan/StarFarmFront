@@ -81,7 +81,7 @@
             </div>
             <div id="store_timer_deliv">
                 <div>
-                    <p>마감 시간(최소 하루, 최대 한달)</p>
+                    <p class="wi100">마감 시간(최소 하루, 최대 한달)</p>
                     <input type="datetime-local" required v-model="goods_timer">
                 </div>
                 <div v-if="goods_trade==='택배거래'">
@@ -507,5 +507,8 @@ select {
   input:focus {
     /* border: 2px solid #ffc905; */
     outline: 2px solid rgb(255, 236, 253);
+    }
+    .wi100 {
+        width: 100%;
     }
 </style>
