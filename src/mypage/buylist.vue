@@ -218,7 +218,7 @@ import axios from 'axios'
 }
 
 .goods .table {
-    max-width: 1200px;
+    max-width: 1300px;
     text-align: center;
     background-color: #ffffff;
     border-radius: 10px;
@@ -242,19 +242,6 @@ import axios from 'axios'
 
 .goods .detail {
     display: flex;
-}
-
-#complete {
-    background-color: #00bfa5;
-}
-#biding {
-    background-color: #ff6d00;
-}
-#cancel {
-    background-color: #ff1744;
-}
-#ing {
-    background-color: #ffea00;
 }
 
 .title {
@@ -300,7 +287,7 @@ tbody tr:hover {
 /* 테이블 비율 */
 th:nth-child(1),
 td:nth-child(1) {
-  width: 5%;
+  width: 3%;
 }
 
 th:nth-child(2),
@@ -310,22 +297,26 @@ td:nth-child(2) {
 
 th:nth-child(3),
 td:nth-child(3) {
-  width: 20%;
+  width: 15%;
 }
 th:nth-child(4),
 td:nth-child(4) {
-  width: 35%;
+  width: 10%;
 }
 th:nth-child(5),
 td:nth-child(5) {
-  width: 5%;
+  width: 25%;
 }
 th:nth-child(6),
 td:nth-child(6) {
-  width: 15%;
+  width: 10%;
 }
 th:nth-child(7),
 td:nth-child(7) {
+  width: 18%;
+}
+th:nth-child(8),
+td:nth-child(8) {
   width: 10%;
 }
 

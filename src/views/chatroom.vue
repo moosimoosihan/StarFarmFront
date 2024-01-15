@@ -17,10 +17,10 @@
                         </div>
                     </div>
                     <div v-else class="chat_you">
-                        <img :width="50" height="50" style="border-radius:10px"
+                        <div class="chat_container1">
+                            <img style="border-radius:10px" width="50" height="50"
                             :src="anothorUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${anothorUser.user_no}/${anothorUser.user_img}`) : require('../assets/profile.png')"
                             alt="프로필 이미지" />
-                        <div class="chat_container1">
                             <p class="chat_name1">{{ anothorUser.user_nick }}</p>
                             <div class="chat_content_container1">
                                 <textarea class="chat_content1" :rows="chat.CHAT_CONTENT.length/15" readonly v-model="chat.CHAT_CONTENT"></textarea>
@@ -31,8 +31,8 @@
                 </div>
             </div>
             <div class="chat_input_container">
-                <input class="chat_input" type="text" placeholder="메세지를 입력하세요." v-model="content"/>
-                <button class="chat_send" @click="send()">전송</button>
+                <input class="chat_input" type="text" placeholder="메세지를 입력하세요." v-model="content" @keyup.enter="send" />
+                <button class="chat_send" @click="send">전송</button>
             </div>
         </div>
     </div>
@@ -265,7 +265,7 @@ import io from 'socket.io-client'
 }
 
 .chat_container {
-    width: 530px;
+    width: 700px;
     height: 100%;
     position: relative;
     margin-top: 20px;
@@ -273,8 +273,9 @@ import io from 'socket.io-client'
 }
 
 .chat_container1 {
-    width: 530px;
+    width: 700px;
     height: 100%;
+    display: flex;
     position: relative;
     margin-left: 13px;
     margin-top: 20px;
@@ -285,9 +286,12 @@ import io from 'socket.io-client'
     display: flex;
 }
 .chat_content_container1 {
-    width: 310px;
-    margin-left: 2px;
+    max-width: 100%;
+    margin-left: 60px;
+    margin-top: 20px;
     display: flex;
+    position: absolute;
+
 }
 .chat_content {
     display:block; 
@@ -310,19 +314,34 @@ import io from 'socket.io-client'
     padding: 5px;
 }
 .chat_you {
-    display: flex;
+    /*display: flex;
     margin-top: 10px;
     margin-left: 10px;
-    width: auto;
+    width: auto; */
     /* height: auto; */
+    max-width: 700px;
+    margin: 5px;
+    font-size: 12px;
+    display: inline-block;
+    position: relative;
+    justify-content: left;
+    text-align: left;
 }
 .chat_me {
-    float: right;
+    /*float: right;
     margin-right: 20px;
     text-align: right;
     border: none;
-    width: auto;
+    width: auto; */
     /* height: auto; */
+    max-width: 700px;
+    margin: 12px;
+    padding: 7px 12px;
+    font-size: 12px;
+    display: inline-block;
+    position: relative;
+    justify-content: right;
+    text-align: right;
 }
 
 .chat_input {
