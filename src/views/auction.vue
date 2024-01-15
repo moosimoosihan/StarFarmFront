@@ -36,7 +36,7 @@
         </div>
       </div>
       <div class="dot-navigation">
-        <span class="dot" v-for="(img,i) in good_img" :key="i" @click="moveToSlide(i)"></span>
+        <span class="dot" v-for="(img,i) in good_img" :key="i" @click="moveToSlideAuction(i)"></span>
       </div>
     </div>
   </div>
@@ -115,6 +115,10 @@ data() {
     endTime: Date.now(),
     chatRoomNo: '',
     buyUser: false,
+
+    timer: null,
+    intervalId: null, // 자동 슬라이드를 위한 인터벌 ID
+    currentIndex: 0,
   };
 },
 computed: {
@@ -129,7 +133,7 @@ created() {
   this.getBidList();
   this.checkLikeGoods();
   this.updateTimer();
-  // this.getChatRoomNo();
+  this.startAutoSlide(); // 페이지가 생성될 때 자동 슬라이드 시작
 },
 beforeUpdate() {
   if(this.currentTime !== '경매가 종료되었습니다.'){
@@ -146,6 +150,15 @@ methods: {
     } else if(goods_trade===1){
         return '직거래'
     }
+  },
+  startAutoSlide() {
+    var nextIndex = 0;
+    this.intervalId = setInterval(() => {
+      if(this.good_img.length>0){
+        nextIndex = (this.currentIndex + 1) % this.good_img.length;
+      }
+      this.moveToSlideAuction(nextIndex);
+    }, 4000); // 4초마다 슬라이드 이동
   },
   formatPrice(price) {
       if (price !== undefined && price !== null) {
@@ -199,10 +212,10 @@ methods: {
       console.error(error);
     }
   },
-  moveToSlide(index) {
-    const slides = this.$el.querySelectorAll('.slide');
-    const slideWidth = slides[0].clientWidth;
-    this.$el.querySelector('.slide-wrapper').style.transform = `translateX(-${index * slideWidth}px)`;
+  moveToSlideAuction(index) {
+    const slidesAuction = document.querySelectorAll('.slide');
+    const slideWidthAuction = slidesAuction[0].clientWidth;
+    document.querySelector('.slide-wrapper').style.transform = `translateX(-${index * slideWidthAuction}px)`;
     this.currentIndex = index;
   },
   //1:1 채팅룸 생성
@@ -378,7 +391,7 @@ methods: {
     });
   },
   updateTimer() {
-    let timer = setInterval(()=>{
+    this.timer = setInterval(()=>{
       // 날짜를 초로 바꾸어 저장 후 계산
       let countDownDate = new Date(this.endTime).getTime();
       // 현재 시간을 초로 바꾸어 저장
@@ -408,7 +421,7 @@ methods: {
 
     // 만약 종료시간이 지났다면 타이머를 종료하고 경매가 종료되었다는 메시지를 표시
     if (distance < 0) {
-      clearInterval(timer);
+      clearInterval(this.timer);
       this.currentTime = '경매가 종료되었습니다.';
     }
   }, 1000);
@@ -480,8 +493,18 @@ methods: {
     } else if (cate=='기타'){
         return'기타';
     }
-  }
+  },
+  stopAutoSlide() {
+    clearInterval(this.intervalId);
+  },
+  topAutoTimer() {
+    clearInterval(this.timer);
+  },
 },
+  beforeDestroy() {
+    this.stopAutoSlide(); // 페이지가 파괴될 때 자동 슬라이드 정지
+    this.stopAutoTimer(); // 페이지가 파괴될 때 타이머 정지
+  },
 };
 
 </script>
@@ -589,14 +612,15 @@ body {
  }
  .slider{
     width: 100%;
+    height: 100%;
     overflow: hidden;
     position: relative;
     margin-bottom: 20px;
  }
- .slider-wrapper{
+ .slide-wrapper {
     display: flex;
     transition: transform 0.5s ease-in-out;
- }
+  }
  .slide{
     flex: 0 0 100%;
  }
