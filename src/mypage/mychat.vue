@@ -239,15 +239,19 @@ td:nth-child(1) {
 
 th:nth-child(2),
 td:nth-child(2) {
-  width: 30%;
+  width: 20%;
 }
 
 th:nth-child(3),
 td:nth-child(3) {
-  width: 30%;
+  width: 20%;
 }
 th:nth-child(4),
 td:nth-child(4) {
+  width: 20%;
+}
+th:nth-child(5),
+td:nth-child(5) {
   width: 20%;
 }
 

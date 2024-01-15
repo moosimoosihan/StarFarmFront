@@ -257,19 +257,20 @@ a {
   display: flex;
   width: 20%;
   max-width: 100%;
-  outline: rgb(0, 0, 0) solid 1px;
-  background-color: rgb(230, 255, 219);
+  outline: rgb(221, 221, 221) solid 3px;
+  background-color: rgb(255, 255, 255);
   float : right;
   margin-right: 55px;
   margin-top: 50px;
   border-radius: 20px;
+  box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
 }
 
 input[type='text'] {
   width: 100%;
   font-size: 1rem;
   outline: none;
-  background-color: rgb(230, 255, 219);
+  background-color: rgb(255, 255, 255);
   border: none;
   margin-right: 8px;
   margin-left: 20px;
@@ -282,7 +283,7 @@ input[type='text']:focus {
 }
 
 input::placeholder {
-  color:  rgb(255, 236, 253);
+  color:  rgb(239, 255, 237);
 }
 
 .search_btn {

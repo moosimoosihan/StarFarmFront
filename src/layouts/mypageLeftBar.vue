@@ -34,6 +34,7 @@
                 </div>
             </div>
           </div>
+          <div class="m_container">
             <router-link class="m" to="/mypage/">
                 <p><i class="fa fa-user"></i>  마이페이지</p>
             </router-link>
@@ -58,6 +59,7 @@
             <router-link class="m" to="/mypage/mychat">
                 <p><i class="fas fa-solid fa-comments"></i> 나의 채팅방</p>
             </router-link>
+          </div>
           </div>
         </div>
       </div>
@@ -123,12 +125,20 @@ import axios from 'axios'
   margin-top: 35px;
 }
 
-.m {
+.m_container {
   border-right: 1px solid #b3b3b3;
+  height: 450px;
+  overflow-y: scroll ;
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
+}
+
+.m_container::-webkit-scrollbar {
+    display: none; /* 크롬, 사파리, 오페라, 엣지 */
 }
 
 .myinfo {
-  width: 250px;
+  width: 400px;
   height: 300px;
   margin-bottom: 20px; 
   display: table-cell;
@@ -149,7 +159,7 @@ import axios from 'axios'
 }
 .innerbar {
   max-width: 150px;
-  height: 10px;
+  height: 20px;
   text-align: right;
   height: 8px; /* same as #progressBar height if we want text middle aligned */
   width: 30%;
@@ -176,7 +186,7 @@ import axios from 'axios'
   padding-top: 10px;
 }
 
-.mypage-bar .m:hover{
+.m:hover{
   background-color: #a1ff6a;
 }
 
