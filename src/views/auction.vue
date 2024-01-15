@@ -234,12 +234,12 @@ methods: {
   //   const response = await axios.get(`http://localhost:3000/chat/checkChatRoom/${seller_no}/${buyer_no}`);
   // },
   /*1:1 채팅룸 열기*/
-  async gotoChatRoom(index) {
-    let popupWindow = window.open(`/chatroom/${index}`, '_blank', 'width=800', 'height=620', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
-    popupWindow.resizeTo(800, 620);
-    popupWindow.onresize = () => {
-      popupWindow.resizeTo(800, 620);
-    };
+  gotoChatRoom(index) {
+      let popupWindow = window.open(`/chatroom/${index}`, '_blank', 'width=700', 'height=560', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
+      popupWindow.resizeTo(700, 560)
+      popupWindow.onresize = (_=>{
+          popupWindow.resizeTo(700, 560)
+      })
   },
   /* 팝업창 열고 닫기*/
   handleBid() {

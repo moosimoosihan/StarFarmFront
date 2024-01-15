@@ -67,10 +67,10 @@ import axios from 'axios'
         },
         methods: {
             gotoChatRoom(index) {
-                let popupWindow = window.open(`/chatroom/${index}`, '_blank', 'width=800', 'height=620', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
-                popupWindow.resizeTo(800, 620)
+                let popupWindow = window.open(`/chatroom/${index}`, '_blank', 'width=700', 'height=560', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
+                popupWindow.resizeTo(700, 560)
                 popupWindow.onresize = (_=>{
-                    popupWindow.resizeTo(800, 620)
+                    popupWindow.resizeTo(700, 560)
                 })
             },
             async getUser() {

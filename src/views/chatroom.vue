@@ -234,7 +234,7 @@ import io from 'socket.io-client'
     color: rgb(137, 137, 137);
     border: 2px solid rgb(221, 221, 221);
     border-radius: 10px;
-    margin-right: 8px;
+    margin-right: 5px;
     margin-top: -8px;
 }
 
@@ -345,7 +345,7 @@ import io from 'socket.io-client'
 }
 
 .chat_input {
-    width: 650px;
+    width: 680px;
     height: 40px;
     margin-left: 25px;
     margin-top: 10px;
@@ -354,9 +354,9 @@ import io from 'socket.io-client'
 }
 
 .chat_send {
-    width: 50px;
+    width: 60px;
     height: 43px;
-    margin-left: 30px;
+    margin-left: 10px;
     align-items: center;
     font-size: 1rem;
     font-family: GmarketSansMedium;
