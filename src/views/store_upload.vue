@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <div v-if="!isUploading || !isDelete" class="isLoadingScreen"></div>
         <div class="left">
             <div id="store_upload_wrapper">
                 <div class="mb-3 row">
@@ -128,7 +129,11 @@ import moment from 'moment'
                 goods_img: ['','','','',''],
 
                 // 이미지를 보여줄 변수
-                goods_img_src: ['','','','','']
+                goods_img_src: ['','','','',''],
+
+                // 이미지가 아직 업로드 중인지 확인할 변수
+                isUploading: true,
+                isDelete: true
             }
         },
         computed: {
@@ -200,8 +205,11 @@ import moment from 'moment'
                 } else {
                     this.goods_deliv_price = 0
                 }
-                if(this.goods_img.length===0){
+                if(this.goods_img==['','','','','']){
                     return this.$swal('상품 이미지를 등록해주세요.')
+                }
+                if(!this.isUploading || !this.isDelete){
+                    return this.$swal('이미지 작업 중입니다.')
                 }
                 switch(this.goods_trade){
                     case '택배거래':
@@ -268,10 +276,11 @@ import moment from 'moment'
                 }
             },
             async multiUploadFile(files) {
-                console.log(files);
-                if (files.length <= 0) {
+                if (files.length <= 0 || !this.isUploading || !this.isDelete) {
+                    this.$swal("파일이 없거나 현재 파일을 업로드 중입니다.")
                     return; // 파일 미선택 시 반환
                 }
+                this.isUploading = false;
                 const formData = [];
                 this.goods_img_src = ['','','','',''];
                 for(var i=0;i<files.length;i++){
@@ -282,16 +291,14 @@ import moment from 'moment'
                         console.log(key, ":", formData[i].get(key));
                     }
                 }
-                // 기존 이미지 삭제
                 for(var i=0;i<this.goods_img.length;i++){
                     if(this.goods_img[i]!=''){
                         try{
-                            const img = this.goods_img[i]
                             await axios({
                                 url:'http://localhost:3000/goods/delete_img',
                                 method:'POST',
                                 data:{
-                                    pastname: img
+                                    pastname: this.goods_img[i]
                                 }
                             })
                         } catch(err){
@@ -299,7 +306,7 @@ import moment from 'moment'
                         }
                     }
                 }
-                try {
+                try{
                     this.goods_img = ['','','','',''];
                     for(var i=0;i<formData.length;i++){
                         try{
@@ -318,13 +325,15 @@ import moment from 'moment'
                         this.goods_img[i] = files[i].name
                         console.log(this.goods_img[i])
                     }
-                    return true;
+                    this.isUploading = true;
+                    return this.isUploading;
                 } catch(err){
                     console.log(err);
-                    return false;
+                    this.isUploading = false;
+                    return isUploading;
                 }
             },
-            deleteImage(index){
+            async deleteImage(index){
                 this.$swal.fire({
                     title:'정말 삭제하시겠습니까?',
                     showCancelButton: true,
@@ -332,6 +341,10 @@ import moment from 'moment'
                     cancelButtonText: `취소`
                 }).then(async (result) => {
                     if(result.isConfirmed){
+                        if(!this.isUploading || !this.isDelete){
+                            return this.$swal('이미지 작업 중입니다.')
+                        }
+                        this.isDelete = false
                         const img = this.goods_img[index]
                         this.goods_img_src[index] = ''
                         this.goods_img[index] = ''
@@ -342,6 +355,7 @@ import moment from 'moment'
                                 pastname: img
                             }
                         })
+                        this.isDelete = true
                     }
                 })
             },
@@ -358,6 +372,20 @@ import moment from 'moment'
             },
             gotoBack() {
                 this.$router.go(-1)
+            }
+        },
+        beforeDestroy() {
+            for(var i=0;i<this.goods_img.length;i++){
+                if(this.goods_img[i]!=''){
+                    const img = this.goods_img[i]
+                    axios({
+                        url:'http://localhost:3000/goods/delete_img',
+                        method:'POST',
+                        data:{
+                            pastname: img
+                        }
+                    })   
+                }  
             }
         }
     }
@@ -510,5 +538,18 @@ select {
     }
     .wi100 {
         width: 100%;
+    }
+    .isLoadingScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('../assets/logo.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100px;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
     }
 </style>

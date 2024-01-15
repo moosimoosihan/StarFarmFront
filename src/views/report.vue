@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <div v-if="!isUploading || !isDelete" class="isLoadingScreen"></div>
         <div class="report_wrapper">
             <div class="title">
                 <h1>회원 신고</h1>
@@ -20,7 +21,8 @@
             </div>
             <div class="report_file_box">
                 <span class="report_file_name">파일 업로드</span>
-                <input type="file" class="report_upload_file" @change="uploadFile($event.target.files)" >
+                <input type="file" class="report_upload_file" accept="image/png,image/jpeg" @change="uploadFile($event.target.files)" >
+                
                 <div class="img_view_container">
                     <img class="img_loader" v-if="reportFileSrc!=''" :src="reportFileSrc" alt="미리보기" type="img">
                     <span v-else>미리보기</span>
@@ -48,6 +50,10 @@ export default {
             reportContent: '',
             reportFile: '',
             reportFileSrc: '',
+            
+            // 이미지가 아직 업로드 중인지 확인할 변수
+            isUploading: true,
+            isDelete: true
         }
     },
     created() {
@@ -87,7 +93,9 @@ export default {
                 this.$swal("내용을 입력해주세요")
                 return
             }
-
+            if(!this.isUploading || !this.isDelete){
+                return this.$swal('이미지 작업 중입니다.')
+            }
             try{
                 await axios.post(`http://localhost:3000/auth/report`, {
                     report_title: this.reportTitle,
@@ -112,12 +120,17 @@ export default {
         },
         async uploadFile(file) {
             let name = "";
-            if (file) {
+            if (file.length>0) {
                 name = file[0].name;
             }
             else {
-                return;     // 파일 미선택 시 반환
+                return;
             }
+            if (!this.isUploading || !this.isDelete) {
+                this.$swal("이미지 작업 중입니다")
+                return;
+            }
+            this.isUploading = false;
 
             const formData = new FormData();
             
@@ -127,6 +140,17 @@ export default {
 
             for (let key of formData.keys()) {
                 console.log(key, ":", formData.get(key));
+            }
+            try{
+                await axios({
+                    url: `http://localhost:3000/auth/delete_img`,
+                    method: 'POST',
+                    data: {
+                        pastname: this.reportFile
+                    }
+                })
+            } catch(err){
+                console.log(err);
             }
             try {
                 axios({
@@ -144,11 +168,12 @@ export default {
                         console.log(e);
                     })
                 this.reportFile = name;
-                console.log(this.reportFile)
-                return true;
+                this.isUploading = true;
+                return this.isUploading;
             } catch(err){
                 console.log(err);
-                return false;
+                this.isUploading = false;
+                return isUploading;
             }
         },
         gotoBack() {
@@ -162,6 +187,10 @@ export default {
                     cancelButtonText: `취소`
                 }).then(async (result) => {
                     if(result.isConfirmed){
+                        if(!this.isUploading || !this.isDelete){
+                            return this.$swal('이미지 작업 중입니다.')
+                        }
+                        this.isDelete = false
                         const img = this.reportFile
                         this.reportFileSrc = ''
                         this.reportFile = ''
@@ -172,6 +201,7 @@ export default {
                                 pastname: img
                             }
                         })
+                        this.isDelete = true
                     }
                 })
             },
@@ -336,4 +366,17 @@ h1 {
     /* border: 2px solid #ffc905; */
     outline: 2px solid rgb(255, 236, 253);
     }
+.isLoadingScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../assets/logo.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100px;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
 </style>

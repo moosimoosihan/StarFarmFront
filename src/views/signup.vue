@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div v-if="!isUploading || !isDelete" class="isLoadingScreen"></div>
     <div class="logo">
         <img src="../assets/logo.png" @click="gotoMain()">
     </div>
@@ -58,6 +59,7 @@
       <div id="box2">
         <p class="s">프로필 사진</p>
         <div class="profile-upload-content upload-img">
+          <button v-if="user_img_src!=''" @click="deleteImage()">X</button>
           <div class="profile-img">
             <img v-if="user_img_src!=''" id="img-preview" :src="user_img_src" alt="미리보기" />
             <img v-else id="img-preview_default" src="../assets/profile.png" alt="미리보기" />
@@ -99,6 +101,9 @@ export default {
       id_check_bool: 0,
       email_check_bool: 0,
       phone_check_bool: 0,
+
+      isUploading: true,
+      isDelete: true,
     }
   },
   methods: {
@@ -106,7 +111,6 @@ export default {
             if (!this.validationCheck()) {
                 return;
             }
-            console.log(this.user_id, this.user_email, this.user_nick, this.user_pw, this.user_mobile, this.user_zipcode, this.user_adr1, this.user_adr2, this.user_img);            
             axios({
                 url: "http://localhost:3000/auth/join_process",
                 method: "POST",
@@ -227,6 +231,10 @@ export default {
                 this.$swal("주소를 입력하세요.");
                 return false;
             }
+            if (!this.isUploading || !this.isDelete){
+                this.$swal("이미지 업로드 중입니다. 잠시만 기다려주세요.");
+                return false;
+            }
             return true;
         },
         validatePhoneNumber() {
@@ -237,12 +245,14 @@ export default {
         },
         async uploadFile(file) {
                 let name = "";
-                if (file) {
+                if (file.length>0) {
                     name = file[0].name;
                 }
                 else {
                     return;     // 파일 미선택 시 반환
                 }
+
+                this.isUploading = false;
 
                 const formData = new FormData();
                 
@@ -253,6 +263,19 @@ export default {
                 for (let key of formData.keys()) {
                     console.log(key, ":", formData.get(key));
                 }
+                if(this.user_img != ''){
+                    try{
+                        await axios({
+                            url: `http://localhost:3000/auth/delete_img`,
+                            method: 'POST',
+                            data: {
+                                pastname: this.user_img
+                            }
+                        })
+                    } catch(err){
+                        console.log(err);
+                    }
+                }
                 try {
                     axios({
                         url: `http://localhost:3000/auth/upload_img`,
@@ -260,25 +283,26 @@ export default {
                         headers: {'Content-Type': 'multipart/form-data'},
                         data: formData
                     })
-                        .then ((res) => {
-                            if (res.data.message == 'success'){
-                                this.user_img = name;
-                            }
-                            else {
-                                this.$swal("DB 에러");
-                            }
-                        })
-                        .catch(e => {
-                            console.log(e);
-                        })
-                    return true;
-
+                    .then ((res) => {
+                        if (res.data.message == 'success'){
+                            this.user_img = name;
+                        }
+                        else {
+                            this.$swal("DB 에러");
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    })
+                    this.isUploading = true;
+                    return this.isUploading;
                 } catch(err){
                     console.log(err);
-                    return false;
+                    this.isUploading = false;
+                    return this.isUploading;
                 }
             },
-            deleteImage(id,name){
+            async deleteImage(){
                 this.$swal.fire({
                     title:'정말 삭제하시겠습니까?',
                     showCancelButton: true,
@@ -286,15 +310,21 @@ export default {
                     cancelButtonText: `취소`
                 }).then(async (result) => {
                     if(result.isConfirmed){
-                      await axios({
-                            url:'/auth/imageDelete',
+                        if(!this.isDelete || !this.isUploading){
+                            return this.$swal("이미지 업로드 중입니다. 잠시만 기다려주세요.");
+                        }
+                        this.isDelete = false;
+                        const img = this.user_img
+                        this.user_img = '';
+                        this.user_img_src = '';
+                        await axios({
+                            url:'http://localhost:3000/auth/delete_img',
                             method:'POST',
                             data:{
-                                id:id,
-                                name:name
+                                pastname:img
                             }
                         })
-                        this.$swal.fire('삭제되었습니다.','','success')
+                        this.isDelete = true;
                     }
                 })
             },
@@ -557,6 +587,17 @@ button{
   overflow: hidden;
   border: 2px solid rgb(221, 221, 221);
 }
+.upload-img button {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    color: rgb(255, 0, 0);
+    border: 2px solid rgb(123, 123, 123);
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    margin-left: -10px;
+    margin-top: -10px;
+  }
 .alert_font{
     font-size: 10px;
     margin-left: 180px;
@@ -569,5 +610,18 @@ input:focus {
     margin-left: 20px;
     font-size: 12px;
     font-weight: bold;
+}
+.isLoadingScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../assets/logo.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100px;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
 }
 </style>

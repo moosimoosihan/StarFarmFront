@@ -542,9 +542,6 @@ body {
     overflow: hidden;
     margin: 0 auto;
   }
-  .profile_nick{
-     /*사용자 이름 추후 수정*/
-  }
   /*친밀도*/
   .friendly_box{
     float: left;
