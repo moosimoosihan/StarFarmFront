@@ -7,7 +7,7 @@
            <!--프로필 사진, 닉네임-->
           <div class="profile_box">
             <div class="profile_img_box">
-              <img :height="70" :width="70" style="border-radius: 10px;"
+              <img :height="70" :width="70" style="border-radius: 70px;"
                       :src="goodsUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${goodsUser.user_no}/${goodsUser.user_img}`) : require(`../assets/profile.png`)"
                       alt="프로필 사진 미리보기" @click="gotoUserpage(goodsUser.user_no)" />
             </div>
@@ -17,8 +17,8 @@
           <div class="friendly_box">
             <span class="friendly_text">친밀도</span>
             <div class="friendly_img_box">
-              <progress :value="goodsUser.user_fr" max="100"></progress>
-              <span>{{ goodsUser.user_fr }}점</span>
+              <progress id="progress" :value="goodsUser.user_fr" max="100" ></progress>
+              <span class="friendly_score">{{ goodsUser.user_fr }}점</span>
               <p class="friendly_text1">{{ goodsUser.user_adr1 }}</p>
           </div>
         </div>
@@ -107,6 +107,7 @@ data() {
     goodsBidList: {},
     time30s:false,//30초 남았을때 깜빡거리기
     good_img : [],
+    userFr: 0,
 
     likeGoods: 0,
 
@@ -758,5 +759,23 @@ margin: auto; /* 가운데 정렬을 위한 마진 설정 */
 }
 .btn_container input, button {
   margin-left:4px;  
+}
+
+#progress::-webkit-progress-bar {
+    background:#f5f5f5;
+    border-radius:10px;
+    width: 200px;
+    height: 15px;
+}
+#progress::-webkit-progress-value {
+    border-radius:10px;
+    background: #ff43ec;
+    background: linear-gradient(to right, #fff3ff, #ffbeff);
+}
+.friendly_img_box progress {
+    background-color: white;
+}
+.friendly_score{
+  margin-left: 30px;
 }
 </style>

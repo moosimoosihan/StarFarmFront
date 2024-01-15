@@ -13,7 +13,7 @@
                 <ul class="mymenu">
                   <li>
                     <a1>
-                      <img style="border-radius: 10px;" class="myPage"
+                      <img style="border-radius: 70px;" class="myPage"
                       :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
                       alt="프로필 이미지"/></a1>
                         <ul class="mypageMenu">

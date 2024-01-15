@@ -13,8 +13,8 @@
                     <progress id="progress" :value="userFr" max="100" ></progress>
                 </div>
               <div v-if="user.user_no != userNo">
-                <button class="button" @click="gotoChatRoom(userNo), createChatRoom()">1대1 채팅</button>
-                <button class="button" id="userpage_report" @click="reportBtn()">신고</button>
+                <button class="button1" @click="gotoChatRoom(userNo), createChatRoom()">1대1 채팅</button>
+                <button class="button2" id="userpage_report" @click="reportBtn()">신고</button>
               </div>
             </div>
             <div class="wrap">
@@ -381,7 +381,7 @@ import axios from 'axios';
     color: black;
 }
 
-.button {
+.button1 {
     height: 42px;
     width:120px;
     font-size: 14px;
@@ -390,7 +390,20 @@ import axios from 'axios';
     border-radius: 10px;
     cursor: pointer;
     margin-top: 70px;
-    margin-left: 20px;
+    float: right;
+    margin-right: 30px;
+}
+.button2 {
+    height: 42px;
+    width:120px;
+    font-size: 14px;
+    color: rgb(123, 123, 123);
+    border: 2px solid rgb(221, 221, 221);
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 70px;
+    float: right;
+    margin-right: 10px;
 }
 /* 유저 페이지 상단 끝 */
 
@@ -518,6 +531,10 @@ import axios from 'axios';
     background-color: rgb(255, 255, 255);
     border: 2px solid rgb(221, 221, 221);
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: auto;
+
 }
 .goodslist_div li {
     list-style: none;

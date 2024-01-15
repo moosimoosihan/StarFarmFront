@@ -12,7 +12,7 @@
                         <!-- <div class="profile-icon">
                             <i class="fas fa-user-circle"></i>
                         </div> -->
-                        <img :width="100" style="border-radius: 10px;"
+                        <img :width="100" style="border-radius: 70px;"
                             :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
                             alt="프로필 사진 미리보기" />
                     </div>
@@ -25,10 +25,8 @@
                 <div class="friendly_box">
                     <span class="friendly_text">친밀도</span>
                     <div class="friendly_img_box">
-                        <div class="progressBar">
-                            <div id="bar" class="innerbar"></div>
-                        </div>
-                        <span class="friendly_score">{{ loginUser.user_fr }}점</span>
+                      <progress id="progress" :value="loginUser.user_fr" max="100" ></progress><br>
+                      <span class="friendly_score">{{ loginUser.user_fr }}점</span>
                         <p>ID : {{ loginUser.user_id }}</p>
                     </div>
                 </div>
@@ -75,7 +73,7 @@ import axios from 'axios'
     name: 'app',
     data() {
       return {
-        loginUser: {}
+        loginUser: {},
       }
     },
     components: {
@@ -127,7 +125,7 @@ import axios from 'axios'
 
 .m_container {
   border-right: 1px solid #b3b3b3;
-  height: 450px;
+  height: 400px;
   overflow-y: scroll ;
   -ms-overflow-style: none; /* 인터넷 익스플로러 */
   scrollbar-width: none; /* 파이어폭스 */
@@ -157,34 +155,8 @@ import axios from 'axios'
 .friendly_text {
   margin-top: 10px;
 }
-.innerbar {
-  max-width: 150px;
-  height: 20px;
-  text-align: right;
-  height: 8px; /* same as #progressBar height if we want text middle aligned */
-  width: 30%;
-  border-radius: 3px;
-  background: linear-gradient(#55ff63, #5ed168);
-}
-
-.progressBar {
-  max-width: 150px;
-  margin: 10px auto;
-  margin-top: 5px;
-  height: 5px;
-  border-radius: 3px;
-  background: linear-gradient(#6fa6d66c, #7db1df54);
-}
 
 /* icon */
-.mypage-bar .m, .icon-bar p{
-  color: #000000;
-}
-
-.mypage-bar p {
-  font-size: 18px;
-  padding-top: 10px;
-}
 
 .m:hover{
   background-color: #a1ff6a;
@@ -211,6 +183,19 @@ Footer {
   text-decoration: none;
 }
 
-
+#progress::-webkit-progress-bar {
+    background:#f5f5f5;
+    border-radius:10px;
+    width: 180px;
+    height: 15px;
+}
+#progress::-webkit-progress-value {
+    border-radius:10px;
+    background: #ff43ec;
+    background: linear-gradient(to right, #fff3ff, #ffbeff);
+}
+.friendly_img_box progress {
+    background-color: white;
+}
 
   </style>
