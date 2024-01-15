@@ -6,11 +6,11 @@
                     <div id="userpage_profile_img">
                         <img :src="userInfo.user_img ? require(`../../../StarFarmBack/uploads/userImg/${userInfo.user_no}/${userInfo.user_img}`) : require(`../assets/profile.png`)">
                     </div>
-                    <span>{{  userInfo.user_nick  }}</span>
                 </div>
                 <div id="userpage_friendly">
-                    <span>{{ userInfo.user_nick }}의 친밀도</span>
-                    <progress :value="userFr" max="100"></progress>
+                    <div id="user_nick">닉네임 : {{  userInfo.user_nick  }}</div>
+                    <span>친밀도</span>
+                    <progress id="progress" :value="userFr" max="100" ></progress>
                 </div>
               <div v-if="user.user_no != userNo">
                 <button class="button" @click="gotoChatRoom(userNo), createChatRoom()">1대1 채팅</button>
@@ -23,35 +23,36 @@
                         v-for="(tab, index) in tabList"
                         :key="index"
                         @click.prevent="currentTab = index"
-                        :class="{'active' : currentTab === index}"
-                    >
+                        :class="{'active' : currentTab === index}">
                         {{ tab.name }}
                     </button>
-                </div>
-                <ul class="product-tab-content" v-if="currentTab === 0">
-                    <li v-for="(item, index) in userProductList" :key="index">
-                        <div class="userpage_product" @click="gotoAuction(item.goods_no)">
-                            <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${userProductList[index].goods_no}/${userProductList[index].goods_img.split(',')[0]}`)" class="userpage_product_img">
-                            <h1 class="userpage_product_name">{{ userProductList[index].goods_nm }}</h1>
+            </div>
+            <ul class="product-tab-content" v-if="currentTab === 0">
+                <div class="goodslist_div" v-if="userProductList.length>0">
+              
+                        <div class="item_container" v-for="(goods, i) in userProductList" :key="i" @click="gotoAuction(goods.goods_no)">
+                            <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
+                            <p class="goodsname">{{ goods.goods_nm }}</p>
+                            <p class="price">시작가 : {{ goods.goods_start_price }}</p>
+                            <p class="sprice">입찰가 : {{ goods_succ_bid[i] }}</p>
+                            <p class="time" v-if="goods.goods_timer">{{ goodsTimer[i] }}</p>
                         </div>
-                    </li>
-                </ul>
-                <ul class="review-tab-content" v-if="currentTab === 1">
-                    <li v-for="(item, index) in userReviewList" :key="index">
+                </div>
+            </ul>
+            <ul class="review-tab-content" v-if="currentTab === 1">
+                <li v-for="(item, index) in userReviewList" :key="index">
                         <div id="userpage_review_list">
                             <div id="userpage_review_user">
-                                <h1>{{userReviewList[index].goods_nm}}</h1>
-                                <p>{{ userReviewList[index].user_nick }}</p>
+                            <h1>{{userReviewList[index].goods_nm}}</h1>
+                            <p>{{ userReviewList[index].user_nick }}</p>
                             </div>
                             <img :src="require(`../../../StarFarmBack/uploads/uploadGoods/${userReviewList[index].goods_no}/${userReviewList[index].goods_img.split(',')[0]}`)" id="userpage_product_review_img">
                             <div id="userpage_review_content"><p>{{ userReviewList[index].review_con }}</p></div>
-                            
-                            <p id="userpage_review_date">{{ userReviewList[index].review_create_dt }}</p>
-                        </div>
-                    </li>
-                </ul>
-                
-        </div>
+                            <p id="userpage_review_date">{{ formatDateTime(userReviewList[index].review_create_dt) }}</p>
+                    </div>
+                </li>
+            </ul>
+            </div>
             <div id="tab-1" class="tab-content current"></div>
             <div id="tab-2" class="tab-content"></div>
         </div>
@@ -73,6 +74,9 @@ import axios from 'axios';
         userReviewList: [],
         userProductList: [],
         userFr: 0,
+        goods_succ_bid: [],
+        goodsTimer: [],
+        timer: null,
         userNo: this.$route.params.id
         };
     },
@@ -85,6 +89,7 @@ import axios from 'axios';
         this.getUserInfo();
         this.getReviewList();
         this.getProductList();
+        this.allGoodsTimer()
     },
     methods: {
         async getUserInfo() {
@@ -102,9 +107,23 @@ import axios from 'axios';
                 const user_no = this.$route.params.id;
                 const response = await axios.get(`http://localhost:3000/mypage/get_user_product/${user_no}`);
                 this.userProductList = response.data;
+                this.goodsTimer = new Array(this.userProductList.length)
             } catch (error) {
                 console.error(error);
             }
+            for(let i=0; i<this.userProductList.length; i++){
+            await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.userProductList[i].goods_no}`)
+            .then((res) => {
+              if(res.data[0].succ_bid==null){
+                this.goods_succ_bid.push('입찰 없음');
+              } else {
+                this.goods_succ_bid.push(res.data[0].succ_bid);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            }) 
+          }
         },
         async getReviewList() {
             try {
@@ -157,8 +176,80 @@ import axios from 'axios';
             popupWindow.resizeTo(800, 620);
           };
         },
+        stopAutoTimer() {
+            clearInterval(this.timer);
+        },
+        updateTimer(endTime) {
+        // 날짜를 초로 바꾸어 저장 후 계산
+        let countDownDate = new Date(endTime).getTime();
+        // 현재 시간을 초로 바꾸어 저장
+        let currentTime = new Date().getTime();
+        const distance = countDownDate - currentTime;
+        // 만약 종료시간이 지났다면 타이머를 종료하고 경매가 종료되었다는 메시지를 표시
+        if (distance < 0) {
+            return '경매가 종료되었습니다.';
+        }
+        // 남은 시간 계산
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        // 표시할 남은 시간 문자열 생성 포맷은 무조건 해당 포맷 하나만 '00일 남음' '00시간 남음' '00분 00초 남음' 으로만 표기
+        const daysStr = days > 0 ? `${days}일 남음` : '';
+        const hoursStr = hours > 0 ? `${hours}시간 남음` : '';
+        const minutesStr = minutes > 0 ? `${minutes}분` : '';  
+        const secondsStr = seconds >= 0 ? `${seconds}초 남음` : '';
+        // 만약 00일 남음이라면
+        if (daysStr === '') {
+            // 00시간 남음이라면
+            if (hoursStr === '') {
+            // 00분 남음이라면
+            if (secondsStr === '') {
+                // 경매가 종료되었다는 메시지를 표시
+                return '경매가 종료되었습니다.';
+            }
+            // 00시간 남음이 아니라면 00분 00초 남음을 표시
+            return minutesStr + ' ' + secondsStr;
+            }
+            // 00일 남음이 아니라면 00시간 남음을 표시
+            return hoursStr;
+        }
+        // 00일 남음을 표시
+        return daysStr;
     },
-    };
+    allGoodsTimer(){
+      this.timer = setInterval(()=>{
+        if(this.userProductList.length>0){
+          for(let i=0; i<this.userProductList.length; i++){
+            if(this.goodsTimer[i]!='경매가 종료되었습니다.')
+              this.goodsTimer[i] = this.updateTimer(this.userProductList[i].goods_timer);
+          }
+        }
+      }, 1000);
+    },
+  stopAutoTimer() {
+    clearInterval(this.timer);
+  },
+  formatDateTime(dateTime) {
+        const date = new Date(dateTime);
+        const options = {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        };
+        const formattedDateTime = date.toLocaleDateString("ko-KR", options);
+        return formattedDateTime;
+    },
+  },
+  computed: {
+    user() {
+      return this.$store.state.user;
+    },
+  },
+  destroyed(){
+    this.stopAutoTimer()
+  }
+}
 </script>
 <style scoped>
 * {
@@ -173,9 +264,18 @@ import axios from 'axios';
 /* ------------------------------------------------------------- */
 
 /* 유저 페이지 상단 */
-progress {
+#progress::-webkit-progress-bar {
+    background:#f5f5f5;
+    border-radius:10px;
     width: 200px;
-    height: 50px;
+    height: 25px;
+    margin-top: 11px;
+}
+#progress::-webkit-progress-value {
+    border-radius:10px;
+    background: #ff43ec;
+    background: linear-gradient(to right, #fff3ff, #ffbeff);
+
 }
 #userpage_wrapper {
     width: 60%;
@@ -187,6 +287,7 @@ progress {
     height: 200px;
     border: 1px solid rgb(227, 208, 208);
 }
+
 #userpage_profile a {
     display: block;
     width: 50px;
@@ -215,10 +316,11 @@ progress {
 }
 #userpage_profile_img {
     width: 150px;
-    height: 75%;
+    height: 150px;
     border-radius: 100%;
     margin: 0 auto;
     overflow: hidden;
+    margin-top: 25px;
 }
 #userpage_profile_img img {
     width: 150px;
@@ -229,15 +331,20 @@ progress {
     width: 400px;
     height: 100%;
     float: left;
+    margin-left: 20px;
 }
 #userpage_friendly span {
     float: left;
-    line-height: 80px;
+    line-height: 50px;
+}
+#user_nick {
+    margin-top: 60px;
+    font-size: 25px;
 }
 #userpage_friendly progress {
     float: left;
-    margin-top: 15px;
     margin-left: 20px;
+    background-color: white;
 }
 #userpage_friendly a {
     display: block;
@@ -273,6 +380,18 @@ progress {
     text-decoration: none;
     color: black;
 }
+
+.button {
+    height: 42px;
+    width:120px;
+    font-size: 14px;
+    color: rgb(123, 123, 123);
+    border: 2px solid rgb(221, 221, 221);
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 70px;
+    margin-left: 20px;
+}
 /* 유저 페이지 상단 끝 */
 
 /* 판매자 리뷰 */
@@ -280,18 +399,24 @@ progress {
     width:100%;
     height:100px;
 }
+
 .button_tab button {
     width: 50%;
     height: 100%;
     border:none;
+    font-size: 15px;
+    font-family: GmarketSansMedium;
 }
 .active {
-    background-color: red;
+    background-color: rgb(25, 90, 13);
+    color: white;
+    font-size: 15px;
+    font-family: GmarketSansMedium;
 }
 #userpage_review_list {
     width: 100%;
     height: 150px;
-    background-color: beige;
+    border: 2px solid rgb(221, 221, 221);
     margin: 30px auto;
     border-radius: 20px;
     overflow:hidden;
@@ -300,15 +425,15 @@ progress {
     width: 153px;
     height: 60%;
     padding-left: 22px;
-    padding-top: 16px;
+    padding-top: 35px;
     float: left;
 }
 #userpage_review_list div h1 {
     font-size: 20px;
 }
 #userpage_review_list div p {
-    font-size: 14px;
-    margin: 34px auto;
+    font-size: 17px;
+    margin-top: 25px;
 }
 #userpage_product_review_img {
     width: 200px;
@@ -319,6 +444,7 @@ progress {
 #userpage_review_content {
     width: 300px;
     height: 100%;
+    margin-left: 25px;
     float: left;
 }
 #userpage_review_img {
@@ -330,41 +456,72 @@ progress {
 #userpage_review_date {
     float: right;
     margin-right: 46px;
-    line-height: 160px;
+    margin-top: 60px;
 }
 /* 판매자 리뷰 끝 */
 
 /* 판매자 상품 리스트 */
-.userpage_product {
-    width: 200px;
-    height: 250px;
-    background-color: rgb(246, 244, 198);
-    float: left;
-    margin-top: 50px;
-    border-radius: 10px;
+.item_container {
+  width: 200px;
+  height: 350px;
+  background-color: rgb(255, 255, 255);
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 25px;
+  border-color: rgb(219, 219, 219);
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 15px;
+  margin-right: 15px;
+  overflow: hidden;
+  box-shadow: 5px 5px 5px gray;
 }
-.userpage_product:nth-child(4n) {
-    margin-right: 0;
+
+.item_container > p {
+  margin-left: 3px;
 }
-.userpage_product:nth-child(4n+1) {
-    margin-left: 50px;
+
+.goodsname {
+  font-size: 20px;
+  position: relative;
+  top: 15px;
+  left: 5px;
 }
-.userpage_product_img {
-    width: 100%;
-    height: 70%;
+
+.price {
+  position: relative;
+  left: 5px;
+  top: 20px;
 }
-.userpage_product_name {
-    font-size: 20px;
-    line-height: 70px;
-    margin-left: 55px;
+
+.sprice {
+  position: relative;
+  left: 5px;
+  top: 25px;
 }
-.product-tab-content {
+
+.time {
+  position: relative;
+  left: 5px;
+  top: 30px;
+  color : red;
+}
+
+.goods_img {
+  width: 200px;
+  height: 200px;
+}
+
+.goodslist_div {
     width: 100%;
     height: 800px;
-    background-color: beige;
+    background-color: rgb(255, 255, 255);
+    border: 2px solid rgb(221, 221, 221);
+    display: flex;
 }
-.product-tab-content li {
+.goodslist_div li {
     list-style: none;
+    margin-top: 25px;
 }
 .review-tab-content li {
     margin-bottom: 30px;

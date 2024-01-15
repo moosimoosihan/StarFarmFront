@@ -53,7 +53,7 @@
             
             <div class="form4">
                 <button type="submit" class="pass" @click="goToPass">비밀번호 수정</button>
-                <button class="delete" @click="userDelete">회원탈퇴</button>
+                <button type="submit" class="delete" @click="userDelete">회원탈퇴</button>
                 <button type="submit" class="btn2" @click="onSubmitForm">수정하기</button>
             </div>
         </div>
@@ -318,7 +318,7 @@ a {
 }
 
 .container {
-    margin: 50px 230px;
+    margin: 50px;
     font-family: GmarketSansMedium;
 }
 
@@ -385,6 +385,7 @@ h2 {
     /* border: 1px solid red; */
 }
 
+
 .form3 .in2 {
     display: block;
     align-items: center;
@@ -417,7 +418,6 @@ h2 {
     border-radius: 10px;
     cursor: pointer;
     margin-top: 50px;
-    margin-left: 300px;
     text-align: center;
 }
 
@@ -438,13 +438,14 @@ input:focus {
     height: 42px;
     width:120px;
     font-size: 14px;
-    color: rgb(123, 123, 123);
-    border: 2px solid rgb(221, 221, 221);
+    background-color: rgb(1, 96, 15);
     border-radius: 10px;
+    border: none;
     cursor: pointer;
     float: right;
-    margin-right: 590px;
     margin-top: 50px;
+    margin-right: 200px;
+    color: rgb(255, 255, 255);
 }
 .profile-img {
   width: 200px;
@@ -460,5 +461,17 @@ input:focus {
 #profile-img {
     margin-left: 280px;
     border:none;
+}
+
+.delete {
+    height: 42px;
+    width:120px;
+    font-size: 14px;
+    color: rgb(123, 123, 123);
+    border: 2px solid rgb(221, 221, 221);
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 50px;
+    margin-left: 5px;
 }
 </style>
