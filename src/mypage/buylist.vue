@@ -49,7 +49,8 @@
                                 </td>
                                 <td>
                                     <span v-if="order.goods_state===1 && order.goods_trade===1" @click="saleComp(i)">거래 완료</span>
-                                    <span v-else-if="order.goods_state===1 && order.goods_trade===0 && succ_bid_user_no[i]===user.user_no" @click="gotoPay(i)">결제</span>
+                                    <span v-else-if="order.goods_state===1 && order.goods_trade===0 && succ_bid_user_no[i]===user.user_no && order_count[i]===0" @click="gotoPay(i)">결제</span>
+                                    <span v-else-if="order.goods_state===1 && order.goods_trade===0 && succ_bid_user_no[i]===user.user_no && order_count[i]!=0" @click="saleComp(i)">거래 완료</span>
                                     <!-- 내가 리뷰를 썻다면 표시 안되도록 -->
                                     <span v-if="order.goods_state===2 && review_count[i]===0" @click="writeReview(order.goods_no)">리뷰쓰기</span>
                                 </td>
@@ -76,6 +77,7 @@ import axios from 'axios'
                 succ_bidList: [],
                 succ_bid_user_no: [],
                 review_count: [],
+                order_count: [],
             }
         },
         computed: {
@@ -126,6 +128,7 @@ import axios from 'axios'
                 }
                 await this.getSuccBid()
                 await this.getReviewCount()
+                await this.getOrderCount()
             },
             async getSuccBid() {
                 for(let i=0; i<this.orderList.length; i++){
@@ -143,6 +146,16 @@ import axios from 'axios'
                     try {
                         const response = await axios.get(`http://localhost:3000/goods/reviewCount/${this.orderList[i].goods_no}/${this.user.user_no}`);
                         this.review_count.push(response.data[0].count)
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            },
+            async getOrderCount() {
+                for(let i=0; i<this.orderList.length; i++){
+                    try {
+                        const response = await axios.get(`http://localhost:3000/goods/orderCount/${this.orderList[i].goods_no}/${this.user.user_no}`);
+                        this.order_count.push(response.data[0].count)
                     } catch (error) {
                         console.error(error);
                     }
