@@ -2,11 +2,20 @@
   <div>
     <div class="report-section">
       <div id="scroll">
-        <h2>신고 관리</h2>
+        <div class="report_search">
+          <h2>신고 관리</h2>
+          <span>검색할 신고제목 : </span>
+          <input type="text" placeholder="신고제목을 입력하세요" v-model="search_report" />
+          <button @click="searchReport(sort)">검색</button>
+          <select v-model="sort" @change="search_report!='' ? searchReport(sort) : getReport(sort)">
+            <option value="DESC">최신순</option>
+            <option value="ASC">오래된순</option>
+          </select>
+        </div>
         <table class="rwd-table">
           <thead>
             <tr>
-              <th>No</th>
+              <th>신고번호</th>
               <th>신고제목</th>
               <th>신고자</th>
               <th>피신고자</th>
@@ -16,11 +25,11 @@
           </thead>
           <tbody>
             <tr v-for="(report, index) in reports" :key="index">
-              <td>{{ index + 1 }}</td>
+              <td>{{ report.REPORT_NO }}</td>
               <td>{{ report.REPORT_TITLE }}</td>
               <td>{{ reported_userNames[index] }}</td>
               <td>{{ report_userNames[index] }}</td>
-              <td>{{ report.REPORT_DATE }}</td>
+              <td>{{ formatDateTime(report.REPORT_DATE) }}</td>
               <td><button class="view-button" @click="viewReport(report.REPORT_NO)">보기</button></td>
             </tr>
             <tr v-if="reports.length === 0">
@@ -41,6 +50,9 @@ export default {
       reports: [],
       reported_userNames: [],
       report_userNames: [],
+
+      sort: 'DESC',
+      search_report: '',
     }
   },
   mounted() {
@@ -56,13 +68,13 @@ export default {
     },
     async getReport(){
       try{
-        const res = await axios.get('http://localhost:3000/auth/admin/reportlistInfo');
+        const res = await axios.get(`http://localhost:3000/auth/admin/reportlistInfo/none/${this.sort}`);
         this.reports = res.data;
       } catch(err) {
         console.log(err);
       }
-      this.getReportedUserNames()
-      this.getReportUserNames()
+      await this.getReportedUserNames()
+      await this.getReportUserNames()
     },
     async getReportedUserNames(){
       try{
@@ -83,7 +95,27 @@ export default {
       } catch(err) {
         console.log(err);
       }
-    }
+    },
+    async searchReport(sort) {
+      try{
+        const res = await axios.get(`http://localhost:3000/auth/admin/reportlistInfo/${this.search_report}/${sort}`);
+        this.reports = res.data;
+      } catch(err) {
+        console.log(err);
+      }
+      await this.getReportedUserNames()
+      await this.getReportUserNames()
+    },
+    formatDateTime(dateTime) {
+        const date = new Date(dateTime);
+        const options = {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        };
+        const formattedDateTime = date.toLocaleDateString("ko-KR", options);
+        return formattedDateTime;
+    },
   }
 }
 </script>
@@ -249,5 +281,11 @@ h2 {
   25%   { transform: translateX(-10px)}
   75%   { transform: translateX(10px)}
   100%  { transform: translateX(0)}
+}
+
+.report_search {
+  margin-left: 600px;
+  margin-bottom: 20px;
+  height: 50px;
 }
 </style>

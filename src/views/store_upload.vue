@@ -67,7 +67,7 @@
             <div id="store_price_trade">
                 <div>
                     <p>시작가</p>
-                    <input type="text" placeholder="경매 시작가를 입력해주세요." v-model="price_trade" required @input="validateNumber('price_trade')">
+                    <input type="text" placeholder="경매 시작가를 입력해주세요. (최소 1,000원)" v-model="price_trade" required @input="validateNumber('price_trade')">
                 </div>
             </div>
             <div id="store_trade">
@@ -81,7 +81,7 @@
             </div>
             <div id="store_timer_deliv">
                 <div>
-                    <p>마감 시간</p>
+                    <p>마감 시간(최소 하루, 최대 한달)</p>
                     <input type="datetime-local" required v-model="goods_timer">
                 </div>
                 <div v-if="goods_trade==='택배거래'">
@@ -117,7 +117,7 @@ import moment from 'moment'
                 product_name: '',
                 product_category1: '의류',
                 product_category2: 1,
-                price_trade: '',
+                price_trade: 1000,
                 goods_trade: '택배거래',
                 goods_timer: '',
                 product_content: '',
@@ -167,6 +167,7 @@ import moment from 'moment'
                 if(this.product_content===''){
                     return this.$swal('상품 설명을 입력해주세요.')
                 }
+                
                 if(this.price_trade==='' && this.price_trade<0){
                     return this.$swal('경매 시작가를 입력해주세요.')
                 }
@@ -176,9 +177,22 @@ import moment from 'moment'
                 if(this.goods_timer===''){
                     return this.$swal('마감 시간을 입력해주세요.')
                 }
-                if(moment(this.goods_timer).isBefore(moment().format())){
-                    return this.$swal('현재 시간보다 이전 시간은 입력할 수 없습니다.')
-                }
+                // 테스트를 위하여 일단 주석처리
+                // if(this.product_content.length<10){
+                //     return this.$swal('상품 설명은 최소 10글자 이상 입력해주세요.')
+                // }
+                // if(this.price_trade<1000){
+                //     return this.$swal('경매 시작가는 1000원 이상 입력해주세요.')
+                // }
+                // if(moment(this.goods_timer).isBefore(moment().add(1, 'days'))){
+                //     return this.$swal('하루 이상의 시간을 입력해주세요.')
+                // }
+                // if(moment(this.goods_timer).isAfter(moment().add(1, 'months'))){
+                //     return this.$swal('한 달 이상의 시간은 입력할 수 없습니다.')
+                // }
+                // if(moment(this.goods_timer).isBefore(moment().format())){
+                //     return this.$swal('현재 시간보다 이전 시간은 입력할 수 없습니다.')
+                // }
                 if(this.goods_trade==='택배거래'){
                     if(this.goods_deliv_price==='' && this.goods_deliv_price<0){
                         return this.$swal('택배 비용을 입력해주세요.')
@@ -227,8 +241,6 @@ import moment from 'moment'
                             .then(() => {
                                 this.$router.push("mypage/salelist")
                             })
-                        // } else if (res.data.message == 'already_exist_goods'){
-                        //     this.$swal("이미 등록된 제품입니다.");
                         }
                         else if (res.data.message == '파일 변경 실패'){
                             this.$swal("파일 변경 실패");
@@ -270,23 +282,39 @@ import moment from 'moment'
                         console.log(key, ":", formData[i].get(key));
                     }
                 }
+                // 기존 이미지 삭제
+                for(var i=0;i<this.goods_img.length;i++){
+                    if(this.goods_img[i]!=''){
+                        try{
+                            const img = this.goods_img[i]
+                            await axios({
+                                url:'http://localhost:3000/goods/delete_img',
+                                method:'POST',
+                                data:{
+                                    pastname: img
+                                }
+                            })
+                        } catch(err){
+                            console.log(err);
+                        }
+                    }
+                }
                 try {
                     this.goods_img = ['','','','',''];
                     for(var i=0;i<formData.length;i++){
-                        axios({
-                            url: `http://localhost:3000/goods/upload_img`,
-                            method: 'POST',
-                            headers: {'Content-Type': 'multipart/form-data'},
-                            data: formData[i]
-                        })
-                            .then ((res) => {
-                                if (res.data.message != 'success'){
-                                    this.$swal("DB 에러");
-                                }
+                        try{
+                            var res = await axios({
+                                url: `http://localhost:3000/goods/upload_img`,
+                                method: 'POST',
+                                headers: {'Content-Type': 'multipart/form-data'},
+                                data: formData[i]
                             })
-                        .catch(e => {
+                            if (res.data.message != 'success'){
+                                this.$swal("DB 에러");
+                            }
+                        } catch(e) {
                             console.log(e);
-                        })
+                        }
                         this.goods_img[i] = files[i].name
                         console.log(this.goods_img[i])
                     }

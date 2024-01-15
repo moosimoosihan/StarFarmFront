@@ -7,10 +7,10 @@
             <p>카테고리 : {{category}} > {{ categoryDetailstr }}</p>
         </div>
         <div class="sort">
-            <a class="a">입찰가낮은순</a><a class="a">|</a>
-            <a class="a">시작가낮은순</a><a class="a">|</a>
-            <a class="a">최신등록순</a><a class="a">|</a>
-            <a class="a">정확도순</a>
+            <select class="a" v-model="sort" @change="getGoodsList(page,sort)">
+                <option value="DESC" selected>최신등록순</option>
+                <option value="ASC">오래된등록순</option>
+            </select>
         </div>
         <div class="search_goods">
             <div class="item_container" v-for="(goods,i) in goodsList" :key="i" @click="gotoProduct(goods.goods_no)">
@@ -29,7 +29,7 @@
         <div class="page">
             <button v-if="page>1" class="page_btn" @click="prev()">이전</button>
             <button v-for="(num,i) in maxPage" :key="i" class="pageNum" @click="getGoodsList((num-1)*10)">{{num}}</button>
-            <button v-if="page<maxPage" class="page_btn" @click="next()">다음</button>
+            <button v-if="page<maxPage-1" class="page_btn" @click="next()">다음</button>
         </div>
     </div>
     <div v-else class="empty_container">
@@ -52,7 +52,7 @@ import axios from 'axios';
                 goodsList : [],
                 goods_succ_bid: [],
                 nickList: [],
-                page:1,
+                page:0,
                 maxPage: 0,
 
                 category: '',
@@ -61,6 +61,8 @@ import axios from 'axios';
 
                 goodsTimer: [],
                 timer: null,
+
+                sort: 'DESC',
             }
         },
         beforeDestroy() {
@@ -124,21 +126,21 @@ import axios from 'axios';
                 this.keyword = this.$route.params.keyword;
                 this.page = this.$route.params.page;
             }
-            this.getGoodsList(0);
-            this.getMaxPage();
+            this.getGoodsList(this.page, this.sort);
         },
         created() {
             this.allGoodsTimer();
         },
         methods: {
-            async getGoodsList(nimNum) {
+            async getGoodsList(nimNum, sort) {
+                this.goodsList = [];
                 if(this.$route.params.cate=='cate'){
                     try{
                         if(this,this.categoryDetail==0){
-                            const response = await axios.get(`http://localhost:3000/goods/category_search/${this.category}/${nimNum}`)
+                            const response = await axios.get(`http://localhost:3000/goods/category_search/${this.category}/${nimNum}/${sort}`)
                             this.goodsList = response.data;
                         } else {
-                            const response = await axios.get(`http://localhost:3000/goods/category_detail_search/${this.category}/${this.categoryDetail}/${nimNum}`)
+                            const response = await axios.get(`http://localhost:3000/goods/category_detail_search/${this.category}/${this.categoryDetail}/${nimNum}/${sort}`)
                             this.goodsList = response.data;
                         }
                     } catch(err) {
@@ -146,7 +148,7 @@ import axios from 'axios';
                     }
                 } else {
                     try{
-                        const response = await axios.get(`http://localhost:3000/goods/goodsSearch/${this.keyword}/${nimNum}`)
+                        const response = await axios.get(`http://localhost:3000/goods/goodsSearch/${this.keyword}/${nimNum}/${sort}`)
                         this.goodsList = response.data;
                     } catch(err) {
                         console.log(err);
@@ -173,7 +175,8 @@ import axios from 'axios';
                         this.nickList.push(res.data[0].user_nick);
                     })
                 }
-                this.page = Math.ceil(nimNum/10)+1;
+                this.page = Math.ceil(nimNum/10);
+                this.getMaxPage();
             },
             async getMaxPage() {
                 if(this.$route.params.cate=='cate'){
@@ -294,7 +297,7 @@ import axios from 'axios';
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: left;
     margin: auto;
     margin-top: 45px;
 }

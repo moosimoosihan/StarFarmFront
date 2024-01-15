@@ -3,7 +3,7 @@
     <aside class="sidebar">
       <nav class="nav">
         <ul>
-          <li><div class="management-box ">-->
+          <li><div class="management-box ">
             <router-link to="/">
               <h3>메인으로</h3>
             </router-link>

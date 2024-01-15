@@ -30,7 +30,7 @@
                                     <span>입찰가 {{ formatPrice(succ_bidList[i]) }}</span>
                                 </td>
                                 <td>
-                                    {{ likegoods.user_nick }}
+                                    {{ likeGoodsUserNick[i] }}
                                 </td>
                             </tr>
                             <tr v-if="likeList.length === 0">
@@ -52,6 +52,7 @@ import axios from 'axios'
             return {
                 likeList: [],
                 succ_bidList: [],
+                likeGoodsUserNick: [],
             }
         },
         computed: {
@@ -72,6 +73,7 @@ import axios from 'axios'
                     this.likeList = response.data;
                     for(let i=0; i<this.likeList.length; i++){
                         let val = await this.getSuccBid(this.likeList[i].GOODS_NO)
+                        await this.getUserNick(this.likeList[i].user_no)
                         if(val === undefined || val === null){
                             val = 0;
                         }
@@ -101,7 +103,6 @@ import axios from 'axios'
             async getSuccBid(goods_no) {
                 try {
                     const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goods_no}`);
-                    console.log(response.data[0].succ_bid);
                     if(response.data[0].succ_bid === null)
                         return 0;
                     else
@@ -110,6 +111,15 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
+            async getUserNick(user_no) {
+                try {
+                    const response = await axios.get(`http://localhost:3000/mypage/mypage/${user_no}`);
+                    this.likeGoodsUserNick.push(response.data[0].user_nick)
+                } catch (error) {
+                    console.error(error);
+                }
+            
+            }
         }
     }
 </script>

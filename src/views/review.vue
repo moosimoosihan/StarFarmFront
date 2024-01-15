@@ -1,12 +1,12 @@
 <template>
     <div class="container">
         <div class="review_wrapper">
-            <h1>리뷰 작성</h1>
+            <h1>{{ $route.params.sale==='sale' ? '구매자에게' : '판매자에게' }} 리뷰 작성</h1>
             <div class="review_product_name">
                 <img :src="review_info.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${review_info.goods_no}/${review_info.goods_img.split(',')[0]}`):require(`../assets/2-1.png`)" class="review_product_img">
                 <h2>{{ review_info.goods_nm }}</h2>
                 <div class="review_user">
-                <img class="review_user_img">
+                <img class="review_user_img" :src="review_info.user_img ? require(`../../../StarFarmBack/uploads/userImg/${review_info.user_no}/${review_info.user_img}`):require(`../assets/profile.png`)">
                 <span class="review_user_nick">{{ review_info.user_nick }}</span>
                 </div>
             </div>
@@ -37,9 +37,9 @@ export default {
         }
     },
     computed: {
-            user () {
-                return this.$store.state.user
-            }
+        user () {
+            return this.$store.state.user
+        }
     },
     created() {
         this.getGoodsInfo();
@@ -52,16 +52,16 @@ export default {
                 try {
                     const goods_no = this.$route.params.id;
                     axios({
-                    url: `http://localhost:3000/goods/write_review/${goods_no}`,
-                    method: "POST", 
-                    data: { 
-                        review_con: this.review_con,
-                        review_score: this.review_score,
-                        writer_user: this.user.user_no,
-                        review_goods: this.review_info.goods_no,
-                        sell_user_no: this.review_info.user_no
-                    },
-                })
+                        url: `http://localhost:3000/goods/write_review/${goods_no}`,
+                        method: "POST", 
+                        data: {
+                            review_con: this.review_con,
+                            review_score: this.review_score,
+                            writer_user: this.user.user_no,
+                            review_goods: this.review_info.goods_no,
+                            sell_user_no: this.review_info.user_no
+                        },
+                    })
                     .then((res) => {
                         if(res.data.message=='review_complete'){
                             this.$swal({
@@ -84,7 +84,7 @@ export default {
                             console.log(res.data.message);
                             this.$swal("리뷰 등록 실패");
                         }
-                })
+                    })
                     .catch(() => {
                         this.$swal("오류 발생")
                     })
@@ -117,14 +117,25 @@ export default {
                 this.isClicked_bad = false;
             },
             async getGoodsInfo() {
-                try {
-                    const goods_no = this.$route.params.id;
-                    const response = await axios.get(`http://localhost:3000/goods/write_review_info/${goods_no}`);
-                    this.review_info = response.data[0];
-                    console.log(this.review_info.goods_img.split(',')[0]);
-                } catch (error) {
-                    console.error(error);
+                if(this.$route.params.sale==='sale'){
+                    // 판매자의 경우 구매자에게 리뷰를 작성
+                    try {
+                        const goods_no = this.$route.params.id;
+                        const response = await axios.get(`http://localhost:3000/goods/sale_write_review_info/${goods_no}`);
+                        this.review_info = response.data[0];
+                    } catch (error) {
+                        console.error(error);
+                    }
+                } else {
+                    try {
+                        const goods_no = this.$route.params.id;
+                        const response = await axios.get(`http://localhost:3000/goods/write_review_info/${goods_no}`);
+                        this.review_info = response.data[0];
+                    } catch (error) {
+                        console.error(error);
+                    }
                 }
+                
             },
     }
 }

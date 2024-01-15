@@ -77,7 +77,7 @@ const routes = [
         component: report
       },
       {
-        path: '/review/:id',
+        path: '/review/:id/:sale',
         name: 'review',
         component: review
       },

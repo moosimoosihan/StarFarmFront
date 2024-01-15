@@ -42,12 +42,11 @@
                                 </td>
                                 <td>
                                     <!-- 판매완료 -->
-                                    <div v-if="goodslist.GOODS_STATE===2">
-                                        <button>후기 작성</button>
-                                        <button>결제 내역</button>
-                                        <div class="trash_icon" @click="deleteItem(goodslist.GOODS_NO)">
+                                    <div v-if="goodslist.GOODS_STATE===2 && review_count[i]===0">
+                                        <button @click="writeReview(goodslist.GOODS_NO)">후기 작성</button>
+                                        <!-- <div class="trash_icon" @click="deleteItem(goodslist.GOODS_NO)">
                                             <i class="fas fa-solid fa-trash"></i>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </td>
                             </tr>
@@ -71,6 +70,7 @@ import axios from 'axios';
                 loginUser: {},
                 saleList: [],
                 succ_bidList: [],
+                review_count: [],
             }
         },
         created() {
@@ -123,6 +123,21 @@ import axios from 'axios';
                     }
                     this.succ_bidList.push(val)
                 }
+                for(let i=0; i<this.saleList.length; i++){
+                    let val = await this.getReviewCount(this.saleList[i].GOODS_NO)
+                    this.review_count.push(val)
+                }
+            },
+            async getReviewCount(goods_no) {
+                try {
+                    const response = await axios.get(`http://localhost:3000/goods/getReviewCount/${goods_no}/${this.user.user_no}`);
+                    return response.data[0].count;
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+            writeReview(goods_no) {
+                this.$router.push(`/review/${goods_no}/sale`);
             },
             getOrderStatusText(status) {
                 switch (status) {

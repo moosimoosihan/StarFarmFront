@@ -2,11 +2,22 @@
   <div>
     <div class="report-section">
       <div id="scroll">
-        <h2>회원 관리</h2>
+        
+        <div class="id_search">
+          <h2>회원 관리</h2>
+          <span>검색할 ID : </span>
+          <input type="text" placeholder="아이디를 입력하세요" v-model="search_id" />
+          <button @click="searchID(sort)">검색</button>
+          <select v-model="sort" @change="search_id!='' ? searchID(sort) : fetchUserData(sort)">
+            <option value="DESC">최신순</option>
+            <option value="ASC">오래된순</option>
+          </select>
+        </div>
         <table class="rwd-table">
           <thead>
             <tr>
               <th>No</th>
+              <th>ID</th>
               <th>닉네임</th>
               <th>이메일</th>
               <th>계정상태</th>
@@ -18,6 +29,7 @@
           <tbody>
             <tr v-for="(us, index) in userList" :key="index">
               <td>{{ us.USER_NO }}</td>
+              <td>{{ us.USER_ID }}</td>
               <td>{{ us.USER_NICK }}</td>
               <td>{{ us.USER_EMAIL }}</td>
               <td>{{ us.USER_BAN === 0 ? '정상' : '정지' }}</td>
@@ -30,7 +42,7 @@
               </td>
              </tr>
              <tr v-if="userList.length === 0">
-               <td colspan="7">회원이 없습니다.</td>
+               <td colspan="8">회원이 없습니다.</td>
               </tr>
           </tbody>
         </table>
@@ -49,11 +61,14 @@ export default {
       reportUser: {},
       reportUserCount: [],
       userList: [], // 추가: 데이터를 저장할 배열
+
+      search_id: '',
+      sort: 'DESC',
     };
   },
   created() {
     this.getUser();
-    this.fetchUserData(); // 추가: 데이터를 불러오는 메서드 호출
+    this.fetchUserData(this.sort); // 추가: 데이터를 불러오는 메서드 호출
     // this.reportNum();
   },
   computed: {
@@ -62,16 +77,15 @@ export default {
     },
   },
   methods: {
-    async fetchUserData() {
+    async fetchUserData(sort) {
       await axios
-        .get('http://localhost:3000/auth/admin/userlist/none')
+        .get(`http://localhost:3000/auth/admin/userlist/none/${sort}`)
         .then((response) => {
           this.userList = response.data;
         })
         .catch((error) => {
           console.error('사용자 데이터를 가져오는 중 오류 발생:', error);
         });
-        console.log(this.userList);
         for(let i = 0; i < this.userList.length; i++){
           const response = await axios.get(`http://localhost:3000/auth/report_count/${this.userList[i].USER_NO}`);
           if(response.data[0] === undefined || response.data[0] === null){
@@ -115,6 +129,23 @@ export default {
         const formattedDateTime = date.toLocaleDateString("ko-KR", options);
         return formattedDateTime;
     },
+    async searchID(sort){
+      try {
+        const response = await axios.get(`http://localhost:3000/auth/admin/userlist/${this.search_id}/${sort}`);
+        this.userList = response.data;
+      } catch (error) {
+        console.log(error);
+      }
+      this.reportUserCount = [];
+      for(let i = 0; i < this.userList.length; i++){
+          const response = await axios.get(`http://localhost:3000/auth/report_count/${this.userList[i].USER_NO}`);
+          if(response.data[0] === undefined || response.data[0] === null){
+            this.reportUserCount.push(0);
+          } else {
+            this.reportUserCount.push(response.data[0].count);
+          }
+      }
+    }
   },
 };
 </script>
@@ -281,5 +312,11 @@ h2 {
   25%   { transform: translateX(-10px)}
   75%   { transform: translateX(10px)}
   100%  { transform: translateX(0)}
+}
+
+.id_search {
+  margin-left: 600px;
+  margin-bottom: 20px;
+  height: 50px;
 }
 </style>
