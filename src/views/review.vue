@@ -6,8 +6,8 @@
                 <img :src="review_info.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${review_info.goods_no}/${review_info.goods_img.split(',')[0]}`):require(`../assets/2-1.png`)" class="review_product_img">
                 <h2>{{ review_info.goods_nm }}</h2>
                 <div class="review_user">
-                <img class="review_user_img" :src="review_info.user_img ? require(`../../../StarFarmBack/uploads/userImg/${review_info.user_no}/${review_info.user_img}`):require(`../assets/profile.png`)">
-                <span class="review_user_nick">{{ review_info.user_nick }}</span>
+                    <img class="review_user_img" :src="review_info.user_img ? require(`../../../StarFarmBack/uploads/userImg/${review_info.user_no}/${review_info.user_img}`):require(`../assets/profile.png`)"><br>
+                    <div class="review_user_nick">{{ review_info.user_nick }}</div>
                 </div>
             </div>
             <p>리뷰 평가</p>
@@ -17,8 +17,8 @@
                 <button :class=" { clicked_bad:isClicked_bad}"><img src="../assets/bad.png" @click="score_click_bad"></button>
             </div>
                 <textarea v-model="review_con"></textarea>
-                <button @click="review_add">확인</button>
-                <button value="취소" >취소</button>
+                <button class="ok" @click="review_add">확인</button>
+                <button class="ok1" value="취소" >취소</button>
         </div>
     </div>
 </template>
@@ -155,53 +155,61 @@ export default {
 
 .review_wrapper {
     width: 60%;
-    height: 1050px;
-    margin: 0 auto;
+    height: 950px;
+    margin: 3% auto;
+    border: 1px solid black;
+    border-radius: 20px;
 }
 .review_wrapper h1 {
     font-size: 40px;
     font-weight: 100;
     margin-bottom: 20px;
+    padding-left: 20px;
+    padding-top: 20px;
 }
 .review_product_name {
-    width: 100%;
+    width: 95%;
     height: 200px;
     border: 1px solid black;
     border-radius: 20px;
+    margin-left: 2.5%;
 }
 .review_product_img {
     width: 200px;
     height:100%;
     background-color: bisque;
     float: left;
+    border-radius: 20px;
 }
 .review_product_name h2 {
     font-size: 25px;
     font-weight: 400;
     margin-left: 30px;
     float: left;
+    margin-top: 20px;
 }
-.review_product_name span {
-    font-size: 15px;
-    margin-left: 20px;
+.review_user_nick {
+    font-size: 20px;
+    text-align: center;
+    margin-right: 60px;
 }
 .review_user {
-    width: 130px;
+    width: 200px;
     height: 100%;
-    float: right;
-    margin: 20px 20px 0 0;
+    margin-left: 82%;
 }
 .review_user_img {
     height: 70%;
-    width: 140px;
+    width: 70%;
+    margin-top: 15px;
     border-radius: 100%;
     background-color: blue;
 }
 
 .review_wrapper p {
-    margin-top: 20px;
-    font-size: 25px;
-    font-weight: 200;
+    margin-top: 50px;
+    font-size: 30px;
+    font-weight: 40%;
     text-align: center;
 }
 .review_rating {
@@ -211,6 +219,7 @@ export default {
 }
 .review_rating button {
     width: 25%;
+    height: 100%;
     margin-left: 12%;
     border: none;
     border-radius: 100%;
@@ -228,31 +237,53 @@ export default {
     margin-left: 0;
 }
 textarea {
-    width: 100%;
+    width: 95%;
     height: 300px;
     box-sizing: border-box;
     border: solid black 1px;
-    border-radius: 5px;
+    border-radius: 20px;
     resize: none;
-    margin-top: 50px;
+    margin-left: 2.5%;
+    font-size: 20px;
+    padding-left: 30px;
+    padding-top: 30px;
+    margin-top: 20px;
 }
-button {
-    width: 100px;
+.ok {
     height: 50px;
-    float: right;
-    border: none;
-    background:none;
-    background-color: aqua;
-    margin-left: 20px;
+    width:120px;
+    font-size: 14px;
+    font-family: GmarketSansMedium;
+    color: rgb(123, 123, 123);
+    border: 2px solid rgb(221, 221, 221);
     border-radius: 10px;
+    cursor: pointer;
+    float: right;
+    margin-top: 50px;
+    margin-right: 2.5%;
 }
+.ok1 {
+    height: 50px;
+    width:120px;
+    font-size: 14px;
+    font-family: GmarketSansMedium;
+    color: rgb(123, 123, 123);
+    border: 2px solid rgb(221, 221, 221);
+    border-radius: 10px;
+    cursor: pointer;
+    float: right;
+    margin-top: 50px;
+    margin-right: 10px;
+}
+
 .clicked_good {
-    background-color: yellow;
-}
-.clicked_bad {
-    background-color: yellow;
+    background-color: rgb(0, 132, 255);
 }
 .clicked_normal {
     background-color: yellow;
+}
+
+.clicked_bad {
+    background-color: rgb(255, 0, 0);
 }
 </style>
