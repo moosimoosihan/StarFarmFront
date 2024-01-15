@@ -457,8 +457,8 @@ select {
   }
   #store_submit button:hover {
     color: rgb(0, 0, 0);
-    border: 2px solid rgb(253, 217, 249);
-    background-color: rgb(255, 236, 253);
+    border: 2px solid rgb(224, 253, 217);
+    background-color: rgb(224, 253, 217);
     border-radius: 10px;
     cursor: pointer;
 }
