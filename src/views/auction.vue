@@ -43,8 +43,9 @@
   <!--경매시작을 보여주는 화면-->
   <div class="product-details6">
     <div class="product-details1">
+      <div class="timer">
         <h1>{{ goods.goods_nm }}
-        <p :class="{'blinking': time30s }" style="text-align: right; align-self: flex-end; font-size: 25px; margin-top: 2px;">{{ currentTime }}</p></h1>
+          <p :class="{'blinking': time30s }" style="text-align: right; align-self: flex-end; font-size: 25px; margin-top: 2px; min-width: 150px; visibility: {{ time30s ? 'visible' : 'hidden' }}">{{ currentTime }}</p></h1></div>
         <p style="text-align: left; margin-left: 0;">시작가: {{ formatPrice(goods.goods_start_price) }}</p>
         <p style="text-align: left; margin-left: 0;" v-if="goodsSuccBid != null">최고 입찰가: {{ formatPrice(goodsSuccBid) }}</p>
         <p  style="text-align: left; margin-left: 0;" v-else>최고 입찰가: 입찰 없음</p>
@@ -656,10 +657,13 @@ body {
     text-overflow: ellipsis;
     display: flex;
     justify-content: space-between;
+
 }
 
  .product-details1{
     margin-left:20px;
+    max-width:100%;
+    max-height:100%;
  }
  .description{
     line-height: 1.6;
@@ -712,8 +716,8 @@ body {
 /*경매시작가*/
 .product-details4 {
   float: left;
-  width: 1210px;
-  height: 180px;
+  width:1210px;
+  max-height:100%;
   /*border-radius: 20px;*/
   /*border: rgba(24, 204, 0, 0.1);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
@@ -744,40 +748,35 @@ margin: auto; /* 가운데 정렬을 위한 마진 설정 */
     text-align: end;
 }
 .blinking {
-  color:red;
-  -webkit-animation: blink 0.2s ease-in-out infinite alternate;
-  -moz-animation: blink 0.2s ease-in-out infinite alternate;
-  animation: blink 0.2s ease-in-out infinite alternate;
+  color: red;
+  animation: blink-effect 1s step-end infinite;
  }
- @-webkit-keyframes blink{
-  0% {opacity: 0;}
-  100% {opacity: 1;}
-}
 
-@-moz-keyframes blink{
-  0% {opacity: 0;}
-  100% {opacity: 1;}
-}
-
-@keyframes blink{
-  0% {opacity: 0;}
-  100% {opacity: 1;}
+@keyframes blink-effect{
+  50% {
+    opacity: 0;
+  }
 }
 .goods_con {
-  width: 100%;
-  height:22.5px;
+  max-width:100%;
+  max-height:100%;
   text-align: start;
   display:block; 
-  overflow:hidden; 
-  resize:none;
+  /*overflow:hidden;*/ 
+  /*resize:none;*/
   border-bottom: rgba(0, 0, 0, 0.3) solid;
-  border-top:none;
+  /*border-top:none;
   border-left:none;
-  border-right:none;
-  pointer-events: none;
+  border-right:none;*/
+  /*pointer-events: none;*/
   margin-left: 20px;
-  font-size: 20px;
+  font-size: 15px;
 }
+textarea {
+            width: 100%;
+            height: 100px;
+            resize: none; /* Optional: Prevent resizing */
+        }
 .btn_container input, button {
   margin-left:4px;  
 }
@@ -798,5 +797,11 @@ margin: auto; /* 가운데 정렬을 위한 마진 설정 */
 }
 .friendly_score{
   margin-left: 30px;
+}
+.timer {
+  font-size: 25px;
+  margin-top: 2px;
+  min-width: 150px;
+  visibility: visible; /* 초기에는 보이도록 설정 */
 }
 </style>
