@@ -753,26 +753,23 @@ margin: auto; /* 가운데 정렬을 위한 마진 설정 */
     opacity: 0;
   }
 }
+/*상세정보부분 설정 더 이상 안됨*/
 .goods_con {
   max-width:100%;
   max-height:100%;
   text-align: start;
-  display:block; 
-  /*overflow:hidden;*/ 
-  /*resize:none;*/
-  border-bottom: rgba(0, 0, 0, 0.3) solid;
-  /*border-top:none;
-  border-left:none;
-  border-right:none;*/
-  /*pointer-events: none;*/
+  display:block;
+  resize:none;
+  /*border-bottom: rgba(0, 0, 0, 0.3) solid;*/
   margin-left: 20px;
   font-size: 15px;
+  overflow-y: auto; /* 필요 시 수직 스크롤을 자동으로 표시 */
 }
 textarea {
-            width: 100%;
-            height: 100px;
-            resize: none; /* Optional: Prevent resizing */
-        }
+  width: 100%;
+  height:100px;
+  resize: none; /* Optional: Prevent resizing */
+}
 .btn_container input, button {
   margin-left:4px;  
 }
@@ -795,7 +792,7 @@ textarea {
   margin-left: 30px;
 }
 .timer {
-  font-size: 25px;
+  font-size: 20px;
   margin-top: 2px;
   min-width: 150px;
 }
