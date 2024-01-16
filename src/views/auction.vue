@@ -2,7 +2,7 @@
   <!--전체-->
   <div class="container">
         <!--판매자페이지-->
-  <div class="product-details3">
+    <div class="product-details3">
       <div class="mypage_topbar_container">
            <!--프로필 사진, 닉네임-->
           <div class="profile_box">
@@ -19,7 +19,7 @@
             <div class="friendly_img_box">
               <progress id="progress" :value="goodsUser.user_fr" max="100" ></progress>
               <span class="friendly_score">{{ goodsUser.user_fr }}점</span>
-              <p class="friendly_text1">{{ goodsUser.user_adr1 }}</p>
+              <p class="friendly_text1" v-if="goodsUser.user_adr1">{{ goodsUser.user_adr1.split(' ')[0] + ' ' + goodsUser.user_adr1.split(' ')[1] }}</p>
           </div>
         </div>
       </div>
@@ -53,9 +53,9 @@
         </p>
         <!-- 관심 상품 버튼 -->
         <div :class="likeGoods===0?'heart':'heart is-active'" @click="likeGoods===0?like_goods():likeDelete()"></div>
-        <div class="bid_container">
+        <div class="bid_container" id="scroll">
             <ul>
-              <li v-for="(nick, i) in goodsBidList" class="price" :key="i">{{ goodsBidList[i].user_nick }}님이 {{ formatPrice(goodsBidList[i].bid_amount) }} 입찰하셨습니다.</li>
+              <li v-for="(bidUser, i) in goodsBidList" :class="bidUser.user_no===user.user_no ? 'me_price' : 'price'" :id="bidUser===goodsBidList[goodsBidList.length-1]? 'last_price' : ''" :key="i">{{ bidUser.user_nick }}님이 {{ formatPrice(bidUser.bid_amount) }} 입찰하셨습니다.</li>
             </ul>
 
         </div>
@@ -71,6 +71,9 @@
               <input v-if="goods.goods_state===0 && this.currentTime !== '경매가 종료되었습니다.'" type="button" id="submit_button" value="입찰" @click="postBidding">
               <!-- 신고버튼 -->
               <button class="button" @click="reportBtn()">신고</button>
+            </div>
+            <div class="btn_container" v-else-if="user.user_no===goodsUser.user_no">
+              <h1>내 상품 입니다.</h1>
             </div>
         </div>
     </div>
@@ -106,7 +109,7 @@ data() {
 
     likeGoods: 0,
 
-    currentTime: Date.now(),
+    currentTime: '',
     endTime: Date.now(),
     chatRoomNo: '',
     buyUser: false,
@@ -131,6 +134,7 @@ created() {
   this.checkLikeGoods();
   this.updateTimer();
   this.startAutoSlide(); // 페이지가 생성될 때 자동 슬라이드 시작
+  this.scroll();
 },
 beforeUpdate() {
   if(this.currentTime !== '경매가 종료되었습니다.'){
@@ -209,6 +213,12 @@ methods: {
       console.error(error);
     }
   },
+  scroll() {
+      setTimeout(() => {
+          const scroll = document.getElementById('scroll');
+          scroll.scrollTop = scroll.scrollHeight;
+      }, 100);
+  },
   moveToSlideAuction(index) {
     const slidesAuction = document.querySelectorAll('.slide');
     const slideWidthAuction = slidesAuction[0].clientWidth;
@@ -236,14 +246,6 @@ methods: {
       console.error(error);
     }
   },
-  //1:1 채팅룸 방번호 가져오기
-  // async getChatRoomNo() {
-  //   const seller_no = this.goodsUser.user_no;
-  //   const buyer_no = this.user.user_no;
-  //   console.log(this.goodsUser);
-  //
-  //   const response = await axios.get(`http://localhost:3000/chat/checkChatRoom/${seller_no}/${buyer_no}`);
-  // },
   /*1:1 채팅룸 열기*/
   gotoChatRoom(index) {
       let popupWindow = window.open(`/chatroom/${index}`, '_blank', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
@@ -251,18 +253,6 @@ methods: {
       popupWindow.onresize = (_=>{
           popupWindow.resizeTo(800, 650)
       })
-  },
-  /* 팝업창 열고 닫기*/
-  handleBid() {
-    const bidValue = document.getElementById('searchInput').value.trim();
-
-    if (bidValue === '') {
-      alert('입찰 숫자를 입력하세요.');
-      window.close(); // 입력값이 비어있을 때 바로 창을 닫음
-    } else {
-      this.bidAmount = bidValue; // 사용자가 입력한 값 업데이트
-      this.displayBidAmount = this.bidAmount; // 화면에 표시할 값 업데이트
-    }
   },
   async getGoods() {
     try {
@@ -370,6 +360,12 @@ methods: {
             if(res.data.message == 'bidding_fail'){
               this.$swal("경매가 마감되었습니다.")
             }
+            this.$swal.fire({
+              icon: 'success',
+              title: '입찰 성공',
+              text: '입찰에 성공하였습니다.',
+            })
+            this.scroll()
           })
           this.bidAmount = ''
         } catch (error) {
@@ -552,6 +548,7 @@ body {
     height: 150px;
     margin-right: auto;
     overflow: hidden;
+    margin-left : 40px;
   }
   /*프로필 닉네임*/
   .profile_box{
@@ -569,6 +566,9 @@ body {
     height: 90px;
     overflow: hidden;
     margin: 0 auto;
+  }
+  .profile_img_box :hover {
+    transform: scale(1.15);
   }
   /*친밀도*/
   .friendly_box{
@@ -676,14 +676,27 @@ body {
 
  }
  .bid_container{
+    padding-left: 20px;
+    padding-right: 20px;
     overflow-y:scroll;
     background-color: #ffffff;
     height: 250px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
  }
  .price{
+    text-align: start;
     font-weight: bold;
-
+    list-style-type: none;
+ }
+ .me_price{
+    text-align: end;
+    font-weight: bold;
+    list-style-type: none;
+    color: #008d07f1;
+ }
+ #last_price {
+    font-size: 18px;
+    font-weight: bold;
  }
  .chatroom_container {
   margin-top: 20px;

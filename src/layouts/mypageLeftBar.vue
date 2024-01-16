@@ -12,7 +12,7 @@
                         <!-- <div class="profile-icon">
                             <i class="fas fa-user-circle"></i>
                         </div> -->
-                        <img :width="100" style="border-radius: 70px;"
+                        <img :width="100" style="border-radius: 70px;" @click="profileImgClick()"
                             :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
                             alt="프로필 사진 미리보기" />
                     </div>
@@ -95,6 +95,9 @@ import axios from 'axios'
         } catch (error) {
           console.error(error);
         }
+      },
+      profileImgClick() {
+        this.$router.push(`/userpage/${this.user.user_no}`);
       }
     }
 
@@ -190,7 +193,7 @@ Footer {
 #progress::-webkit-progress-bar {
     background:#f5f5f5;
     border-radius:10px;
-    width: 180px;
+    width: 100%;
     height: 15px;
 }
 #progress::-webkit-progress-value {
@@ -201,5 +204,7 @@ Footer {
 .friendly_img_box progress {
     background-color: white;
 }
-
+.profile_img_box :hover {
+  transform: scale(1.15);
+}
   </style>

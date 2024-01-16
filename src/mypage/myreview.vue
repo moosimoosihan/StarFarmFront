@@ -25,7 +25,7 @@
                                         alt="상품 이미지" />
                                 </td>
                                 <td @click="gotoProduct(review.goods_no)">
-                                    {{ review.goods_nm }}
+                                    <p>{{ review.goods_nm }}</p>
                                 </td>
                                 <td>
                                     <p>{{ review.user_nick }}</p>
@@ -76,24 +76,6 @@ import axios from 'axios'
             user() {
                 return this.$store.state.user;
             },
-            // uniqueReviewList() {
-            //     const uniqueOrders = [];
-            //     const tradeNos = [];
-
-            //     for (const order of this.reviewList) {
-            //         if (!tradeNos.includes(order.ORDER_TRADE_NO)) {
-            //             uniqueOrders.push({
-            //                 ORDER_TRADE_NO: order.ORDER_TRADE_NO,
-            //                 items: [order],
-            //             });
-            //             tradeNos.push(order.ORDER_TRADE_NO);
-            //         } else {
-            //             const index = uniqueOrders.findIndex((o) => o.ORDER_TRADE_NO === order.ORDER_TRADE_NO);
-            //             uniqueOrders[index].items.push(order);
-            //         }
-            //     }
-            //     return uniqueOrders;
-            // }
         },
         created() {
             this.getUser();
@@ -197,6 +179,12 @@ td {
   border-bottom: 1px solid #008d07f1;
   text-align: center;
   height: 40px;
+}
+td p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    grid-area: text;
 }
 
 th {

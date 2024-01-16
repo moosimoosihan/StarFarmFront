@@ -1,6 +1,6 @@
 <!-- 일반 모든 화면에서 사용 -->
 <template>
-    <div>
+    <div class="root_container">
       <Header />
       <div class="default_content">
         <router-view />
@@ -22,20 +22,16 @@
   }
   </script>
   <style scoped>
+.root_container {
+  width: 100%;
+  min-width: 1280px;
+}
   .default_content {
     padding-top: 120px;
     margin: auto;
     height: 100%;
     position: relative;
     min-height: 100%;
-  }
-  
-  body {
-    overflow-y: scroll;
-    -ms-overflow-style: none;
-    /* 인터넷 익스플로러 */
-    scrollbar-width: none;
-    /* 파이어폭스 */
   }
   
   Footer {

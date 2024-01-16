@@ -4,6 +4,13 @@
             <div class="myinfo">
                 <div class="likelist_title">
                     <span class="title">관심 상품</span>
+                    <select class="form-select" aria-label="Default select example" v-model="sort" @change="getLikeGoods(sort,page)">
+                        <option value="none" selected>전체</option>
+                        <option value="0">경매 중</option>
+                        <option value="1">거래 중</option>
+                        <option value="2">거래 완료</option>
+                        <option value="3">유찰</option>
+                    </select>
                 </div>
                 <div class="likegoods">
                     <table class="table" style="width: 100%;">
@@ -12,6 +19,7 @@
                                 <th>상품 이미지</th>
                                 <th>상품명</th>
                                 <th>금액</th>
+                                <th>상품상태</th>
                                 <th>판매자</th>
                             </tr>
                         </thead>
@@ -26,18 +34,26 @@
                                     {{ likegoods.goods_nm }}
                                 </td>
                                 <td>
-                                    <span>시작가 {{ formatPrice(likegoods.goods_start_price) }}</span><br>
-                                    <span>입찰가 {{ formatPrice(succ_bidList[i]) }}</span>
+                                    <span>시작가 : {{ formatPrice(likegoods.goods_start_price) }}</span><br>
+                                    <span>입찰가 : {{ formatPrice(succ_bidList[i])===0+' 원' ? '입찰 없음' : formatPrice(succ_bidList[i]) }}</span>
+                                </td>
+                                <td>
+                                    {{ getOrderStatusText(likegoods.goods_state) }}
                                 </td>
                                 <td>
                                     {{ likeGoodsUserNick[i] }}
                                 </td>
                             </tr>
                             <tr v-if="likeList.length === 0">
-                                <td colspan="4">관심 상품이 없습니다.</td>
+                                <td colspan="5">관심 상품이 없습니다.</td>
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="page_container">
+                    <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
+                    <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="getLikeGoods(sort,i)">{{i+1}}</button>
+                    <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
                 </div>
             </div>
         </div>
@@ -53,6 +69,11 @@ import axios from 'axios'
                 likeList: [],
                 succ_bidList: [],
                 likeGoodsUserNick: [],
+                
+                page: 0,
+                pageCount: 0,
+
+                sort: 'none',
             }
         },
         computed: {
@@ -61,15 +82,23 @@ import axios from 'axios'
             },
         },
         created() {
-            this.getLikeGoods()
+            this.getLikeGoods(this.sort, this.page)
         },
         methods: {
             gotoProduct(index) {
                 this.$router.push(`/product/${index}`)
             },
-            async getLikeGoods() {
+            async getLikeCount(sort) {
                 try {
-                    const response = await axios.get(`http://localhost:3000/mypage/likelist/${this.user.user_no}`);
+                    const response = await axios.get(`http://localhost:3000/mypage/likecount/${this.user.user_no}/${sort}`);
+                    this.pageCount = Math.ceil(response.data[0].count/10)
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+            async getLikeGoods(sort, page) {
+                try {
+                    const response = await axios.get(`http://localhost:3000/mypage/likelist/${this.user.user_no}/${sort}/${page}`);
                     this.likeList = response.data;
                     for(let i=0; i<this.likeList.length; i++){
                         let val = await this.getSuccBid(this.likeList[i].GOODS_NO)
@@ -82,6 +111,7 @@ import axios from 'axios'
                 } catch (error) {
                     console.error(error);
                 }
+                await this.getLikeCount(sort)
             },
             formatPrice(price) {
                 if (price !== undefined) {
@@ -118,8 +148,31 @@ import axios from 'axios'
                 } catch (error) {
                     console.error(error);
                 }
-            
-            }
+            },
+            getOrderStatusText(status) {
+                switch (status) {
+                    case 0:
+                        return "경매 중";
+                    case 1:
+                        return "거래 중";
+                    case 2:
+                        return "거래 완료";
+                    case 3:
+                        return "유찰";
+                    case 4:
+                        return "삭제";
+                    default:
+                        return "";
+                }
+            },
+            prev() {
+                this.page -= 1;
+                this.getLikeGoods(this.sort,this.page);
+            },
+            next(){
+                this.page += 1;
+                this.getLikeGoods(this.sort,this.page)
+            },
         }
     }
 </script>
@@ -202,21 +255,25 @@ tbody tr:hover {
 /* 테이블 비율 */
 th:nth-child(1),
 td:nth-child(1) {
-  width: 25%;
+  width: 20%;
 }
 
 th:nth-child(2),
 td:nth-child(2) {
-  width: 25%;
+  width: 20%;
 }
 
 th:nth-child(3),
 td:nth-child(3) {
-  width: 25%;
+  width: 20%;
 }
 th:nth-child(4),
 td:nth-child(4) {
-  width: 25%;
+  width: 20%;
+}
+th:nth-child(5),
+td:nth-child(5) {
+  width: 20%;
 }
 
 th, td {
@@ -230,5 +287,28 @@ tr {
 }
 .title {
     font-size: 24px;
+}
+.form-select {
+    width: 100px;
+    height: 30px;
+    margin-left: 20px;
+}
+.page_container {
+  width: 400px;
+  height: 100px;
+  margin-left: 50%;
+  margin-top: 20px;
+}
+.page_container button {
+  min-width:32px;
+  width: 50px;
+  height: 40px;
+  padding:2px 6px;
+  text-align:center;
+  margin:0 3px;
+  border-radius: 6px;
+  border:1px solid #eee;
+  color:#666;
+  cursor: pointer;
 }
 </style>

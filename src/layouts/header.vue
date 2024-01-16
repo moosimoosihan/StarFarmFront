@@ -40,7 +40,7 @@
       
       <div>
             <ul class="menu">
-              <li>
+              <li class="hvr-rectangle-out">
                 <a class="cate" @click="gotoCate('의류',0)">의류</a>
                 <ul class="submenu">
                   <li><a @click="gotoCate('의류',1)">상의</a></li>
@@ -50,7 +50,7 @@
                   <li><a @click="gotoCate('의류',5)">가방</a></li>
                 </ul>
               </li>
-              <li>
+              <li class="hvr-rectangle-out">
                 <a class="cate" @click="gotoCate('뷰티',0)">뷰티</a>
                 <ul class="submenu">
                   <li><a @click="gotoCate('뷰티',1)">악세사리</a></li>
@@ -60,7 +60,7 @@
                   <li><a href="#">&nbsp;</a></li>
                 </ul>
               </li>
-              <li>
+              <li class="hvr-rectangle-out">
                 <a class="cate" @click="gotoCate('생활가전',0)">생활/가전</a>
                 <ul class="submenu">
                   <li><a @click="gotoCate('생활가전',1)">주방용품</a></li>
@@ -70,7 +70,7 @@
                   <li><a href="#">&nbsp;</a></li>
                 </ul>
               </li>
-              <li>
+              <li class="hvr-rectangle-out">
                 <a class="cate" @click="gotoCate('취미',0)">취미</a>
                 <ul class="submenu">
                   <li><a @click="gotoCate('취미',1)">스포츠</a></li>
@@ -80,7 +80,7 @@
                   <li><a href="#">&nbsp;</a></li>
                 </ul>
               </li>
-              <li>
+              <li class="hvr-rectangle-out">
                 <a class="cate" @click="gotoCate('기타',0)">기타</a>
                 <ul class="submenu">
                   <li><a href="#">&nbsp;</a></li>
@@ -194,7 +194,7 @@ export default {
             })
             return
           }
-          window.location.href=`http://localhost:8080/search_goodslist/all/${this.searchKeyword}/1`
+          window.location.href=`http://localhost:8080/search_goodslist/all/${this.searchKeyword}/0`
         },
         gotoCate(cate, cate2) {
           window.location.href=`http://localhost:8080/search_goodslist/cate/${cate}/${cate2}`
@@ -339,6 +339,7 @@ input::placeholder {
   }
 
   .navbar_top {
+    min-width: 100%;
     display: flex;
     justify-content: space-between;
     padding: 0;
@@ -386,6 +387,15 @@ a {
   
   .menu a {
     color: #520119;
+    user-select: none;
+    -webkit-transition: all .25s ease;
+    -moz-transition: all .25s ease;
+    -ms-transition: all .25s ease;
+    -o-transition: all .25s ease;
+    transition: all .25s ease;
+  }
+  .menu a:hover {
+    font-size: 24px;
   }
   
   .submenu > li {
@@ -395,11 +405,12 @@ a {
   
   .submenu {
     height: 0; /*ul의 높이를 안보이게 처리*/
-   
+  }
+  .submenu a {
+    user-select: none;
   }
 
   .menu > li:hover {
-    background-color: #c4c4c4;
     transition-duration: 0.5s;
   }
   
@@ -429,7 +440,6 @@ a {
   .mymenu a {
     color: #520119;
   }
-  
   .mypageMenu > li {
     line-height: 50px;
     background-color: #ffffff;
@@ -437,6 +447,10 @@ a {
   
   .mypageMenu {
     height: 0; /*ul의 높이를 안보이게 처리*/
+  }
+  .mypageMenu li:hover {
+    color:#520119;
+    font-weight: 600;
   }
 
   .mymenu > li:hover {
@@ -456,4 +470,44 @@ a {
     font-size: 20px;
     font-weight: 700;
   }
+
+
+.hvr-rectangle-out {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  position: relative;
+  background: #e1e1e1;
+  -webkit-transition-property: color;
+  transition-property: color;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+.hvr-rectangle-out:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #caffaa;
+  -webkit-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition-property: transform;
+  transition-property: transform;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+}
+.hvr-rectangle-out:hover, .hvr-rectangle-out:focus, .hvr-rectangle-out:active {
+  color: white;
+}
+.hvr-rectangle-out:hover:before, .hvr-rectangle-out:focus:before, .hvr-rectangle-out:active:before {
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
 </style>

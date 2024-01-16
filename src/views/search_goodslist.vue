@@ -1,10 +1,10 @@
 <template>
     <div class="container" id="scroll" v-if="maxPage!=0">
         <div v-if="$route.params.cate!='cate'" class="search_title">
-            <p style="font-size: 30px; color: green ;">{{keyword}} </p><p style="font-size: 20px; margin-top: 10px;"> 의 검색 결과</p>
+            <h3 style="margin-left:50px; margin-top: 10px;">{{keyword}} 의 검색 결과</h3>
         </div>
         <div v-else class="search_title">
-            <p>카테고리 : {{category}} > {{ categoryDetailstr }}</p>
+            <h3>카테고리 : {{category}} > {{ categoryDetailstr }}</h3>
         </div>
         <div class="sort">
             <select class="a" v-model="sort" @change="getGoodsList(page,sort)">
@@ -12,24 +12,33 @@
                 <option value="ASC">오래된등록순</option>
             </select>
         </div>
-        <div class="search_goods">
-            <div class="item_container" v-for="(goods,i) in goodsList" :key="i" @click="gotoProduct(goods.goods_no)">
-                <img class="goods_img"
-                    :src="goods.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
-                    alt="상품 이미지"/>
-                <div class="search_goodsdetails">
-                    <p class="goodsname">{{ goods.goods_nm }}</p>
-                    <p class="price">시작가 : {{ goods.goods_start_price }}</p>
-                    <p class="price">입찰가 : {{ goods_succ_bid[i] }}</p>
-                    <p class="sprice">{{ nickList[i] }}</p>
-                    <p class="time" font-color:red v-if="goods.goods_timer">{{ goodsTimer[i] }}</p>
+        <div class="goodslist_div" v-if="goodsList.length>0">
+            <div class="item_container" v-for="(goods, i) in goodsList" :key="i" @click="gotoProduct(goods.goods_no)">
+                <img class="goods_img"  :src="goods.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`):require(`../assets/2-1.png`)" alt="상품 이미지">
+                <div class="goodsname">
+                <h2>{{ goods.goods_nm }}</h2>
+                <p>{{ goods.goods_content }}</p>
+                </div>
+                <div class="card-stats">
+                <div class="stat">
+                    <div class="type">시작가</div>
+                    <div class="value"><p class="price">{{ goods.goods_start_price }}</p></div>
+                </div>
+                <div class="stat border">
+                    <div class="type">입찰가</div>
+                    <div class="value"><p class="sprice">{{ goods_succ_bid[i] }}</p></div>
+                </div>
+                <div class="stat">
+                    <div class="type">경매 시간</div>
+                    <div class="value"><p class="time" v-if="goods.goods_timer">{{ goodsTimer[i] }}</p></div>
+                </div>
                 </div>
             </div>
         </div>
-        <div class="page">
-            <button v-if="page>1" class="page_btn" @click="prev()">이전</button>
-            <button v-for="(num,i) in maxPage" :key="i" class="pageNum" @click="getGoodsList((num-1)*10)">{{num}}</button>
-            <button v-if="page<maxPage-1" class="page_btn" @click="next()">다음</button>
+        <div class="page_container">
+            <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
+            <button v-for="(num,i) in maxPage" :key="i" class="pageNum" @click="getGoodsList(i,sort)">{{i+1}}</button>
+            <button v-if="page<maxPage-1" class="pageNum" @click="next()">다음</button>
         </div>
     </div>
     <div v-else class="empty_container">
@@ -39,7 +48,7 @@
         <div v-else class="search_title">
             <p>카테고리 : {{category}} > {{ categoryDetailstr }}</p>
         </div>
-        <p>검색 결과가 없습니다.</p>
+        <h1 style="margin: 20px;">검색 결과가 없습니다.</h1>
     </div>
 </template>
 <script>
@@ -205,11 +214,11 @@ import axios from 'axios';
             },
             prev() {
                 this.page--;
-                this.getGoodsList((this.page-1)*10);
+                this.getGoodsList(this.page, this.sort);
             },
             next() {
                 this.page++;
-                this.getGoodsList((this.page-1)*10);
+                this.getGoodsList(this.page, this.sort);
             },
             stopAutoTimer() {
                 clearInterval(this.timer);
@@ -272,7 +281,7 @@ import axios from 'axios';
     box-sizing: border-box;
 }
 .container {
-    width: 80%;
+    width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -287,68 +296,100 @@ import axios from 'axios';
 
 .empty_container {
     width: 100%;
-    height: 500px;
+    height: 900px;
 }
 /* -------------------- */
 
-.search_goods {
-    width: 80%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: left;
-    margin: auto;
-    margin-top: 45px;
+.goodslist_div {
+  width: 100%;
+  height: 955px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: left;
+  margin-top: 20px;
 }
 .item_container {
-    width: 190px;
-    height: 340px;
-    background-color: rgb(255, 255, 255);
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 25px;
-    border-color: rgb(219, 219, 219);
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 15px;
-    margin-right: 15px;
-    overflow: hidden;
-    box-shadow: 5px 5px 5px gray;
+  display: grid;
+  grid-template-columns: 240px;
+  grid-template-rows: 150px 160px 80px;
+  grid-template-areas: "image" "text" "stats";
+  height: 40%;
+
+  border-radius: 18px;
+  background: white;
+  box-shadow: 5px 5px 15px rgba(0,0,0,0.9);
+  font-family: roboto;
+  text-align: center;
+
+  transition: 0.5s ease;
+  cursor: pointer;
+  margin:30px;
+}
+.goods_img {
+  grid-area: image;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  grid-area: image;
+  width: 100%;
+  height: 100%;
+}
+.goodsname {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  grid-area: text;
+  margin: 25px;
+}
+.goodsname .date {
+  color: rgb(255, 7, 110);
+  font-size: 13px;
+}
+.goodsname p {
+ text-overflow: ellipsis;
+ overflow: hidden;
+ white-space: nowrap;
+  color: grey;
+  font-size:15px;
+  font-weight: 300;
+  margin-top: 20px;
+
+}
+.goodsname h2 {
+  margin-top:0px;
+  font-size:28px;
+}
+.card-stats {
+  grid-area: stats;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  background: #68ce68;
+}
+.card-stats .stat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  color: white;
+  padding:10px;
+  width: 80px;
+  font-size: 13px;
+  border-right: 2px solid rgba(46, 190, 0, 0.3);
+}
+.stat:last-child {
+  border: none;
 }
 .item_container > p {
   margin-left: 3px;
 }
-
-.goodsname {
-  font-size: 20px;
-  position: relative;
-  top: 15px;
-  left: 5px;
-}
-
-.price {
-  position: relative;
-  left: 5px;
-  top: 20px;
-}
-
-.sprice {
-  position: relative;
-  left: 5px;
-  top: 25px;
-}
-
-.time {
-  position: relative;
-  left: 5px;
-  top: 30px;
-  color : red;
-}
-
-.goods_img {
-  width: 200px;
-  height: 200px;
+.item_container:hover {
+  transform: scale(1.15);
+  box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
 }
 
 .search_title {
@@ -357,28 +398,30 @@ import axios from 'axios';
     display: flex;
 }
 
-.page {
-    text-align: center;
-    margin-top: 15px;
-}
-
-.page_btn {
-    text-align: center;
-    border: #ffffff;
-    background-color: #ffffff;
-}
-
-.pageNum {
-    text-align: center;
-    border: #ffffff;
-    background-color: #ffffff;
-    font-size: 20px;
-}
-
 .a {
+    width: 150px;
+    height: 30px;
     float: right;
     margin-left: 10px;
-    margin-right: 10px;
+    margin-right: 50px;
+}
+.page_container {
+  width: 400px;
+  height: 100px;
+  margin-left: 50%;
+  margin-top: 20px;
+}
+.page_container button {
+  min-width:32px;
+  width: 50px;
+  height: 40px;
+  padding:2px 6px;
+  text-align:center;
+  margin:0 3px;
+  border-radius: 6px;
+  border:1px solid #eee;
+  color:#666;
+  cursor: pointer;
 }
 
 </style>

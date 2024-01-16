@@ -24,10 +24,10 @@
                                     alt="프로필 이미지" />
                             </td>
                             <td>
-                                {{ userNickList[i] }}
+                                <p>{{ userNickList[i] }}</p>
                             </td>
                             <td>
-                                {{ commentList[i] }}
+                                <p>{{ commentList[i] }}</p>
                             </td>
                             <td @click="outChatRoom(chatroom.CHATROOM_NO)">
                                 <i class="fa-solid fa-right-from-bracket"></i><!-- 임시 -->
@@ -213,6 +213,12 @@ td {
   border-bottom: 1px solid #008d07f1;
   text-align: center;
   height: 40px;
+}
+td p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    grid-area: text;
 }
 
 th {

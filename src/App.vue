@@ -1,5 +1,5 @@
 <template>
-  <div class="root_container">
+  <div>
     <router-view />
   </div>
 </template>
@@ -18,9 +18,12 @@ export default {
   padding:0;
   box-sizing: border-box;
 }
-.root_container {
-  width: 100%;
-  min-width: 1280px;
+body {
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  /* 인터넷 익스플로러 */
+  scrollbar-width: none;
+  /* 파이어폭스 */
 }
 .HamFont {
   font-family: 'SF_HambakSnow', sans-serif !important;

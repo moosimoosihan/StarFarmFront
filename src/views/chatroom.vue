@@ -196,16 +196,14 @@ import io from 'socket.io-client'
     }
 </script>
 <style scoped>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 .container {
-    width: 700px;
-    height: 560px;
-    overflow-block: hidden;
+    width:100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100dvh;
+    background: rgb(255, 255, 255);
 }
 
 #scroll {
@@ -232,7 +230,7 @@ import io from 'socket.io-client'
     color: rgb(137, 137, 137);
     border: 2px solid rgb(221, 221, 221);
     border-radius: 10px;
-    margin-right: 5px;
+    margin-right: 30px;
     margin-top: -8px;
 }
 
@@ -244,7 +242,7 @@ import io from 'socket.io-client'
 
 .chats_container {
     width: 750px;
-    height: 450px;
+    height: 540px;
     background-color: rgb(255, 255, 255);
     margin-left: 25px;
     border: 0.5px solid black;

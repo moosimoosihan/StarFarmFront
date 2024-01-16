@@ -31,7 +31,7 @@
                                     <p>{{ goods_name_List[i] }}</p>
                                 </td>
                                 <td>
-                                    <span>구매가 : {{ this.succ_bidList[i] }}</span><br>
+                                    <p>구매가 : {{ this.succ_bidList[i] }}</p>
                                 </td>
                                 <td>
                                     <p>{{ formatDateTime(order.ORDER_DATE) }}</p>
@@ -151,12 +151,6 @@ import axios from 'axios'
     }
 </script>
 <style scoped>
-* {
-    margin: 0;
-    padding: 0;
-    border-spacing: 0px;
-}
-
 .container {
     margin: 40px 30px;
 }
@@ -226,6 +220,13 @@ td {
   border-bottom: 1px solid #008d07f1;
   text-align: center;
   height: 40px;
+}
+
+td p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    grid-area: text;
 }
 
 th {

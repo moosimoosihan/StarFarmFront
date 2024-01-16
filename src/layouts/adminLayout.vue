@@ -1,5 +1,5 @@
 <template>
-  <main class="main, container" v-if="admin">
+  <main class="main, root_container" v-if="admin">
     <aside class="sidebar">
       <nav class="nav">
         <ul>
@@ -86,6 +86,11 @@ html {
   background: #5e42a6;
 }
 
+.root_container {
+  width: 100%;
+  min-width: 1280px;
+}
+
 .sidebar {
   position: fixed;
   width: 20%;
@@ -138,28 +143,4 @@ html {
   bottom: 0;
   background-image: linear-gradient(to right, #5e42a6, #b74e91);
 }
-
-/* .container {
-    display: flex;
-    background-color: #ffffff;
-    height: 100vh;
-}
-.menu-container {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #000000;
-}
-.management-box {
-    width: 200px;
-    height: 80px;
-    background-color: #f57575;
-    padding-top: 30px;
-    margin-bottom: 90px;
-    box-shadow: 0 0 2px rgba(50, 255, 118, 0.1);
-    text-align: center;
-}
-a {
-  text-decoration: none;
-  color: black;
-} */
 </style>

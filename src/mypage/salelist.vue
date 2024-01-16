@@ -50,7 +50,7 @@
                                 <td>
                                     <!-- 판매완료 -->
                                     <div v-if="goodslist.GOODS_STATE===2 && review_count[i]===0">
-                                        <button @click="writeReview(goodslist.GOODS_NO)">후기 작성</button>
+                                        <span @click="writeReview(goodslist.GOODS_NO)">후기 작성</span>
                                         <!-- <div class="trash_icon" @click="deleteItem(goodslist.GOODS_NO)">
                                             <i class="fas fa-solid fa-trash"></i>
                                         </div> -->
@@ -339,6 +339,12 @@ th, td {
   border-right: none;
   color: #008807;
 }
+td p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    grid-area: text;
+}
 
 tr {
     height: 80px;
@@ -347,6 +353,8 @@ tr {
     font-size: 24px;
 }
 .form-select {
+    width: 100px;
+    height: 30px;
     margin-left: 20px;
 }
 .page_container {

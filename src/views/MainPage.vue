@@ -79,23 +79,23 @@
       <!-- 상품 카드 css 시작 -->
       <div class="goodslist_div" v-if="goodsList.length>0">
           <div class="item_container" v-for="(goods, i) in goodsList" :key="i" @click="gotoAuction(goods.goods_no)">
-            <img class="goods_img"  :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
+            <img class="goods_img"  :src="goods.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`):require(`../assets/2-1.png`)" alt="상품 이미지">
             <div class="goodsname">
               <h2>{{ goods.goods_nm }}</h2>
               <p>{{ goods.goods_content }}</p>
             </div>
             <div class="card-stats">
               <div class="stat">
-                <div class="value"><p class="price">{{ goods.goods_start_price }}</p></div>
                 <div class="type">시작가</div>
+                <div class="value"><p class="price">{{ goods.goods_start_price }}</p></div>
               </div>
               <div class="stat border">
-                <div class="value"><p class="sprice">{{ goods_succ_bid[i] }}</p></div>
                 <div class="type">입찰가</div>
+                <div class="value"><p class="sprice">{{ goods_succ_bid[i] }}</p></div>
               </div>
               <div class="stat">
-                <div class="value"><p class="time" v-if="goods.goods_timer">{{ goodsTimer[i] }}</p></div>
                 <div class="type">경매 시간</div>
+                <div class="value"><p class="time" v-if="goods.goods_timer">{{ goodsTimer[i] }}</p></div>
             </div>
             </div>
           </div>
@@ -325,7 +325,7 @@ export default {
 
 /* 카드 css 시작 */
 .goodslist_div {
-  width: 82%;
+  width: 90%;
   height: 955px;
   display: flex;
   flex-direction: row;

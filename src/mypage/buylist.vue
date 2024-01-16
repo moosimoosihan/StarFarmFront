@@ -45,7 +45,7 @@
                                 <td>
                                     <span>시작가 : {{ formatPrice(order.goods_start_price) }}</span><br>
                                     <span>입찰가 : {{ formatPrice(order.bid_amount) }}</span><br>
-                                    <span v-if="getOrderStatusText(order.goods_state)=='경매 중'">최고 입찰가 :{{ formatPrice(succ_bidList[i]) }}</span>
+                                    <span style="font-weight: 600;" v-if="getOrderStatusText(order.goods_state)=='경매 중'">최고입찰 : {{ formatPrice(succ_bidList[i]) }}</span>
                                     <span v-else>낙찰가 :{{ formatPrice(succ_bidList[i]) }}</span><br>
                                 </td>
                                 <td>
@@ -174,7 +174,8 @@ import axios from 'axios'
                     month: "long",
                     day: "numeric",
                 };
-                const formattedDateTime = date.toLocaleDateString("ko-KR", options);
+                const formattedDateTime = date.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" });
+
                 return formattedDateTime;
             },
             getOrderStatusText(status) {
@@ -286,6 +287,7 @@ td {
   border-bottom: 1px solid #008d07f1;
   text-align: center;
   height: 40px;
+  font-size: 13px;
 }
 
 th {
@@ -295,6 +297,12 @@ th {
   border-top: 2px solid #008807;
   border-bottom: 2px solid #008807;
   color: #189200;
+}
+th p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    grid-area: text;
 }
 
 /* 테이블 올렸을 때 */
@@ -307,37 +315,37 @@ tbody tr:hover {
 /* 테이블 비율 */
 th:nth-child(1),
 td:nth-child(1) {
-  width: 3%;
+  width: 12.5%;
 }
 
 th:nth-child(2),
 td:nth-child(2) {
-  width: 10%;
+  width: 12.5%;
 }
 
 th:nth-child(3),
 td:nth-child(3) {
-  width: 15%;
+  width: 12.5%;
 }
 th:nth-child(4),
 td:nth-child(4) {
-  width: 10%;
+  width: 12.5%;
 }
 th:nth-child(5),
 td:nth-child(5) {
-  width: 25%;
+  width: 15%;
 }
 th:nth-child(6),
 td:nth-child(6) {
-  width: 10%;
+  width: 12.5%;
 }
 th:nth-child(7),
 td:nth-child(7) {
-  width: 18%;
+  width: 12.5%;
 }
 th:nth-child(8),
 td:nth-child(8) {
-  width: 10%;
+  width: 12.5%;
 }
 
 th, td {
@@ -350,6 +358,8 @@ tr {
     height: 80px;
 }
 .form-select {
+    width: 100px;
+    height: 30px;
     margin-left: 20px;
 }
 .page_container {
