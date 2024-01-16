@@ -335,10 +335,10 @@ export default {
 }
 .item_container {
   display: grid;
-  grid-template-columns: 300px;
-  grid-template-rows: 190px 210px 80px;
+  grid-template-columns: 240px;
+  grid-template-rows: 150px 160px 80px;
   grid-template-areas: "image" "text" "stats";
-  height: 50%;
+  height: 40%;
 
   border-radius: 18px;
   background: white;
@@ -364,7 +364,7 @@ export default {
 }
 .goodsname .date {
   color: rgb(255, 7, 110);
-  font-size:13px;
+  font-size: 13px;
 }
 .goodsname p {
   color: grey;
@@ -394,7 +394,12 @@ export default {
 
   color: white;
   padding:10px;
-  width: 100px;
+  width: 80px;
+  font-size: 13px;
+  border-right: 2px solid rgba(46, 190, 0, 0.3);
+}
+.stat:last-child {
+  border: none;
 }
 .item_container > p {
   margin-left: 3px;

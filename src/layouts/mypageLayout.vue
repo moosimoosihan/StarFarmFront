@@ -29,7 +29,7 @@ import mypageSideBar from './mypageLeftBar.vue'
     padding-left: 15%;
     margin: auto;
     width: 90%;
-    height: 1500px;
+    height: 1900px;
   }
 
 .mypage_container::-webkit-scrollbar {
