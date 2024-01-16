@@ -4,6 +4,13 @@
             <div class="myinfo">
                 <div class="salelist_title">
                     <span class="title">판매 상품 관리</span>
+                    <select class="form-select" aria-label="Default select example" v-model="sort" @change="getSaleList(sort,page)">
+                        <option value="none" selected>전체</option>
+                        <option value="0">경매 중</option>
+                        <option value="1">거래 중</option>
+                        <option value="2">거래 완료</option>
+                        <option value="3">유찰</option>
+                    </select>
                 </div>
                 <div class="salelist">
                     <table class="table" style="width:100%;">
@@ -21,7 +28,7 @@
                         <tbody>
                             <tr v-for="(goodslist,i) in saleList" :key="i">
                                 <td>
-                                    <p>{{ i+1 }}</p>
+                                    <p>{{ goodslist.GOODS_NO }}</p>
                                 </td>
                                 <td>
                                     <img :width="70" style="border-radius: 10px;"
@@ -56,6 +63,11 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="page_container">
+                    <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
+                    <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="getSaleList(sort,i)">{{i+1}}</button>
+                    <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
+                </div>
             </div>
         </div>
     </main>
@@ -67,51 +79,36 @@ import axios from 'axios';
         name: 'salelist',
         data () {
             return {
-                loginUser: {},
                 saleList: [],
                 succ_bidList: [],
                 review_count: [],
+
+                page: 0,
+                pageCount: 0,
+
+                sort: 'none',
             }
         },
         created() {
-            this.getUser();
-            this.getSaleList();
+            this.getSaleList(this.sort, this.page);
         },
         computed: {
             user() {
                 return this.$store.state.user;
             },
-            // salelistList() {
-            //     const uniqueOrders = [];
-            //     const tradeNos = [];
-
-            //     for (const order of this.saleList) {
-            //         if (!tradeNos.includes(order.ORDER_TRADE_NO)) {
-            //             uniqueOrders.push({
-            //                 ORDER_TRADE_NO: order.ORDER_TRADE_NO,
-            //                 items: [order],
-            //             });
-            //             tradeNos.push(order.ORDER_TRADE_NO);
-            //         } else {
-            //             const index = uniqueOrders.findIndex((o) => o.ORDER_TRADE_NO === order.ORDER_TRADE_NO);
-            //             uniqueOrders[index].items.push(order);
-            //         }
-            //     }
-            //     return uniqueOrders;
-            // },
         },
         methods: {
-            async getUser() {
+            async getSalePage() {
                 try {
-                    const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
-                    this.loginUser = response.data[0];
+                    const response = await axios.get(`http://localhost:3000/mypage/salelistCount/${this.user.user_no}/${this.sort}`);
+                    this.pageCount = Math.ceil(response.data[0].count / 10);
                 } catch (error) {
                     console.error(error);
                 }
             },
-            async getSaleList() {
+            async getSaleList(sort, page) {
                 try {
-                    const response = await axios.get(`http://localhost:3000/mypage/salelist/${this.user.user_no}`);
+                    const response = await axios.get(`http://localhost:3000/mypage/salelist/${this.user.user_no}/${sort}/${page}`);
                     this.saleList = response.data;
                 } catch (error) {
                     console.error(error);
@@ -127,6 +124,7 @@ import axios from 'axios';
                     let val = await this.getReviewCount(this.saleList[i].GOODS_NO)
                     this.review_count.push(val)
                 }
+                await this.getSalePage()
             },
             async getReviewCount(goods_no) {
                 try {
@@ -196,7 +194,15 @@ import axios from 'axios';
                         button: "확인",
                     });
                 }
-                this.getSaleList()
+                this.getSaleList(this.sort, this.page);
+            },
+            prev() {
+                this.page -= 1;
+                this.getSaleList(this.sort,this.page);
+            },
+            next(){
+                this.page += 1;
+                this.getSaleList(this.sort,this.page)
             },
         }
     }
@@ -340,6 +346,25 @@ tr {
 .title {
     font-size: 24px;
 }
-
-
+.form-select {
+    margin-left: 20px;
+}
+.page_container {
+  width: 400px;
+  height: 100px;
+  margin-left: 50%;
+  margin-top: 20px;
+}
+.page_container button {
+  min-width:32px;
+  width: 50px;
+  height: 40px;
+  padding:2px 6px;
+  text-align:center;
+  margin:0 3px;
+  border-radius: 6px;
+  border:1px solid #eee;
+  color:#666;
+  cursor: pointer;
+}
 </style>

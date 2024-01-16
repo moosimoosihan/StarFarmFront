@@ -4,6 +4,13 @@
             <div class="myinfo">
                 <div class="buylist_title">
                     <span class="title">입찰 상품 이력</span>
+                    <select class="form-select" aria-label="Default select example" v-model="sort" @change="getOrderList(sort,page)">
+                        <option value="none" selected>전체</option>
+                        <option value="0">경매 중</option>
+                        <option value="1">거래 중</option>
+                        <option value="2">거래 완료</option>
+                        <option value="3">유찰</option>
+                    </select>
                 </div>
                 <div class="goods">
                     <table class="table" style="width: 100%;">
@@ -22,7 +29,7 @@
                         <tbody>
                             <tr v-for="(order, i) in orderList" :key="i">
                                 <td>
-                                    <p>{{ i+1 }}</p>
+                                    <p>{{ order.goods_no }}</p>
                                 </td>
                                 <td>
                                     <img :width="70" style="border-radius: 10px;"
@@ -61,6 +68,11 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="page_container">
+                    <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
+                    <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="getOrderList(sort,i)">{{i+1}}</button>
+                    <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
+                </div>
             </div>
         </div>
     </main>
@@ -72,63 +84,50 @@ import axios from 'axios'
         name: "buylist",
         data() {
             return {
-                loginUser: {},
                 orderList: [],
                 succ_bidList: [],
                 succ_bid_user_no: [],
                 review_count: [],
                 order_count: [],
+
+                page: 0,
+                pageCount: 0,
+
+                sort: 'none',
             }
         },
         computed: {
             user() {
                 return this.$store.state.user;
             },
-        //     uniqueOrderList() {
-        //         const uniqueOrders = [];
-        //         const tradeNos = [];
-
-        //         for (const order of this.orderList) {
-        //             if (!tradeNos.includes(order.ORDER_TRADE_NO)) {
-        //                 uniqueOrders.push({
-        //                     ORDER_TRADE_NO: order.ORDER_TRADE_NO,
-        //                     items: [order],
-        //                 });
-        //                 tradeNos.push(order.ORDER_TRADE_NO);
-        //             } else {
-        //                 const index = uniqueOrders.findIndex((o) => o.ORDER_TRADE_NO === order.ORDER_TRADE_NO);
-        //                 uniqueOrders[index].items.push(order);
-        //             }
-        //         }
-        //         return uniqueOrders;
-        //     }
         },
         created() {
-            this.getUser();
-            this.getOrderList();
+            this.getOrderList(this.sort, this.page)
         },
         methods: {
             gotoProduct(index) {
                 this.$router.push(`/product/${index}`);
             },
-            async getUser() {
+            async getBuyCount() {
                 try {
-                    const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
-                    this.loginUser = response.data[0];
+                    const response = await axios.get(`http://localhost:3000/mypage/orderCount/${this.user.user_no}/${this.sort}`);
+                    this.pageCount = Math.ceil(response.data.length/10);
                 } catch (error) {
                     console.error(error);
                 }
             },
-            async getOrderList() {
+            async getOrderList(sort, page) {
                 try {
-                    const response = await axios.get(`http://localhost:3000/mypage/orderlist/${this.user.user_no}`);
+                    const response = await axios.get(`http://localhost:3000/mypage/orderlist/${this.user.user_no}/${sort}/${page}`);
                     this.orderList = response.data;
+                    console.log(this.orderList)
                 } catch (error) {
                     console.error(error);
                 }
+                this.page = page;
                 await this.getSuccBid()
                 await this.getReviewCount()
-                await this.getOrderCount()
+                await this.getBuyCount()
             },
             async getSuccBid() {
                 for(let i=0; i<this.orderList.length; i++){
@@ -212,7 +211,15 @@ import axios from 'axios'
             },
             gotoPay(index) {
                 this.$router.push(`/payment/${this.orderList[index].goods_no}`);
-            }
+            },
+            prev() {
+                this.page -= 1;
+                this.getOrderList(this.sort,this.page);
+                },
+            next(){
+                this.page += 1;
+                this.getOrderList(this.sort,this.page)
+            },
         }
     }
 </script>
@@ -341,5 +348,26 @@ th, td {
 
 tr {
     height: 80px;
+}
+.form-select {
+    margin-left: 20px;
+}
+.page_container {
+  width: 400px;
+  height: 100px;
+  margin-left: 50%;
+  margin-top: 20px;
+}
+.page_container button {
+  min-width:32px;
+  width: 50px;
+  height: 40px;
+  padding:2px 6px;
+  text-align:center;
+  margin:0 3px;
+  border-radius: 6px;
+  border:1px solid #eee;
+  color:#666;
+  cursor: pointer;
 }
 </style>

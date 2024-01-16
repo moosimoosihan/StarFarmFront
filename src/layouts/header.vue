@@ -116,7 +116,6 @@ export default {
     methods: {
         async getUser() {
           if(this.user.user_no!=''){
-            console.log(this.user.user_no)
             try {
                 const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
                 this.loginUser = response.data[0];
