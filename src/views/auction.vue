@@ -58,20 +58,20 @@
 
         </div>
           <div v-if="user.user_no!==''">
-          <!-- 관심 상품 버튼 -->
-          <div :class="likeGoods===0?'heart':'heart is-active'" @click="likeGoods===0?like_goods():likeDelete()"></div>
-          <div class="btn_container" v-if="user.user_no != goodsUser.user_no">
-            <!--1:1 채팅버튼-->
-            <button class="chatroom_container" @click="gotoChatRoom(goodsUser.user_no), createChatRoom()">1:1 채팅</button>
-            <!--결제페이지 이동버튼-->
-            <button v-if="buyUser && goods.state===0" class="button" @click="gotoPayment()">결제</button>
-            <!--금액창-->
-            <input v-if="goods.goods_state===0 && this.currentTime !== '경매가 종료되었습니다.'" type="text" id="searchInput" autocomplete="off" size="50" name="bid_value" v-model="bidAmount" @input="validateNumber()"  @keyup.enter="postBidding()">
-            <!--입찰버튼-->
-            <input v-if="goods.goods_state===0 && this.currentTime !== '경매가 종료되었습니다.'" type="button" id="submit_button" value="입찰" @click="postBidding">
-            <!-- 신고버튼 -->
-            <button class="button" @click="reportBtn()">신고</button>
-          </div>
+            <div class="btn_container" v-if="user.user_no != goodsUser.user_no">
+              <!--1:1 채팅버튼-->
+              <button class="chatroom_container" @click="gotoChatRoom(goodsUser.user_no), createChatRoom()">1:1 채팅</button>
+              <!--결제페이지 이동버튼-->
+              <button v-if="buyUser && goods.state===0" class="button" @click="gotoPayment()">결제</button>
+              <!--금액창-->
+              <input v-if="goods.goods_state===0 && this.currentTime !== '경매가 종료되었습니다.'" type="text" id="searchInput" autocomplete="off" size="50" name="bid_value" v-model="bidAmount" @input="validateNumber()"  @keyup.enter="postBidding()">
+              <!--입찰버튼-->
+              <input v-if="goods.goods_state===0 && this.currentTime !== '경매가 종료되었습니다.'" type="button" id="submit_button" value="입찰" @click="postBidding">
+              <!-- 신고버튼 -->
+              <button class="button" @click="reportBtn()">신고</button>
+            </div>
+            <!-- 관심 상품 버튼 -->
+            <div :class="likeGoods===0?'heart':'heart is-active'" @click="likeGoods===0?like_goods():likeDelete()"></div>
         </div>
     </div>
   </div>
@@ -603,7 +603,9 @@ body {
  .slider-container{
     width: 100%;
     height: 500px;
-    padding: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
     box-sizing: border-box;
  }
  .slider{
@@ -823,6 +825,9 @@ textarea {
   100% {opacity: 1;}
 }
 .heart {
+  position: absolute;
+  left: 630px;
+  top:300px;
   color: black;
   width: 100px;
   height: 100px;
