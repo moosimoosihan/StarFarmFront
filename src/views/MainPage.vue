@@ -76,6 +76,7 @@
           </div>
         </div>
       </div>
+      <!-- 상품 카드 css 시작 -->
       <div class="goodslist_div" v-if="goodsList.length>0">
           <div class="item_container" v-for="(goods, i) in goodsList" :key="i" @click="gotoAuction(goods.goods_no)">
             <img class="goods_img"  :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
@@ -99,6 +100,7 @@
             </div>
           </div>
       </div>
+      <!-- 상품 카드 css 끝 -->
       <div class="goodslist_div" v-else>
         <h1>상품이 없습니다.</h1>
       </div>
@@ -321,9 +323,10 @@ export default {
   display: none;
 }
 
+/* 카드 css 시작 */
 .goodslist_div {
   width: 82%;
-  height: 100%;
+  height: 955px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -353,6 +356,7 @@ export default {
   border-top-right-radius: 15px;
   grid-area: image;
   width: 100%;
+  height: 100%;
 }
 .goodsname {
   grid-area: text;
@@ -400,7 +404,7 @@ export default {
   box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
 }
 
-
+/* 카드 css 끝 */
 
 .goods{
    justify-content: center;
