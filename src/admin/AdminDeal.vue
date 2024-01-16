@@ -2,7 +2,16 @@
   <div>
     <div class="report-section">
       <div id="scroll">
-        <h2>거래 관리</h2>
+        <div class="title_search">
+          <h2>상품 관리</h2>
+          <span>검색할 상품명 : </span>
+          <input type="text" placeholder="상품명을 입력하세요" v-model="search_title" />
+          <button @click="searchGoods(sort, page)">검색</button>
+          <select v-model="sort" @change="search_report!='' ? searchGoods(sort, page) : getAddPage(sort,page)">
+            <option value="DESC">최신순</option>
+            <option value="ASC">오래된순</option>
+          </select>
+        </div>
         <table class="rwd-table">
           <thead>
             <tr>
@@ -23,7 +32,7 @@
               <td>{{ product.GOODS_NM }}</td>
               <td>{{ product.GOODS_START_PRICE }}</td>
               <td>{{ product.GOODS_STATE }}</td>
-              <td>{{ product.GOODS_TIMER }}</td>
+              <td>{{ formatDateTime(product.GOODS_TIMER)}}</td>
               <td>{{ product.GOODS_CATEGORY }}</td>
               <td>{{ product.USER_NO }}</td>
               <td>{{ product.GOODS_SUCC_PRICE }}</td>
@@ -36,7 +45,7 @@
                 </button>
               </td>
             </tr>
-            <tr v-if="productList.length === 0">
+            <tr v-if="productListPage.length === 0">
               <td colspan="9">상품이 없습니다.</td>
             </tr>
           </tbody>
@@ -44,7 +53,7 @@
       </div>
       <div class="page_container">
         <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
-        <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="getAddPage(i)">{{i+1}}</button>
+        <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="search_title!=''? searchGoods(sort,i) : getAddPage(sort,i)">{{i+1}}</button>
         <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
       </div>
     </div>
@@ -57,18 +66,19 @@
   export default {
     data() {
       return {
-        loginUser:{},
         productListPage:[],
         productList: [],
-        page: 1,
+        
+        page: 0,
         pageCount: 0,
-        itemCount: 0,
+
+        sort: 'DESC',
+        search_title: '',
       };
     },
     created() {
-      this.getUser();
       this.getAdd();
-      this.getAddPage(0);
+      this.getAddPage(this.sort, this.page);
     },
     computed:{
       user(){
@@ -87,32 +97,50 @@
       }
       await this.getAdd()
     },
-    async getUser() {
-      const user_no = this.user.user_no;
-      try {
-        const response = await axios.get(`http://localhost:3000/mypage/mypage/${user_no}`);
-        this.loginUser = response.data[0];
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async getAddPage(num) {
+    async getAddPage(sort, num) {
         try {
-          const response = await axios.get(`http://localhost:3000/goods/allGoodsPage/${num}`);
+          const response = await axios.get(`http://localhost:3000/goods/allGoodsPage/none/${sort}/${num}`);
           this.productListPage = response.data;
           this.page = num;
           console.log(this.page)
         } catch (error) {
           console.log(error);
         }
-      this.pageCount = Math.ceil(this.productList.length/10);
+    },
+    async searchGoods(sort, num) {
+      if(this.search_title==''){
+        return this.$swal({
+          title: '검색어를 입력해주세요',
+          icon: 'warning',
+          confirmButtonText: '확인',
+        });
+      }
+      try{
+        const response = await axios.get(`http://localhost:3000/goods/allGoodsPage/${this.search_title}/${sort}/${num}`);
+        this.productListPage = response.data;
+        this.page = num;
+      } catch(e) {
+        console.log(e);
+      }
+      this.getAdd()
     },
       async getAdd() {
-        try {
-          const response = await axios.get(`http://localhost:3000/goods/allgoods`);
-          this.productList = response.data;
-        } catch (error) {
-          console.log(error);
+        if(this.search_title!=''){
+          try {
+            const response = await axios.get(`http://localhost:3000/goods/allgoods/${this.search_title}`);
+            this.productList = response.data[0].count;
+            this.pageCount = Math.ceil(this.productList/10);
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          try {
+            const response = await axios.get(`http://localhost:3000/goods/allgoods/none`);
+            this.productList = response.data[0].count;
+            this.pageCount = Math.ceil(this.productList/10);
+          } catch (error) {
+            console.log(error);
+          }
         }
       },
     async restoreGoods(no) {
@@ -131,12 +159,34 @@
     },
     prev() {
       this.page -= 1;
-      this.getAddPage(this.page);
+      if(this.search_title!=''){
+        this.searchGoods(this.sort,this.page)
+      }
+      else{
+        this.getAddPage(this.sort,this.page);
+      }
     },
     next(){
       this.page += 1;
-      this.getAddPage(this.page);
-    }
+      if(this.search_title!=''){
+        this.searchGoods(this.sort,this.page)
+      }
+      else{
+        this.getAddPage(this.sort,this.page);
+      }
+    },
+    formatDateTime(dateTime) {
+        const date = new Date(dateTime);
+        const options = {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+        };
+        const formattedDateTime = date.toLocaleDateString("ko-KR", options);
+        return formattedDateTime;
+    },
   },
 };
 </script>
@@ -332,5 +382,10 @@ h2 {
 .page_conatainer button.active {
   background-color : #E7AA8D;
   color:#fff;
+}
+.title_search {
+  margin-left: 600px;
+  margin-bottom: 20px;
+  height: 50px;
 }
 </style>

@@ -30,7 +30,7 @@
                                 {{ commentList[i] }}
                             </td>
                             <td @click="outChatRoom(chatroom.CHATROOM_NO)">
-                                <i class="fas fa-solid fa-comments"></i><!-- 임시 -->
+                                <i class="fa-solid fa-right-from-bracket"></i><!-- 임시 -->
                             </td>
                         </tr>
                         <tr v-if="roomList.length === 0">

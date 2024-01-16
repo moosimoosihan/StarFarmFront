@@ -45,7 +45,7 @@
     <div class="product-details1">
       <div class="timer">
         <h1>{{ goods.goods_nm }}
-          <p :class="{'blinking': time30s }" style="text-align: right; align-self: flex-end; font-size: 25px; margin-top: 2px; min-width: 150px; visibility: {{ time30s ? 'visible' : 'hidden' }}">{{ currentTime }}</p></h1></div>
+          <p :class="blinktime? 'blinktime' : 'time'">{{ currentTime }}</p></h1></div>
         <p style="text-align: left; margin-left: 0;">시작가: {{ formatPrice(goods.goods_start_price) }}</p>
         <p style="text-align: left; margin-left: 0;" v-if="goodsSuccBid != null">최고 입찰가: {{ formatPrice(goodsSuccBid) }}</p>
         <p  style="text-align: left; margin-left: 0;" v-else>최고 입찰가: 입찰 없음</p>
@@ -106,7 +106,6 @@ data() {
     goodsUser: {},
     goodsSuccBid: 0,
     goodsBidList: {},
-    time30s:false,//30초 남았을때 깜빡거리기
     good_img : [],
     userFr: 0,
 
@@ -120,6 +119,8 @@ data() {
     timer: null,
     intervalId: null, // 자동 슬라이드를 위한 인터벌 ID
     currentIndex: 0,
+
+    blinktime : false
   };
 },
 computed: {
@@ -398,35 +399,34 @@ methods: {
       // 현재 시간을 초로 바꾸어 저장
       this.currentTime = new Date().getTime();
       const distance = countDownDate - this.currentTime;
-      // 30초 이하일 때 깜빡이는 로직
-    if (distance > 0 && distance <= 30000) {
-       this.currentTime = (Math.floor(distance / 1000) % 2 === 0) ? `${Math.floor(distance / 1000)}초 남음` : '';
-    } else {
+    
       // 남은 시간 계산
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
       // 표시할 남은 시간 문자열 생성 포맷은 무조건 해당 포맷 하나만 '00일 남음' '00시간 남음' '00분 00초 남음' 으로만 표기
       if (days > 0) {
-      this.currentTime = `${days}일 남음`;
-    } else if (hours > 0) {
-      this.currentTime = `${hours}시간 남음`;
-    } else if (minutes > 0) {
-      this.currentTime = `${minutes}분 ${seconds}초 남음`;
-    } else {
-      this.currentTime = `${seconds}초 남음`;
+        this.currentTime = `${days}일 남음`;
+      } else if (hours > 0) {
+        this.currentTime = `${hours}시간 남음`;
+      } else if (minutes > 0) {
+        this.currentTime = `${minutes}분 ${seconds}초 남음`;
+      } else {
+        if(!this.blinktime){
+          this.blinktime = true
+        }
+        this.currentTime = `${seconds}초 남음`;
       }
-    }
 
-    // 만약 종료시간이 지났다면 타이머를 종료하고 경매가 종료되었다는 메시지를 표시
-    if (distance < 0) {
-      clearInterval(this.timer);
-      this.currentTime = '경매가 종료되었습니다.';
-    }
-  }, 1000);
-},
+      // 만약 종료시간이 지났다면 타이머를 종료하고 경매가 종료되었다는 메시지를 표시
+      if (distance < 0) {
+          this.blinktime = false
+          clearInterval(this.timer);
+          this.currentTime = '경매가 종료되었습니다.';
+        }
+      }, 1000);
+    },
   async checkBuyUser() {
     // 경매가 종료되었는지 확인, 로그인 되어있는지, 상품 상태가 경매중인지
     if(this.currentTime === '경매가 종료되었습니다.' && this.user.user_no !== '' && this.buyUser == false && this.goods.goods_state===1){
@@ -747,10 +747,6 @@ margin: auto; /* 가운데 정렬을 위한 마진 설정 */
 #me{
     text-align: end;
 }
-.blinking {
-  color: red;
-  animation: blink-effect 1s step-end infinite;
- }
 
 @keyframes blink-effect{
   50% {
@@ -802,6 +798,38 @@ textarea {
   font-size: 25px;
   margin-top: 2px;
   min-width: 150px;
-  visibility: visible; /* 초기에는 보이도록 설정 */
+}
+.time { 
+  text-align: right;
+  align-self: flex-end;
+  font-size: 25px;
+  margin-top: 2px;
+  min-width: 150px;
+}
+
+.blinktime { 
+  text-align: right;
+  align-self: flex-end;
+  font-size: 25px;
+  margin-top: 2px;
+  min-width: 150px;
+  -webkit-animation: blink 0.5s ease-in-out infinite alternate;
+  -moz-animation: blink 0.5s ease-in-out infinite alternate;
+  animation: blink 0.5s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes blink{
+  0% {opacity: 0.5;}
+  100% {opacity: 1;}
+}
+
+@-moz-keyframes blink{
+  0% {opacity: 0.5;}
+  100% {opacity: 1;}
+}
+
+@keyframes blink{
+  0% {opacity: 0.5;}
+  100% {opacity: 1;}
 }
 </style>

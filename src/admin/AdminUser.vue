@@ -2,13 +2,12 @@
   <div>
     <div class="report-section">
       <div id="scroll">
-        
         <div class="id_search">
           <h2>회원 관리</h2>
           <span>검색할 ID : </span>
           <input type="text" placeholder="아이디를 입력하세요" v-model="search_id" />
-          <button @click="searchID(sort)">검색</button>
-          <select v-model="sort" @change="search_id!='' ? searchID(sort) : fetchUserData(sort)">
+          <button @click="searchID(sort, page)">검색</button>
+          <select v-model="sort" @change="search_id!='' ? searchID(sort, page) : fetchUserData(sort, page)">
             <option value="DESC">최신순</option>
             <option value="ASC">오래된순</option>
           </select>
@@ -49,7 +48,7 @@
       </div>
       <div class="page_container">
         <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
-        <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="getAddPage(i)">{{i+1}}</button>
+        <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="search_id!='' ? searchID(sort, i) : fetchUserData(sort,i)">{{i+1}}</button>
         <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
       </div>
     </div>
@@ -62,19 +61,19 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      loginUser: {},
-      reportUser: {},
       reportUserCount: [],
       userList: [], // 추가: 데이터를 저장할 배열
+
+      page: 0,
+      pageCount: 0,
 
       search_id: '',
       sort: 'DESC',
     };
   },
   created() {
-    this.getUser();
-    this.fetchUserData(this.sort); // 추가: 데이터를 불러오는 메서드 호출
-    // this.reportNum();
+    this.fetchUserData(this.sort, this.page); // 추가: 데이터를 불러오는 메서드 호출
+    this.getUserPage()
   },
   computed: {
     user() {
@@ -82,11 +81,12 @@ export default {
     },
   },
   methods: {
-    async fetchUserData(sort) {
+    async fetchUserData(sort, num) {
       await axios
-        .get(`http://localhost:3000/auth/admin/userlist/none/${sort}`)
+        .get(`http://localhost:3000/auth/admin/userlist/none/${sort}/${num}`)
         .then((response) => {
           this.userList = response.data;
+          this.page = num;
         })
         .catch((error) => {
           console.error('사용자 데이터를 가져오는 중 오류 발생:', error);
@@ -100,25 +100,23 @@ export default {
           }
         } 
     },
-    async getUser() {
-      const user_no = this.user.user_no;
-      try {
-        const response = await axios.get(`http://localhost:3000/mypage/mypage/${user_no}`);
-        this.loginUser = response.data[0];
-      } catch (error) {
-        console.log(error);
+    // 유저 총 수
+    async getUserPage() {
+      if(this.search_id==''){
+        try {
+          const response = await axios.get(`http://localhost:3000/auth/admin/allUsersPage/none`);
+          this.pageCount = Math.ceil(response.data[0].count/10);
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          const response = await axios.get(`http://localhost:3000/auth/admin/allUsersPage/${this.search_id}`);
+          this.pageCount = Math.ceil(response.data[0].count/10);
+        } catch (error) {
+          console.log(error);
+        }
       }
-    },
-    async getUserPage(num) {
-      try {
-        const response = await axios.get(`http://localhost:3000/goods/allGoodsPage/${num}`);
-        this.productListPage = response.data;
-        this.page = num;
-        console.log(this.page)
-      } catch (error) {
-        console.log(error);
-      }
-      this.pageCount = Math.ceil(this.productList.length/10);
     },
     async userStateChange(index,no) {
       try {
@@ -145,12 +143,21 @@ export default {
         const formattedDateTime = date.toLocaleDateString("ko-KR", options);
         return formattedDateTime;
     },
-    async searchID(sort){
-      try {
-        const response = await axios.get(`http://localhost:3000/auth/admin/userlist/${this.search_id}/${sort}`);
-        this.userList = response.data;
-      } catch (error) {
-        console.log(error);
+    async searchID(sort, num){
+      if(this.search_id == ''){
+        return this.$swal({
+          title: '검색할 ID를 입력해주세요',
+          icon: 'warning',
+          confirmButtonText: '확인',
+        })
+      } else {
+        try {
+          const response = await axios.get(`http://localhost:3000/auth/admin/userlist/${this.search_id}/${sort}/${num}`);
+          this.userList = response.data;
+          this.page = num;
+        } catch (error) {
+          console.log(error);
+        }
       }
       this.reportUserCount = [];
       for(let i = 0; i < this.userList.length; i++){
@@ -160,6 +167,23 @@ export default {
           } else {
             this.reportUserCount.push(response.data[0].count);
           }
+      }
+      this.getUserPage()
+    },
+    prev() {
+      this.page -= 1;
+      if(this.search_id == ''){
+        this.fetchUserData(this.sort, this.page);
+      } else {
+        this.searchID(this.sort, this.page);
+      }
+    },
+    next(){
+      this.page += 1;
+      if(this.search_id == ''){
+        this.fetchUserData(this.sort, this.page);
+      } else {
+        this.searchID(this.sort, this.page);
       }
     }
   },
@@ -334,5 +358,23 @@ h2 {
   margin-left: 600px;
   margin-bottom: 20px;
   height: 50px;
+}
+.page_container {
+  width: 400px;
+  height: 100px;
+  margin-left: 50%;
+  margin-top: 20px;
+}
+.page_container button {
+  min-width:32px;
+  width: 50px;
+  height: 40px;
+  padding:2px 6px;
+  text-align:center;
+  margin:0 3px;
+  border-radius: 6px;
+  border:1px solid #eee;
+  color:#666;
+  cursor: pointer;
 }
 </style>

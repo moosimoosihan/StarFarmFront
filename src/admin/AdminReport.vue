@@ -6,8 +6,8 @@
           <h2>신고 관리</h2>
           <span>검색할 신고제목 : </span>
           <input type="text" placeholder="신고제목을 입력하세요" v-model="search_report" />
-          <button @click="searchReport(sort)">검색</button>
-          <select v-model="sort" @change="search_report!='' ? searchReport(sort) : getReport(sort)">
+          <button @click="searchReport(sort, page)">검색</button>
+          <select v-model="sort" @change="search_report!='' ? searchReport(sort, page) : getReport(sort,page)">
             <option value="DESC">최신순</option>
             <option value="ASC">오래된순</option>
           </select>
@@ -38,6 +38,11 @@
           </tbody>
         </table>
       </div>
+      <div class="page_container">
+        <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
+        <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="search_report!='' ? searchReport(sort, i) : getReport(sort,i)">{{i+1}}</button>
+        <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
+      </div>
     </div>
    </div>
  </template>
@@ -51,12 +56,17 @@ export default {
       reported_userNames: [],
       report_userNames: [],
 
+      page: 0,
+      pageCount: 0,
+      itemCount: 0,
+
       sort: 'DESC',
       search_report: '',
     }
   },
   mounted() {
-    this.getReport();
+    this.getReportCount()
+    this.getReport(this.sort, this.page);
   },
   methods: {
     viewReport(report_no) {
@@ -66,10 +76,30 @@ export default {
           popupWindow.resizeTo(800, 620)
         })
     },
-    async getReport(){
+    async getReportCount() {
+      if(this.search_report == ''){
+        try{
+          const res = await axios.get(`http://localhost:3000/auth/admin/reportlist/none`);
+          this.itemCount = res.data[0].count;
+          this.pageCount = Math.ceil(this.itemCount / 10);
+        } catch(err) {
+          console.log(err);
+        }
+      } else {
+        try{
+          const res = await axios.get(`http://localhost:3000/auth/admin/reportlist/${this.search_report}`);
+          this.itemCount = res.data[0].count;
+          this.pageCount = Math.ceil(this.itemCount / 10);
+        } catch(err) {
+          console.log(err);
+        }
+      }
+    },
+    async getReport(sort, num) {
       try{
-        const res = await axios.get(`http://localhost:3000/auth/admin/reportlistInfo/none/${this.sort}`);
+        const res = await axios.get(`http://localhost:3000/auth/admin/reportlistInfo/none/${sort}/${num}`);
         this.reports = res.data;
+        this.page = num;
       } catch(err) {
         console.log(err);
       }
@@ -96,10 +126,19 @@ export default {
         console.log(err);
       }
     },
-    async searchReport(sort) {
+    async searchReport(sort, num) {
+      if(this.search_report == ''){
+        return this.$swal({
+          title: '검색어를 입력해주세요',
+          icon: 'warning',
+          confirmButtonText: '확인',
+        })
+      }
+      this.getReportCount()
       try{
-        const res = await axios.get(`http://localhost:3000/auth/admin/reportlistInfo/${this.search_report}/${sort}`);
+        const res = await axios.get(`http://localhost:3000/auth/admin/reportlistInfo/${this.search_report}/${sort}/${num}`);
         this.reports = res.data;
+        this.page = num;
       } catch(err) {
         console.log(err);
       }
@@ -116,6 +155,22 @@ export default {
         const formattedDateTime = date.toLocaleDateString("ko-KR", options);
         return formattedDateTime;
     },
+    prev() {
+      this.page -= 1;
+      if(this.search_report == ''){
+        this.getReport(this.sort, this.page);
+      } else {
+        this.searchReport(this.sort, this.page);
+      }
+    },
+    next(){
+      this.page += 1;
+      if(this.search_report == ''){
+        this.getReport(this.sort, this.page);
+      } else {
+        this.searchReport(this.sort, this.page);
+      }
+    }
   }
 }
 </script>
@@ -287,5 +342,24 @@ h2 {
   margin-left: 600px;
   margin-bottom: 20px;
   height: 50px;
+}
+
+.page_container {
+  width: 400px;
+  height: 100px;
+  margin-left: 50%;
+  margin-top: 20px;
+}
+.page_container button {
+  min-width:32px;
+  width: 50px;
+  height: 40px;
+  padding:2px 6px;
+  text-align:center;
+  margin:0 3px;
+  border-radius: 6px;
+  border:1px solid #eee;
+  color:#666;
+  cursor: pointer;
 }
 </style>
