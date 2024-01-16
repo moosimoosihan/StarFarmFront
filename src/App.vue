@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="root_container">
     <router-view />
   </div>
 </template>
@@ -17,6 +17,10 @@ export default {
   margin:0;
   padding:0;
   box-sizing: border-box;
+}
+.root_container {
+  width: 100%;
+  min-width: 1500px;
 }
 .HamFont {
   font-family: 'SF_HambakSnow', sans-serif !important;
