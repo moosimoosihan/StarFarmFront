@@ -51,6 +51,8 @@
         <p  style="text-align: left; margin-left: 0;" v-else>최고 입찰가: 입찰 없음</p>
         <p class="description">
         </p>
+        <!-- 관심 상품 버튼 -->
+        <div :class="likeGoods===0?'heart':'heart is-active'" @click="likeGoods===0?like_goods():likeDelete()"></div>
         <div class="bid_container">
             <ul>
               <li v-for="(nick, i) in goodsBidList" class="price" :key="i">{{ goodsBidList[i].user_nick }}님이 {{ formatPrice(goodsBidList[i].bid_amount) }} 입찰하셨습니다.</li>
@@ -70,8 +72,6 @@
               <!-- 신고버튼 -->
               <button class="button" @click="reportBtn()">신고</button>
             </div>
-            <!-- 관심 상품 버튼 -->
-            <div :class="likeGoods===0?'heart':'heart is-active'" @click="likeGoods===0?like_goods():likeDelete()"></div>
         </div>
     </div>
   </div>
@@ -826,8 +826,8 @@ textarea {
 }
 .heart {
   position: relative;
-  bottom: 450px;
   left: 400px;
+  bottom: 100px;
   color: black;
   width: 100px;
   height: 100px;
