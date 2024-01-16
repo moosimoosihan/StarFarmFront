@@ -359,6 +359,9 @@ export default {
   height: 100%;
 }
 .goodsname {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
   grid-area: text;
   margin: 25px;
 }
@@ -367,10 +370,14 @@ export default {
   font-size: 13px;
 }
 .goodsname p {
+ text-overflow: ellipsis;
+ overflow: hidden;
+ white-space: nowrap;
   color: grey;
   font-size:15px;
   font-weight: 300;
   margin-top: 20px;
+
 }
 .goodsname h2 {
   margin-top:0px;
@@ -502,6 +509,9 @@ export default {
     font-size: 20px;
   }
   .slider-name{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
     border:1px solid black;
   }
   
