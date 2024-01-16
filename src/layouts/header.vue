@@ -418,7 +418,7 @@ a {
     
   }
   .mymenu > li {
-    width:70px;
+    width:76px;
     float: left;
     text-align: center;
     line-height: 40px;
