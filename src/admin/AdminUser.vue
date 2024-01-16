@@ -47,6 +47,11 @@
           </tbody>
         </table>
       </div>
+      <div class="page_container">
+        <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
+        <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="getAddPage(i)">{{i+1}}</button>
+        <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
+      </div>
     </div>
   </div>
 </template>
@@ -103,6 +108,17 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    async getUserPage(num) {
+      try {
+        const response = await axios.get(`http://localhost:3000/goods/allGoodsPage/${num}`);
+        this.productListPage = response.data;
+        this.page = num;
+        console.log(this.page)
+      } catch (error) {
+        console.log(error);
+      }
+      this.pageCount = Math.ceil(this.productList.length/10);
     },
     async userStateChange(index,no) {
       try {

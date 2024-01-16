@@ -310,18 +310,17 @@ h2 {
   margin-left: 50%;
   margin-top: 20px;
 }
-.page_conatainer button {
-  width: 100px;
-  height: 100px;
-}
 .page_container button {
   min-width:32px;
+  width: 50px;
+  height: 40px;
   padding:2px 6px;
   text-align:center;
   margin:0 3px;
   border-radius: 6px;
   border:1px solid #eee;
   color:#666;
+  cursor: pointer;
 }
 .page_conatainer button:hover {
   background: #E4DBD6;

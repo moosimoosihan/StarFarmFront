@@ -115,12 +115,14 @@ import axios from 'axios'
 .mypage-bar {
   height: 100%;
   width: 250px;
-  position:absolute; /* Stay in place */
+  position: fixed; /* Stay in place */
   /* z-index: 2; /* Stay on top */
   top: 80px; /* Stay at the top */
   left: 0;
   overflow-x: hidden; /* Disable horizontal scroll */
   margin-top: 35px;
+  z-index: 1;
+  background-color: white;
 }
 
 .m_container {
@@ -145,7 +147,9 @@ import axios from 'axios'
   align-items: center;
   text-align: center;
   border: solid 1px #b3b3b3;
-  border-radius: 30px;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  background-color: #6bd86b;
 }
 
 .profile_nick {

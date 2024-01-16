@@ -224,7 +224,7 @@ a {
 
 .header_wrapper {
   font-size: 15px;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 20;

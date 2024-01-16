@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <div class="mypageContainer">
             <p class="p1">내가 찜한 상품</p>
             <p class="more" @click="gotoLike()">+more</p> 
