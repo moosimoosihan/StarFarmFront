@@ -46,5 +46,6 @@ export default ({
         line-height: 24px;
         font-size: 12px;
         color: rgb(173, 173, 173);
+        text-align: center;
     }
 </style>

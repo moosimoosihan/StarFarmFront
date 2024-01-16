@@ -825,9 +825,9 @@ textarea {
   100% {opacity: 1;}
 }
 .heart {
-  position: absolute;
-  left: 630px;
-  top:300px;
+  position: relative;
+  bottom: 450px;
+  left: 400px;
   color: black;
   width: 100px;
   height: 100px;
