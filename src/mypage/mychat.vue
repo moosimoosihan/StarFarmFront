@@ -19,8 +19,8 @@
                         <tr v-for="(chatroom, i) in roomList" :key="i">
                             <td>{{ chatroom.CHATROOM_NO }}</td>
                             <td @click="gotoChatRoom(chatroom.CHATROOM_USER1 === user.user_no? chatroom.CHATROOM_USER2:chatroom.CHATROOM_USER1)">
-                                <img :width="70" style="border-radius: 10px;"
-                                    :src="userImgList[i] ? require(`../../../StarFarmBack/uploads/userImg/${chatroom.CHATROOM_USER1 === user.user_no? chatroom.CHATROOM_USER2:chatroom.CHATROOM_USER1}/${userImgList[i]}`) : require(`../assets/profile.png`)"
+                                <img :width="70" style="border-radius: 70px;"
+                                    :src="user.user_no!='' ? userImgList[i] ? require(`../../../StarFarmBack/uploads/userImg/${chatroom.CHATROOM_USER1 === user.user_no? chatroom.CHATROOM_USER2:chatroom.CHATROOM_USER1}/${userImgList[i]}`) : require(`../assets/profile.png`):require(`../assets/profile.png`)"
                                     alt="프로필 이미지" />
                             </td>
                             <td>

@@ -167,10 +167,6 @@ export default {
               window.Kakao.Auth.logout()
             }
           }
-          this.$store.commit("user", {
-            user_no: '',
-            user_id: '',
-          })
           this.$swal({
             position: 'top',
             icon: 'success',
@@ -179,6 +175,10 @@ export default {
             timer: 1000
           }).then(() => {
             window.location.href="http://localhost:8080";
+            this.$store.commit("user", {
+              user_no: '',
+              user_id: '',
+            })
           })
         },
         changeUrl() {

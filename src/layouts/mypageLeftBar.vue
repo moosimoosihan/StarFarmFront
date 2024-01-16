@@ -139,7 +139,7 @@ import axios from 'axios'
 
 .myinfo {
   width: 400px;
-  height: 300px;
+  height: 250px;
   margin-bottom: 20px; 
   display: table-cell;
   vertical-align: middle;
@@ -181,7 +181,7 @@ Footer {
 .mypage-bar a {
   display: block;
   text-align: center;
-  height: 14.28%;
+  height: 10%;
   padding-top: 10px;
   transition: all 0.3s ease;
   text-decoration: none;
