@@ -247,7 +247,13 @@ import moment from 'moment'
                                 timer: 1000
                             })
                             .then(() => {
-                                this.$router.push("mypage/salelist")
+                                // 바로 넘어가지 않고 3초 후에 넘어가게 하기 위해 setTimeout 사용
+                                this.isUploading = false;
+                                setTimeout(() => {
+                                    this.isUploading = true;
+                                    this.$router.push("mypage/salelist")
+                                }, 2500)
+
                             })
                         }
                         else if (res.data.message == '파일 변경 실패'){

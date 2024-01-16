@@ -497,11 +497,11 @@ methods: {
   stopAutoSlide() {
     clearInterval(this.intervalId);
   },
-  topAutoTimer() {
+  stopAutoTimer() {
     clearInterval(this.timer);
   },
 },
-  beforeDestroy() {
+  unmounted() {
     this.stopAutoSlide(); // 페이지가 파괴될 때 자동 슬라이드 정지
     this.stopAutoTimer(); // 페이지가 파괴될 때 타이머 정지
   },

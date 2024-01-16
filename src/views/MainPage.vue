@@ -118,7 +118,7 @@ export default {
     this.startAutoSlide(); // 페이지가 생성될 때 자동 슬라이드 시작
     this.allGoodsTimer()
   },
-  beforeDestroy() {
+  unmounted() {
     this.stopAutoSlide(); // 페이지가 파괴될 때 자동 슬라이드 정지
     this.stopAutoTimer(); // 페이지가 파괴될 때 타이머 정지
   },
