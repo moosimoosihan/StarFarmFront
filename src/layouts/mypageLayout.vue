@@ -40,6 +40,7 @@ import mypageSideBar from './mypageLeftBar.vue'
 }
   .mypage_content {
     padding-top: 100px;
+    margin-left: 20px;
   }
 
   Footer {

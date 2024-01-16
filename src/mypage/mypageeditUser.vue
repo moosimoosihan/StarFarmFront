@@ -10,8 +10,8 @@
 
                 <div class="profile-upload-content upload-img">
                 <div class="profile-img">
-                    <img v-if="loginUser.user_img" id="img-preview" :width="200" :src="require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`)" >
-                    <img v-else-if="profile_img_src != ''" id="img-preview" :width="200" :src="profile_img_src"
+                    <img v-if="loginUser.user_img" id="img-preview" :width="200" :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require('../assets/profile.png')" >
+                    <img v-else-if="profile_img_src != null" id="img-preview" :width="200" :src="profile_img_src"
                             alt="프로필 사진 미리보기" />
                     <img v-else id="img-preview" :width="200" :src="require(`../assets/profile.png`)"
                             alt="프로필 사진 미리보기" />
@@ -257,6 +257,7 @@ export default {
                 const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
                 this.loginUser = response.data[0];
                 this.profile_img_src = this.loginUser.user_img
+                console.log(this.profile_img_src)
             } catch (error) {
                 console.error(error);
             }

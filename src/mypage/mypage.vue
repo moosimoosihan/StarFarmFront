@@ -278,6 +278,7 @@ import axios from 'axios';
     width: 100%;
     height: 1900px;
     margin-top: 35px;
+    margin-left: 40px;
     overflow: scroll;
 }
 
