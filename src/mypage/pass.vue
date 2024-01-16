@@ -183,7 +183,7 @@
 }
 
 input:focus {
-    outline: 2px solid #ffc905;
+    outline: 2px solid #007411;
 }
 
 .login-form .one input, .login-form .two input, .login-form .three input{
@@ -238,14 +238,15 @@ input:focus {
 
 .login-form .btn {
     height: 48px;
+    color: white;
     width: 242px;
     font-size: 16px;
     display: inline;
     margin-left: 20%;
     margin-bottom: 40px;
-    border: solid 2px rgb(255, 204, 122);
+    border: solid 2px rgb(0, 101, 13);
     border-radius: 8px;
-    background-color: rgb(255, 210, 107);
+    background-color: rgb(0, 104, 26);
     position: relative;
     top: 110px;
     font-family: 'GmarketSansMedium';
