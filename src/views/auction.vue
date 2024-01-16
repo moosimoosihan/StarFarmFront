@@ -58,13 +58,8 @@
 
         </div>
           <div v-if="user.user_no!==''">
-            <!-- 관심 상품 버튼 -->
-          <div v-if="likeGoods===0" class="heart_icon" @click="like_goods()">
-            <i  class="far fa-regular fa-heart"></i>
-          </div>
-          <div v-else class="heart_icon" @click="likeDelete()">
-            <i class="fas fa-regular fa-heart"></i>
-          </div>
+          <!-- 관심 상품 버튼 -->
+          <div :class="likeGoods===0?'heart':'heart is-active'" @click="likeGoods===0?like_goods():likeDelete()"></div>
           <div class="btn_container" v-if="user.user_no != goodsUser.user_no">
             <!--1:1 채팅버튼-->
             <button class="chatroom_container" @click="gotoChatRoom(goodsUser.user_no), createChatRoom()">1:1 채팅</button>
@@ -120,7 +115,7 @@ data() {
     intervalId: null, // 자동 슬라이드를 위한 인터벌 ID
     currentIndex: 0,
 
-    blinktime : false
+    blinktime : false,
   };
 },
 computed: {
@@ -180,7 +175,7 @@ methods: {
           user_no: this.user.user_no,
         }
       })
-      window.location.reload();
+      this.likeGoods = 1;
     } catch (error) {
       console.error(error);
     }
@@ -209,7 +204,7 @@ methods: {
           user_no: this.user.user_no,
         }
       })
-      window.location.reload();
+      this.likeGoods = 0;
     } catch (error) {
       console.error(error);
     }
@@ -251,10 +246,10 @@ methods: {
   // },
   /*1:1 채팅룸 열기*/
   gotoChatRoom(index) {
-      let popupWindow = window.open(`/chatroom/${index}`, '_blank', 'width=700', 'height=560', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
-      popupWindow.resizeTo(700, 560)
+      let popupWindow = window.open(`/chatroom/${index}`, '_blank', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
+      popupWindow.resizeTo(800, 650)
       popupWindow.onresize = (_=>{
-          popupWindow.resizeTo(700, 560)
+          popupWindow.resizeTo(800, 650)
       })
   },
   /* 팝업창 열고 닫기*/
@@ -679,10 +674,6 @@ body {
     font-weight: bold;
 
  }
- .heart-icon{
-    font-size: 25px;
-
- }
  .chatroom_container {
   margin-top: 20px;
   margin-left: 13px;
@@ -760,11 +751,13 @@ margin: auto; /* 가운데 정렬을 위한 마진 설정 */
   text-align: start;
   display:block;
   resize:none;
-  /*border-bottom: rgba(0, 0, 0, 0.3) solid;*/
   margin-left: 20px;
   font-size: 15px;
   overflow-y: auto; /* 필요 시 수직 스크롤을 자동으로 표시 */
+  font-weight: bold;
+  color: black;
 }
+
 textarea {
   width: 100%;
   height:100px;
@@ -829,4 +822,20 @@ textarea {
   0% {opacity: 0.5;}
   100% {opacity: 1;}
 }
+.heart {
+  color: black;
+  width: 100px;
+  height: 100px;
+  background: url("https://cssanimation.rocks/images/posts/steps/heart.png")
+    no-repeat;
+  background-position: 0 0;
+  cursor: pointer;
+  transition: background-position 1s steps(28);
+  transition-duration: 0s;
+}
+.is-active {
+  transition-duration: 1s;
+  background-position: -2800px 0;
+}
+
 </style>
