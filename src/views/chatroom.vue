@@ -203,8 +203,8 @@ import io from 'socket.io-client'
 }
 
 .container {
-    width: 100%;
-    height: 100%;
+    width: 700px;
+    height: 560px;
     overflow-block: hidden;
 }
 
@@ -215,8 +215,6 @@ import io from 'socket.io-client'
 /*------------*/
 
 .chatroom_container {
-    width: 780px;
-    height: 560px;
     background-color: rgb(255, 255, 255);
 }
 .chatroom_title {
@@ -239,6 +237,8 @@ import io from 'socket.io-client'
 }
 
 .chatroom_title span {
+    width: 100%;
+    height: 100%;
     font-size: 25px;
 }
 

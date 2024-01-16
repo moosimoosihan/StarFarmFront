@@ -20,7 +20,7 @@ export default {
 }
 .root_container {
   width: 100%;
-  min-width: 1500px;
+  min-width: 1280px;
 }
 .HamFont {
   font-family: 'SF_HambakSnow', sans-serif !important;
