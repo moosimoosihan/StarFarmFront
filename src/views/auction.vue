@@ -328,6 +328,15 @@ methods: {
         })
         return
       }
+    } else {
+      if(this.bidAmount<this.goods.goods_start_price+Math.ceil(this.goods.goods_start_price/100)){
+        this.$swal.fire({
+          icon: 'error',
+          title: '입찰금액이 너무 적습니다.',
+          text:`입찰금액은 ${this.formatPrice(this.goods.goods_start_price+Math.ceil(this.goods.goods_start_price/100))}보다 커야 합니다.`
+        })
+        return
+      }
     }
     this.$swal.fire({
       title: '입찰하기',
@@ -825,9 +834,9 @@ textarea {
   100% {opacity: 1;}
 }
 .heart {
-  position: relative;
-  left: 400px;
-  bottom: 100px;
+  position: absolute;
+  left: 1200px;
+  top: 350px;
   color: black;
   width: 100px;
   height: 100px;

@@ -3,17 +3,9 @@
         <div class="mypageContainer">
             <p class="p1">내가 찜한 상품</p>
             <p class="more" @click="gotoLike()">+more</p> 
-        </div> 
-<!--        <div class="goodslist_div" v-if="likeList.length>0">-->
-<!--            <div class="item_container" v-for="(goods, i) in likeList" :key="i" @click="gotoAuction(goods.GOODS_NO)">-->
-<!--              <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.GOODS_NO}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">-->
-<!--              <p class="goodsname">{{ goods.goods_nm }}</p>-->
-<!--              <p class="price">시작가 : {{ goods.goods_start_price }}</p>-->
-<!--              <p class="sprice">입찰가 : {{ like_goods_succ_bid[i] }}</p>-->
-<!--            </div>-->
-<!--        </div>-->
+        </div>
         <div class="goodslist_div" v-if="likeList.length>0">
-          <div class="item_container" v-for="(goods, i) in likeList" :key="i" @click="gotoAuction(goods.goods_no)">
+          <div class="item_container" v-for="(goods, i) in likeList" :key="i" @click="gotoAuction(goods.GOODS_NO)">
             <img class="goods_img"  :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.GOODS_NO}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
             <div class="goodsname">
               <h2>{{ goods.goods_nm }}</h2>
@@ -29,7 +21,7 @@
                 <div class="type">입찰가</div>
               </div>
               <div class="stat">
-                <!--                <div class="value"><p class="time" v-if="goods.GOODS_TIMER">{{ goodsTimer[i] }}</p></div>-->
+                <div class="value"><p class=time v-if="like_goods_timer[i]">{{ like_goods_timer[i] }}</p></div>
                 <div class="type">경매 시간</div>
               </div>
             </div>
@@ -42,14 +34,6 @@
             <p class="p1">나의 입찰 상품</p>
             <p class="more" @click="gotoBuylist()">+more</p>
         </div>
-<!--        <div class="goodslist_div" v-if="orderList.length>0">-->
-<!--            <div class="item_container" v-for="(goods, i) in orderList" :key="i" @click="gotoAuction(goods.goods_no)">-->
-<!--              <img class="goods_img" :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">-->
-<!--              <p class="goodsname">{{ goods.goods_nm }}</p>-->
-<!--              <p class="price">시작가 : {{ goods.goods_start_price }}</p>-->
-<!--              <p class="sprice">입찰가 : {{ order_goods_succ_bid[i] }}</p>-->
-<!--            </div>-->
-<!--        </div>-->
         <div class="goodslist_div" v-if="orderList.length>0">
           <div class="item_container" v-for="(goods, i) in orderList" :key="i" @click="gotoAuction(goods.goods_no)">
             <img class="goods_img"  :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
@@ -67,7 +51,7 @@
                 <div class="type">입찰가</div>
               </div>
               <div class="stat">
-                <!--                <div class="value"><p class="time" v-if="goods.GOODS_TIMER">{{ goodsTimer[i] }}</p></div>-->
+                <div class="value"><p class=time v-if="order_goods_timer[i]">{{ order_goods_timer[i] }}</p></div>
                 <div class="type">경매 시간</div>
               </div>
             </div>
@@ -97,7 +81,7 @@
                 <div class="type">입찰가</div>
               </div>
               <div class="stat">
-<!--                <div class="value"><p class="time" v-if="goods.GOODS_TIMER">{{ goodsTimer[i] }}</p></div>-->
+                <div class="value"><p class=time v-if="sale_goods_timer[i]">{{ sale_goods_timer[i] }}</p></div>
                 <div class="type">경매 시간</div>
               </div>
             </div>
@@ -121,7 +105,11 @@ import axios from 'axios';
                 
                 like_goods_succ_bid: [],
                 order_goods_succ_bid: [],
-                sale_goods_succ_bid: []
+                sale_goods_succ_bid: [],
+
+                like_goods_timer: [],
+                order_goods_timer: [],
+                sale_goods_timer: [],
             }
         },
         computed: {
@@ -133,6 +121,7 @@ import axios from 'axios';
             this.getLikelist();
             this.getOrderlist();
             this.getSalelist();
+            this.allGoodsTimer();
         },
         methods: {
             gotoAuction(goods_no) {
@@ -146,6 +135,9 @@ import axios from 'axios';
             },
             gotoSalelist() {
                     this.$router.push(`/mypage/Salelist`);
+            },
+            stopAutoTimer() {
+              clearInterval(this.timer);
             },
             async getLikelist() {
               const user_no = this.user.user_no;
@@ -210,26 +202,71 @@ import axios from 'axios';
                     }
                 }
           },
-
-
-
-            logout() {
-                if(this.loginUser.user_social_tp==1){
-                    window.Kakao.Auth.logout()
-                }
-                this.$store.commit("user", {})
-                this.$swal({
-                    position: 'top',
-                    icon: 'success',
-                    title: '로그아웃 성공!',
-                    showConfirmButton: false,
-                    timer: 1000
-                    }).then(() => {
-                        window.location.href="http://localhost:8080";
-                    })
+          updateTimer(endTime) {
+            // 날짜를 초로 바꾸어 저장 후 계산
+            let countDownDate = new Date(endTime).getTime();
+            // 현재 시간을 초로 바꾸어 저장
+            let currentTime = new Date().getTime();
+            const distance = countDownDate - currentTime;
+            // 만약 종료시간이 지났다면 타이머를 종료하고 경매가 종료되었다는 메시지를 표시
+            if (distance < 0) {
+              return '경매 종료';
             }
-        }
-    }
+            // 남은 시간 계산
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            // 표시할 남은 시간 문자열 생성 포맷은 무조건 해당 포맷 하나만 '00일 남음' '00시간 남음' '00분 00초 남음' 으로만 표기
+            const daysStr = days > 0 ? `${days}일 남음` : '';
+            const hoursStr = hours > 0 ? `${hours}시간 남음` : '';
+            const minutesStr = minutes > 0 ? `${minutes}분` : '';  
+            const secondsStr = seconds >= 0 ? `${seconds}초 남음` : '';
+            // 만약 00일 남음이라면
+            if (daysStr === '') {
+              // 00시간 남음이라면
+              if (hoursStr === '') {
+                // 00분 남음이라면
+                if (secondsStr === '') {
+                  // 경매가 종료되었다는 메시지를 표시
+                  return '경매 종료';
+                }
+                // 00시간 남음이 아니라면 00분 00초 남음을 표시
+                return minutesStr + ' ' + secondsStr;
+              }
+              // 00일 남음이 아니라면 00시간 남음을 표시
+              return hoursStr;
+            }
+            // 00일 남음을 표시
+            return daysStr;
+          },
+          allGoodsTimer(){
+            this.timer = setInterval(()=>{
+              if(this.likeList.length>0){
+                for(let i=0; i<this.likeList.length; i++){
+                  if(this.like_goods_timer[i]!='경매 종료')
+                    this.like_goods_timer[i] = this.updateTimer(this.likeList[i].goods_timer);
+                }
+              }
+              if(this.orderList.length>0){
+                for(let y=0; y<this.orderList.length; y++){
+                  if(this.order_goods_timer[y]!='경매 종료')
+                    this.order_goods_timer[y] = this.updateTimer(this.orderList[y].goods_timer);
+                }
+              }
+              if(this.saleList.length>0){
+                for(let z=0; z<this.saleList.length; z++){
+                  if(this.sale_goods_timer[z]!='경매 종료')
+                    this.sale_goods_timer[z] = this.updateTimer(this.saleList[z].GOODS_TIMER);
+                }
+              }
+            }, 1000);
+          }
+        },
+        unmounted() {
+          this.stopAutoTimer(); // 페이지가 파괴될 때 타이머 정지
+        },
+      }
 </script>
 <style scoped>
 * {
