@@ -52,7 +52,7 @@
         <p class="description">
         </p>
         <!-- 관심 상품 버튼 -->
-        <div class="like_container">
+        <div class="like_container" v-if="user.user_no!==''">
           <div :class="likeGoods===0?'heart':'heart is-active'" @click="likeGoods===0?like_goods():likeDelete()"></div>
           <p>{{ likeCount }}</p>
         </div>

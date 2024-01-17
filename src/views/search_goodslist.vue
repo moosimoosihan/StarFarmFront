@@ -8,8 +8,8 @@
         </div>
         <div class="sort">
             <select class="a" v-model="sort" @change="getGoodsList(page,sort)">
-                <option value="DESC" selected>최신등록순</option>
-                <option value="ASC">오래된등록순</option>
+                <option value="ASC" selected>마감시간 오름순</option>
+                <option value="DESC">마감시간 내림순</option>
             </select>
         </div>
         <div class="goodslist_div" v-if="goodsList.length>0">
@@ -37,7 +37,7 @@
         </div>
         <div class="page_container">
             <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
-            <button v-for="(num,i) in maxPage" :key="i" class="pageNum" @click="getGoodsList(i,sort)">{{i+1}}</button>
+            <button v-for="num in getPageNumbers()" :key="num" :id="num==page? 'select':''" class="pageNum" @click="getGoodsList(num,sort)">{{num+1}}</button>
             <button v-if="page<maxPage-1" class="pageNum" @click="next()">다음</button>
         </div>
     </div>
@@ -71,7 +71,7 @@ import axios from 'axios';
                 goodsTimer: [],
                 timer: null,
 
-                sort: 'DESC',
+                sort: 'ASC',
             }
         },
         beforeDestroy() {
@@ -141,6 +141,13 @@ import axios from 'axios';
             this.allGoodsTimer();
         },
         methods: {
+            getPageNumbers() {
+                const groupSize = 5; // 페이지 그룹 크기
+                const groupIndex = Math.floor(this.page / groupSize); // 현재 페이지 그룹 인덱스
+                const start = groupIndex * groupSize; // 현재 페이지 그룹의 시작 페이지 번호
+                const end = Math.min(start + groupSize, this.maxPage); // 현재 페이지 그룹의 마지막 페이지 번호
+                return Array.from({length: end - start}, (v, i) => start + i); // 페이지 번호 배열 생성
+            },
             async getGoodsList(nimNum, sort) {
                 this.goodsList = [];
                 if(this.$route.params.cate=='cate'){
@@ -184,7 +191,7 @@ import axios from 'axios';
                         this.nickList.push(res.data[0].user_nick);
                     })
                 }
-                this.page = Math.ceil(nimNum/10);
+                this.page = nimNum;
                 this.getMaxPage();
             },
             async getMaxPage() {
@@ -213,11 +220,17 @@ import axios from 'axios';
                 this.$router.push(`/product/${index}`);
             },
             prev() {
-                this.page--;
+                this.page += 5;
+                if(this.page>=this.maxPage){
+                    this.page = this.maxPage-1;
+                }
                 this.getGoodsList(this.page, this.sort);
             },
             next() {
-                this.page++;
+                this.page += 5;
+                if(this.page>=this.maxPage){
+                    this.page = this.maxPage-1;
+                }
                 this.getGoodsList(this.page, this.sort);
             },
             stopAutoTimer() {
@@ -437,5 +450,9 @@ import axios from 'axios';
 .price,
 .sprice {
   font-weight: 800;
+}
+#select {
+    font-weight: bold;
+    font-size: 15px;
 }
 </style>

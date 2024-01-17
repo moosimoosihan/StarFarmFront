@@ -53,7 +53,7 @@
       </div>
       <div class="page_container">
         <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
-        <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="search_title!=''? searchGoods(sort,i) : getAddPage(sort,i)">{{i+1}}</button>
+        <button v-for="num in getPageNumbers()" :key="num" :id="num==page? 'select':''" class="pageNum" @click="search_title!=''? searchGoods(sort,num) : getAddPage(sort,num)">{{num+1}}</button>
         <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
       </div>
     </div>
@@ -86,6 +86,13 @@
       },
     },
     methods: {
+      getPageNumbers() {
+          const groupSize = 5; // 페이지 그룹 크기
+          const groupIndex = Math.floor(this.page / groupSize); // 현재 페이지 그룹 인덱스
+          const start = groupIndex * groupSize; // 현재 페이지 그룹의 시작 페이지 번호
+          const end = Math.min(start + groupSize, this.pageCount); // 현재 페이지 그룹의 마지막 페이지 번호
+          return Array.from({length: end - start}, (v, i) => start + i); // 페이지 번호 배열 생성
+      },
     async deleteItem(no) {
      try {
         await axios({
@@ -158,7 +165,10 @@
       this.$router.push(`/admin/deal/${index}`);
     },
     prev() {
-      this.page -= 1;
+      this.page += 5;
+      if(this.page>=this.pageCount){
+        this.page = this.pageCount-1;
+      }
       if(this.search_title!=''){
         this.searchGoods(this.sort,this.page)
       }
@@ -167,7 +177,10 @@
       }
     },
     next(){
-      this.page += 1;
+      this.page += 5;
+      if(this.page>=this.pageCount){
+        this.page = this.pageCount-1;
+      }
       if(this.search_title!=''){
         this.searchGoods(this.sort,this.page)
       }
@@ -387,5 +400,9 @@ h2 {
   margin-left: 600px;
   margin-bottom: 20px;
   height: 50px;
+}
+#select {
+    font-weight: bold;
+    font-size: 15px;
 }
 </style>
