@@ -474,10 +474,11 @@ export default {
     flex: 0 0 100%;
   }
 .slide img {
-  width: 450px; /* 이미지가 부모 요소를 넘어가지 않도록 최대 너비 설정 */
-  height: 450px; /* 이미지가 부모 요소를 넘어가지 않도록 최대 높이 설정 */
+  width: 400px; /* 이미지가 부모 요소를 넘어가지 않도록 최대 너비 설정 */
+  height: 400px; /* 이미지가 부모 요소를 넘어가지 않도록 최대 높이 설정 */
   display: block; /* 이미지 간격을 없애기 위해 inline 속성 제거 */
   margin: auto; /* 가운데 정렬을 위한 마진 설정 */
+  margin-bottom: 15px;
 }
 
 .dot-navigation {
@@ -523,6 +524,7 @@ export default {
     overflow: hidden;
     white-space: nowrap;
     border:1px solid black;
+    margin-bottom: 8px;
   }
   
   .slider-nowprice{

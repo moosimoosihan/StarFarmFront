@@ -13,7 +13,7 @@
                 <ul class="mymenu">
                   <li>
                     <a1>
-                      <img style="border-radius: 70px;" class="myPage"
+                      <img style="border-radius: 70px; border: solid 2px #0d4608;" class="myPage"
                       :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
                       alt="프로필 이미지"/></a1>
                         <ul class="mypageMenu">
@@ -257,7 +257,7 @@ a {
   display: flex;
   width: 20%;
   max-width: 100%;
-  outline: rgb(221, 221, 221) solid 3px;
+  outline: rgb(194, 194, 194) solid 3px;
   background-color: rgb(255, 255, 255);
   float : right;
   margin-right: 55px;
@@ -295,7 +295,7 @@ input::placeholder {
   cursor: pointer;
 }
 
-/* --------------------------------- icon */
+/* --------------------------------- icomyPagen */
 .navbar_icons {
   width: 100%;
   justify-content: space-between;
