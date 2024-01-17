@@ -18,6 +18,12 @@ export default {
   padding:0;
   box-sizing: border-box;
 }
+* :not(.fas, .fa){
+  font-family: 'GangwonEdu_OTFBoldA', sans-serif !important;
+}
+
+
+
 body {
   overflow-y: scroll;
   -ms-overflow-style: none;
@@ -25,12 +31,10 @@ body {
   scrollbar-width: none;
   /* 파이어폭스 */
 }
-.HamFont {
-  font-family: 'SF_HambakSnow', sans-serif !important;
-}
+
 @font-face {
-    font-family: 'SF_HambakSnow';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/SF_HambakSnow.woff') format('woff');
+    font-family: 'GangwonEdu_OTFBoldA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }

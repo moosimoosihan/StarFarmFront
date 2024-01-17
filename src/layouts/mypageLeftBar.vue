@@ -2,7 +2,6 @@
     <div class="content">
       <div class="container">
         <div class="mypage_topbar_container">
-          
           <div class="mypage-bar">
             <div class="myinfo">
             <div class="profile_lapper">
@@ -12,7 +11,7 @@
                         <!-- <div class="profile-icon">
                             <i class="fas fa-user-circle"></i>
                         </div> -->
-                        <img :width="100" style="border-radius: 70px;" @click="profileImgClick()"
+                        <img :width="100" style="border-radius: 70px; border: solid 3px #0d4608;" @click="profileImgClick()"
                             :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
                             alt="프로필 사진 미리보기" />
                     </div>
@@ -130,7 +129,7 @@ import axios from 'axios'
 }
 
 .m_container {
-  height: 400px;
+  height: 430px;
   overflow-y: scroll ;
   -ms-overflow-style: none; /* 인터넷 익스플로러 */
   scrollbar-width: none; /* 파이어폭스 */
@@ -140,6 +139,10 @@ import axios from 'axios'
     display: none; /* 크롬, 사파리, 오페라, 엣지 */
 }
 
+.m {
+  margin-top: 10px;
+  color: black;
+}
 .myinfo {
   width: 400px;
   height: 250px;
@@ -149,10 +152,9 @@ import axios from 'axios'
   position: relative;
   align-items: center;
   text-align: center;
-  border: solid 1px #b3b3b3;
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
-  background-color: #6bd86b;
+  background-color: #81f881;
 }
 
 .profile_nick {
@@ -203,8 +205,11 @@ Footer {
 }
 .friendly_img_box progress {
     background-color: white;
+    height: 15px;
+    border-radius:10px;
 }
 .profile_img_box :hover {
   transform: scale(1.15);
 }
+
   </style>

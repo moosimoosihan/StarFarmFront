@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+      <p class="mypage_text">마이페이지</p>
         <div class="mypageContainer">
             <p class="p1">내가 찜한 상품</p>
             <p class="more" @click="gotoLike()">+more</p> 
@@ -9,7 +10,7 @@
             <img class="goods_img"  :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.GOODS_NO}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
             <div class="goodsname">
               <h2>{{ goods.goods_nm }}</h2>
-              <p>{{ goods.goods_content }}</p>
+              <p class="p1">{{ goods.goods_content }}</p>
             </div>
             <div class="card-stats">
               <div class="stat">
@@ -28,7 +29,7 @@
           </div>
         </div>
         <div v-else class="goodslist_div">
-            <p>찜한 상품이 없습니다.</p>
+            <p class="p1">찜한 상품이 없습니다.</p>
         </div>
         <div class="mypageContainer">
             <p class="p1">나의 입찰 상품</p>
@@ -39,7 +40,7 @@
             <img class="goods_img"  :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.goods_no}/${goods.goods_img.split(',')[0]}`)" alt="상품 이미지">
             <div class="goodsname">
               <h2>{{ goods.goods_nm }}</h2>
-              <p>{{ goods.goods_content }}</p>
+              <p class="p1">{{ goods.goods_content }}</p>
             </div>
             <div class="card-stats">
               <div class="stat">
@@ -58,7 +59,7 @@
           </div>
         </div>
         <div v-else class="goodslist_div">
-            <p>입찰한 상품이 없습니다.</p>
+            <p class="p1">입찰한 상품이 없습니다.</p>
         </div>
         <div class="mypageContainer">
             <p class="p1">나의 판매 상품</p>
@@ -69,7 +70,7 @@
             <img class="goods_img"  :src="require(`../../../StarFarmBack/uploads/uploadGoods/${goods.GOODS_NO}/${goods.GOODS_IMG.split(',')[0]}`)" alt="상품 이미지">
             <div class="goodsname">
               <h2>{{ goods.GOODS_NM }}</h2>
-              <p>{{ goods.GOODS_CONTENT }}</p>
+              <p class="p1">{{ goods.GOODS_CONTENT }}</p>
             </div>
             <div class="card-stats">
               <div class="stat">
@@ -88,7 +89,7 @@
           </div>
         </div>
         <div v-else class="goodslist_div">
-            <p>판매한 상품이 없습니다.</p>
+            <p class="p1">판매한 상품이 없습니다.</p>
         </div>
     </div>
 </template>
@@ -284,6 +285,17 @@ import axios from 'axios';
     padding: 0;
     box-sizing: border-box;
 }
+
+@font-face {
+    font-family: 'TAEBAEKfont';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/TAEBAEKfont.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* :not(.p1, .stat, .type, .price, .sprice, .time){
+  font-family: 'TAEBAEKfont', sans-serif !important;
+}
 .container {
     width: 100%;
     height: 1900px;
@@ -377,7 +389,7 @@ import axios from 'axios';
 
 .p1 {
     font-size: 25px;
-    margin-top: 50px;
+    margin-top: 60px;
 }
 
 .goodslist_div {
@@ -499,5 +511,9 @@ import axios from 'axios';
 .price,
 .sprice {
   font-weight: 800;
+}
+
+.mypage_text{
+  font-size: 40px;
 }
 </style>
