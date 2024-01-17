@@ -11,6 +11,7 @@
                     <div id="user_nick">닉네임 : {{  userInfo.user_nick  }}</div>
                     <span>친밀도</span>
                     <progress id="progress" :value="userFr" max="100" ></progress>
+                     <span class="friendly_score">{{ userInfo.user_fr }}점</span>
                 </div>
               <div v-if="user.user_no != userNo">
                 <button class="button1" @click="gotoChatRoom(userNo), createChatRoom()">1대1 채팅</button>
@@ -278,8 +279,8 @@ import axios from 'axios';
     box-sizing: border-box;
 }
 .container {
-    width: 2000px;
-    height: 2000px;
+    width: 100%;
+    height: 1300px;
 }
 /* ------------------------------------------------------------- */
 
@@ -288,8 +289,8 @@ import axios from 'axios';
     background:#f5f5f5;
     border-radius:10px;
     width: 100%;
-    height: 25px;
-    margin-top: 11px;
+    height: 17px;
+    margin-top: 16px;
 }
 #progress::-webkit-progress-value {
     border-radius:10px;
@@ -505,8 +506,8 @@ li {
 
 /* 판매자 상품 리스트 */
 .goodslist_div {
-  width: 82%;
-  height: 955px;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -515,8 +516,8 @@ li {
 }
 .item_container {
   display: grid;
-  grid-template-columns: 300px;
-  grid-template-rows: 190px 210px 80px;
+  grid-template-columns: 240px;
+  grid-template-rows: 190px 150px 80px;
   grid-template-areas: "image" "text" "stats";
   height: 50%;
   border-radius: 18px;
@@ -557,9 +558,9 @@ li {
 .card-stats {
   grid-area: stats;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr;
-
+  grid-template-columns: 70px 70px 70px;
+  grid-template-rows: 80px;
+  font-size: 12px;
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
   background: #68ce68;
@@ -572,7 +573,7 @@ li {
 
   color: white;
   padding:10px;
-  width: 100px;
+  width: 95px;
 }
 .item_container > p {
   margin-left: 3px;
