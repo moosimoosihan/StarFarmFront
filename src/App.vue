@@ -18,7 +18,7 @@ export default {
   padding:0;
   box-sizing: border-box;
 }
-* :not(.fas, .fa){
+* :not(.fas, .fa, .fa-solid){
   font-family: 'GangwonEdu_OTFBoldA', sans-serif !important;
 }
 

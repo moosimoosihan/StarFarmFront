@@ -55,9 +55,9 @@
                                     <p>{{ formatDateTime(order.goods_timer) }}</p>
                                 </td>
                                 <td>
-                                    <span v-if="order.goods_state===1 && order.goods_trade===1" @click="saleComp(i)">거래 완료</span>
-                                    <span v-else-if="order.goods_state===1 && order.goods_trade===0 && succ_bid_user_no[i]===user.user_no && order_count[i]===0" @click="gotoPay(i)">결제</span>
-                                    <span v-else-if="order.goods_state===1 && order.goods_trade===0 && succ_bid_user_no[i]===user.user_no && order_count[i]!=0" @click="saleComp(i)">거래 완료</span>
+                                    <span v-if="order.goods_state==1 && order.goods_trade==1" @click="saleComp(i)">거래 완료</span>
+                                    <span v-else-if="order.goods_state==1 && order.goods_trade==0 && succ_bid_user_no[i]==user.user_no && order_count[i]==0" @click="gotoPay(i)">결제</span>
+                                    <span v-else-if="order.goods_state==1 && order.goods_trade==0 && succ_bid_user_no[i]==user.user_no && order_count[i]!=0" @click="saleComp(i)">거래 완료</span>
                                     <!-- 내가 리뷰를 썻다면 표시 안되도록 -->
                                     <span v-if="order.goods_state===2 && review_count[i]===0" @click="writeReview(order.goods_no)">리뷰쓰기</span>
                                 </td>
@@ -70,7 +70,7 @@
                 </div>
                 <div class="page_container">
                     <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
-                    <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="getOrderList(sort,i)">{{i+1}}</button>
+                    <button v-for="(num, i) in pageCount" :key="i" :id="num==page? 'select':''" class="pageNum" @click="getOrderList(sort,i)">{{i+1}}</button>
                     <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
                 </div>
             </div>
@@ -120,7 +120,6 @@ import axios from 'axios'
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/orderlist/${this.user.user_no}/${sort}/${page}`);
                     this.orderList = response.data;
-                    console.log(this.orderList)
                 } catch (error) {
                     console.error(error);
                 }
@@ -128,6 +127,7 @@ import axios from 'axios'
                 await this.getSuccBid()
                 await this.getReviewCount()
                 await this.getBuyCount()
+                await this.getOrderCount()
             },
             async getSuccBid() {
                 for(let i=0; i<this.orderList.length; i++){
@@ -198,17 +198,37 @@ import axios from 'axios'
                 this.$router.push(`/review/${goods_no}/none`);
             },
             async saleComp(i){
-                if(confirm("거래 완료 처리 하시겠습니까?")){
-                    try {
-                        await axios.post(`http://localhost:3000/goods/saleComp/${this.orderList[i].goods_no}`);
-                        this.$swal("거래 완료 처리 되었습니다.")
-                        this.getOrderList();
-                    } catch (error) {
-                        console.error(error);
+                this.$swal.fire({
+                    title: '거래 완료 처리 하시겠습니까?',
+                    text: "거래 완료 처리 시 거래완료 상태로 변경됩니다.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '거래 완료 처리',
+                    cancelButtonText: '취소'
+                })
+                .then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            await axios.post(`http://localhost:3000/goods/saleComp/${this.orderList[i].goods_no}`);
+                            this.$swal({
+                                icon: "success",
+                                title: "거래 완료 처리 되었습니다.",
+                                showConfirmButton: false,
+                                timer: 1500,
+                            })
+                            .then(() => {
+                                this.getOrderList(this.sort,this.page);
+                                window.location.reload();
+                            })
+                        } catch (error) {
+                            console.error(error);
+                        }
+                    } else {
+                        this.$swal("거래 완료 처리가 취소되었습니다.");
                     }
-                } else {
-                    this.$swal("거래 완료 처리가 취소되었습니다.");
-                }
+                })
             },
             gotoPay(index) {
                 this.$router.push(`/payment/${this.orderList[index].goods_no}`);
@@ -379,5 +399,9 @@ tr {
   border:1px solid #eee;
   color:#666;
   cursor: pointer;
+}
+#select {
+    font-weight: bold;
+    font-size: 15px;
 }
 </style>

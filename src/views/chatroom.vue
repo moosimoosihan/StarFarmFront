@@ -250,20 +250,13 @@ import io from 'socket.io-client'
     margin-top: 2px;
 }
 
-/* .chat_profile_img {
-    width: 100px;
-    height: 100px;
-    background-color: rgb(255, 255, 255);
-    margin-top: 20px;
-    float: left;
-} */
-
 .chat_input_container { 
     width: 800px;
 }
 
 .chat_container {
     width: 700px;
+    min-height: 50px;
     height: 100%;
     position: relative;
     margin-top: 20px;
@@ -273,6 +266,7 @@ import io from 'socket.io-client'
 .chat_container1 {
     width: 700px;
     height: 100%;
+    min-height: 50px;
     display: flex;
     position: relative;
     margin-left: 13px;
@@ -282,11 +276,13 @@ import io from 'socket.io-client'
 .chat_content_container{
     float: right;
     display: flex;
+    min-height: 50px;
 }
 .chat_content_container1 {
     max-width: 100%;
     margin-left: 60px;
     margin-top: 20px;
+    min-height: 50px;
     display: flex;
     position: absolute;
 

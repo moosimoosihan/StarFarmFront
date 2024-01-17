@@ -82,7 +82,7 @@
             </div>
             <div id="store_timer_deliv">
                 <div>
-                    <p class="wi100">마감 시간(최소 하루, 최대 한달)</p>
+                    <p class="wi100">마감 시간</p>
                     <input type="datetime-local" required v-model="goods_timer">
                 </div>
                 <div v-if="goods_trade==='택배거래'">
@@ -97,7 +97,7 @@
         <div class="right">
             <div id="store_product_content">
                 <p>설명</p>
-                <textarea style="height: 600px;" placeholder="상품 설명을 입력해주세요. (최소 10글자)" v-model="product_content"></textarea>
+                <textarea style="height: 600px;" placeholder="상품 설명을 입력해주세요." v-model="product_content"></textarea>
             </div>
         
             <div id="store_submit">

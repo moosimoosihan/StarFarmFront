@@ -1,7 +1,7 @@
 <template>
     <main>
-
         <div class="container">
+            <div v-if="!isUploading || !isDelete" class="isLoadingScreen"></div>
             <h2>내 정보 수정</h2>
             <div class="form">
                 <label class="te">닉네임</label>
@@ -11,7 +11,7 @@
                 <div class="profile-upload-content upload-img">
                 <div class="profile-img">
                     <img v-if="loginUser.user_img" id="img-preview" :width="200" :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require('../assets/profile.png')" >
-                    <img v-else-if="profile_img_src != null" id="img-preview" :width="200" :src="profile_img_src"
+                    <img v-else-if="profile_img_src != ''" id="img-preview" :width="200" :src="profile_img_src"
                             alt="프로필 사진 미리보기" />
                     <img v-else id="img-preview" :width="200" :src="require(`../assets/profile.png`)"
                             alt="프로필 사진 미리보기" />
@@ -68,7 +68,11 @@ export default {
     data() {
         return {
             loginUser: {},
-            profile_img_src : ''
+            profile_img_src : '',
+            
+            // 이미지가 아직 업로드 중인지 확인할 변수
+            isUploading: true,
+            isDelete: true
         };
     },
     computed: {
@@ -160,7 +164,7 @@ export default {
                 else {
                     return;     // 파일 미선택 시 반환
                 }
-
+                this.isUploading = false;
                 const formData = new FormData();
                 this.profile_img_src = ''
                 formData.append('img', file[0]);
@@ -188,11 +192,13 @@ export default {
                         .catch(e => {
                             console.log(e);
                         })
-                    return true;
+                        this.isUploading = true;
+                    return this.isUploading;
 
                 } catch(err){
                     console.log(err);
-                    return false;
+                    this.isUploading = false;
+                    return this.isUploading;
                 }
             },
             deleteImage(id,name){

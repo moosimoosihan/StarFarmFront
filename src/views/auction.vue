@@ -36,7 +36,7 @@
         </div>
       </div>
       <div class="dot-navigation">
-        <span class="dot" v-for="(img,i) in good_img" :key="i" @click="moveToSlideAuction(i)"></span>
+        <span class="dot" v-for="(img,i) in good_img" :key="i" :id="currentIndex==i? 'selectImg':''" @click="moveToSlideAuction(i)"></span>
       </div>
     </div>
   </div>
@@ -869,5 +869,8 @@ textarea {
   top: 40px;
   font-size: 20px;
   font-weight: 700;
+}
+#selectImg{
+  background-color: #766800;
 }
 </style>

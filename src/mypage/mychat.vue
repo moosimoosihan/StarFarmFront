@@ -41,7 +41,7 @@
             </div>
             <div class="page_container">
                 <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
-                <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="getRoomList(i)">{{i+1}}</button>
+                <button v-for="(num, i) in pageCount" :key="i" :id="num==page? 'select':''" class="pageNum" @click="getRoomList(i)">{{i+1}}</button>
                 <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
             </div>
         </div>
@@ -307,5 +307,9 @@ tr {
   border:1px solid #eee;
   color:#666;
   cursor: pointer;
+}
+#select {
+    font-weight: bold;
+    font-size: 15px;
 }
 </style>

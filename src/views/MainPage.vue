@@ -10,7 +10,7 @@
             </div>
           </div>
           <div class="dot-navigation">
-            <span class="dot" v-for="(goods,i) in mainEventGoods" :key="i" @click="moveToSlide(i)"></span>
+            <span class="dot" v-for="(goods,i) in mainEventGoods" :key="i" :id="currentIndex==i? 'selectImg':''" @click="moveToSlide(i)"></span>
           </div>
         </div>
         <div class="slider-container" v-else-if="mainEventGoods.length===0">
@@ -543,4 +543,7 @@ export default {
   .sprice {
     font-weight: 800;
   }
+  #selectImg{
+  background-color: #766800;
+}
 </style>
