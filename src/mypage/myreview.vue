@@ -18,13 +18,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(review,i) in reviewList" :key="i">
+                            <tr v-for="(review,i) in reviewList" :key="i" @click="gotoProduct(review.goods_no)">
                                 <td>
                                     <img :width="70" style="border-radius: 10px;"
                                         :src="review.goods_img ? require(`../../../StarFarmBack/uploads/uploadGoods/${review.goods_no}/${review.goods_img.split(',')[0]}`) : require(`../assets/2-1.png`)"
                                         alt="상품 이미지" />
                                 </td>
-                                <td @click="gotoProduct(review.goods_no)">
+                                <td>
                                     <p>{{ review.goods_nm }}</p>
                                 </td>
                                 <td>
