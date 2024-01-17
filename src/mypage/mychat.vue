@@ -39,6 +39,11 @@
                     </tbody>
                 </table>
             </div>
+            <div class="page_container">
+                <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
+                <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="getRoomList(i)">{{i+1}}</button>
+                <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
+            </div>
         </div>
     </div>
 </template>
@@ -49,11 +54,13 @@ import axios from 'axios'
         name: 'mychat',
         data() {
             return {
-                loginUser: {},
                 roomList: [],
                 commentList: [],
                 userImgList: [],
                 userNickList: [],
+
+                page: 0,
+                pageCount: 0,
             }
         },
         computed: {
@@ -62,28 +69,28 @@ import axios from 'axios'
             },
         },
         created() {
-            this.getUser();
-            this.getRoomList();
+            this.getRoomList(this.page);
         },
         methods: {
             gotoChatRoom(index) {
                 let popupWindow = window.open(`/chatroom/${index}`, '_blank', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
-                popupWindow.resizeTo(800, 650)
-                popupWindow.onresize = (_=>{
+                    popupWindow.resizeTo(800, 650)
+                    popupWindow.onresize = (_=>{
                     popupWindow.resizeTo(800, 650)
                 })
             },
-            async getUser() {
+            async getChatRoomCount(){
                 try {
-                    const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
-                    this.loginUser = response.data[0];
+                    const response = await axios.get(`http://localhost:3000/mypage/getChatRoomCount/${this.user.user_no}`);
+                    this.pageCount = Math.ceil(response.data[0].count/10);
                 } catch (error) {
                     console.error(error);
                 }
             },
-            async getRoomList() {
+            async getRoomList(page) {
+                await this.getChatRoomCount();
                 try {
-                    const response = await axios.get(`http://localhost:3000/mypage/getChatRoom/${this.user.user_no}`);
+                    const response = await axios.get(`http://localhost:3000/mypage/getChatRoom/${this.user.user_no}/${page}`);
                     this.roomList = response.data;
                 } catch (error) {
                     console.error(error);
@@ -102,6 +109,7 @@ import axios from 'axios'
                         await this.getChatUser(this.roomList[i].CHATROOM_USER1 === this.user.user_no? this.roomList[i].CHATROOM_USER2:this.roomList[i].CHATROOM_USER1)
                     }
                 }
+                this.page = page;
             },
             async getComment(room_no) {
                 try {
@@ -143,7 +151,7 @@ import axios from 'axios'
                                 .then((res)=>{
                                     if(res.data.message === 'success') {
                                     this.$swal('채팅방에서 나갔습니다.');
-                                    this.getRoomList();
+                                    this.getRoomList(this.pageCount<page ? page-1 : page);
                                 }
                             })
                         } catch(error) {
@@ -151,7 +159,15 @@ import axios from 'axios'
                         }
                     }
                 });
-            }
+            },
+            prev() {
+                this.page -= 1;
+                this.getRoomList(this.page);
+                },
+            next(){
+                this.page += 1;
+                this.getRoomList(this.page)
+            },
         }
     }
 </script>
@@ -273,5 +289,23 @@ tr {
 
 .title {
     font-size: 24px;
+}
+.page_container {
+  width: 400px;
+  height: 100px;
+  margin-left: 50%;
+  margin-top: 20px;
+}
+.page_container button {
+  min-width:32px;
+  width: 50px;
+  height: 40px;
+  padding:2px 6px;
+  text-align:center;
+  margin:0 3px;
+  border-radius: 6px;
+  border:1px solid #eee;
+  color:#666;
+  cursor: pointer;
 }
 </style>

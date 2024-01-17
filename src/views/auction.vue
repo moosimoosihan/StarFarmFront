@@ -52,7 +52,10 @@
         <p class="description">
         </p>
         <!-- 관심 상품 버튼 -->
-        <div :class="likeGoods===0?'heart':'heart is-active'" @click="likeGoods===0?like_goods():likeDelete()"></div>
+        <div class="like_container">
+          <div :class="likeGoods===0?'heart':'heart is-active'" @click="likeGoods===0?like_goods():likeDelete()"></div>
+          <p>{{ likeCount }}</p>
+        </div>
         <div class="bid_container" id="scroll">
             <ul>
               <li v-for="(bidUser, i) in goodsBidList" :class="bidUser.user_no===user.user_no ? 'me_price' : 'price'" :id="bidUser===goodsBidList[goodsBidList.length-1]? 'last_price' : ''" :key="i">{{ bidUser.user_nick }}님이 {{ formatPrice(bidUser.bid_amount) }} 입찰하셨습니다.</li>
@@ -62,7 +65,7 @@
           <div v-if="user.user_no!==''">
             <div class="btn_container" v-if="user.user_no != goodsUser.user_no">
               <!--1:1 채팅버튼-->
-              <button class="chatroom_container" @click="gotoChatRoom(goodsUser.user_no), createChatRoom()">1:1 채팅</button>
+              <button class="chatroom_container" @click="gotoChatRoom(goodsUser.user_no)">1:1 채팅</button>
               <!--결제페이지 이동버튼-->
               <button v-if="buyUser && goods.state===0" class="button" @click="gotoPayment()">결제</button>
               <!--금액창-->
@@ -108,6 +111,7 @@ data() {
     userFr: 0,
 
     likeGoods: 0,
+    likeCount: 0,
 
     currentTime: '',
     endTime: Date.now(),
@@ -135,6 +139,7 @@ created() {
   this.updateTimer();
   this.startAutoSlide(); // 페이지가 생성될 때 자동 슬라이드 시작
   this.scroll();
+  this.likeCountAPI();
 },
 beforeUpdate() {
   if(this.currentTime !== '경매가 종료되었습니다.'){
@@ -183,6 +188,17 @@ methods: {
     } catch (error) {
       console.error(error);
     }
+    await this.likeCountAPI()
+  },
+  async likeCountAPI() {
+    try {
+      const goods_no = this.$route.params.id;
+      const response = await axios.get(`http://localhost:3000/goods/likeCounts/${goods_no}`);
+      console.log(response)
+      this.likeCount = response.data[0].like_count;
+    } catch (error) {
+      console.error(error);
+    }
   },
   async checkLikeGoods() {
     try {
@@ -212,6 +228,7 @@ methods: {
     } catch (error) {
       console.error(error);
     }
+    await this.likeCountAPI()
   },
   scroll() {
       setTimeout(() => {
@@ -224,27 +241,6 @@ methods: {
     const slideWidthAuction = slidesAuction[0].clientWidth;
     document.querySelector('.slide-wrapper').style.transform = `translateX(-${index * slideWidthAuction}px)`;
     this.currentIndex = index;
-  },
-  //1:1 채팅룸 생성
-  async createChatRoom() {
-    try {
-      const user_no = this.goodsUser.user_no;
-
-      if (this.user.user_no == this.goodsUser.user_no) {
-        return this.$swal('본인과의 채팅은 불가능합니다.');
-      } else {
-        await axios({
-          url: `http://localhost:3000/chat/createChatRoom/${user_no}`,
-          method: "POST",
-          data: {
-            buyer: this.user.user_no,
-            seller: this.goodsUser.user_no,
-          }
-        })
-      }
-    } catch (error) {
-      console.error(error);
-    }
   },
   /*1:1 채팅룸 열기*/
   gotoChatRoom(index) {
@@ -847,9 +843,7 @@ textarea {
   100% {opacity: 1;}
 }
 .heart {
-  position: absolute;
-  left: 1200px;
-  top: 350px;
+  float: left;
   color: black;
   width: 100px;
   height: 100px;
@@ -864,5 +858,16 @@ textarea {
   transition-duration: 1s;
   background-position: -2800px 0;
 }
-
+.like_container{
+  width: 300px;
+  position: absolute;
+  left: 1200px;
+  top: 350px;
+}
+.like_container p {
+  position: relative;
+  top: 40px;
+  font-size: 20px;
+  font-weight: 700;
+}
 </style>

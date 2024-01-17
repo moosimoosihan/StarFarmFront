@@ -13,16 +13,16 @@
             </div>
             <div class="card-stats">
               <div class="stat">
-                <div class="value"><p class="price">{{ goods.goods_start_price }}</p></div>
                 <div class="type">시작가</div>
+                <div class="value"><p class="price">{{ formatPrice(goods.goods_start_price) }}</p></div>
               </div>
               <div class="stat border">
-                <div class="value"><p class="sprice">{{ like_goods_succ_bid[i] }}</p></div>
                 <div class="type">입찰가</div>
+                <div class="value"><p class="sprice">{{ formatPrice(like_goods_succ_bid[i]) }}</p></div>
               </div>
               <div class="stat">
-                <div class="value"><p class=time v-if="like_goods_timer[i]">{{ like_goods_timer[i] }}</p></div>
                 <div class="type">경매 시간</div>
+                <div class="value"><p class="time" v-if="like_goods_timer[i]">{{ like_goods_timer[i] }}</p></div>
               </div>
             </div>
           </div>
@@ -43,16 +43,16 @@
             </div>
             <div class="card-stats">
               <div class="stat">
-                <div class="value"><p class="price">{{ goods.goods_start_price }}</p></div>
                 <div class="type">시작가</div>
+                <div class="value"><p class="price">{{ formatPrice(goods.goods_start_price) }}</p></div>
               </div>
               <div class="stat border">
-                <div class="value"><p class="sprice">{{ order_goods_succ_bid[i] }}</p></div>
                 <div class="type">입찰가</div>
+                <div class="value"><p class="sprice">{{ formatPrice(order_goods_succ_bid[i]) }}</p></div>
               </div>
               <div class="stat">
-                <div class="value"><p class=time v-if="order_goods_timer[i]">{{ order_goods_timer[i] }}</p></div>
                 <div class="type">경매 시간</div>
+                <div class="value"><p class="time" v-if="order_goods_timer[i]">{{ order_goods_timer[i] }}</p></div>
               </div>
             </div>
           </div>
@@ -73,16 +73,16 @@
             </div>
             <div class="card-stats">
               <div class="stat">
-                <div class="value"><p class="price">{{ goods.GOODS_START_PRICE }}</p></div>
                 <div class="type">시작가</div>
+                <div class="value"><p class="price">{{ formatPrice(goods.GOODS_START_PRICE) }}</p></div>
               </div>
               <div class="stat border">
-                <div class="value"><p class="sprice">{{ sale_goods_succ_bid[i] }}</p></div>
                 <div class="type">입찰가</div>
+                <div class="value"><p class="sprice">{{ formatPrice(sale_goods_succ_bid[i]) }}</p></div>
               </div>
               <div class="stat">
-                <div class="value"><p class=time v-if="sale_goods_timer[i]">{{ sale_goods_timer[i] }}</p></div>
                 <div class="type">경매 시간</div>
+                <div class="value"><p class="time" v-if="sale_goods_timer[i]">{{ sale_goods_timer[i] }}</p></div>
               </div>
             </div>
           </div>
@@ -151,7 +151,7 @@ import axios from 'axios';
                 try {
                   const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.likeList[i].GOODS_NO}`);
                   if(response.data[0].succ_bid==null){
-                    this.like_goods_succ_bid.push('입찰없음');
+                    this.like_goods_succ_bid.push('입찰 없음');
                   } else {
                     this.like_goods_succ_bid.push(response.data[0].succ_bid);
                   }
@@ -172,7 +172,7 @@ import axios from 'axios';
                     try {
                     const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.orderList[i].goods_no}`);
                     if(response.data[0].succ_bid==null){
-                        this.order_goods_succ_bid.push('입찰없음');
+                        this.order_goods_succ_bid.push('입찰 없음');
                     } else {
                         this.order_goods_succ_bid.push(response.data[0].succ_bid);
                     }
@@ -193,7 +193,7 @@ import axios from 'axios';
                     try {
                     const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.saleList[i].GOODS_NO}`);
                     if(response.data[0].succ_bid==null){
-                        this.sale_goods_succ_bid.push('입찰없음');
+                        this.sale_goods_succ_bid.push('입찰 없음');
                     } else {
                         this.sale_goods_succ_bid.push(response.data[0].succ_bid);
                     }
@@ -239,6 +239,16 @@ import axios from 'axios';
             }
             // 00일 남음을 표시
             return daysStr;
+          },
+          formatPrice(price) {
+            if(price=='입찰 없음'){
+              return price
+            }
+            if (price !== undefined && price !== null) {
+                const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                return `${formattedPrice} 원`;
+            }
+            return "";
           },
           allGoodsTimer(){
             this.timer = setInterval(()=>{
@@ -485,5 +495,9 @@ import axios from 'axios';
   transform: scale(1.15);
   box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
 }
-
+.time,
+.price,
+.sprice {
+  font-weight: 800;
+}
 </style>

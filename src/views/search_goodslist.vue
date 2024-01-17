@@ -22,11 +22,11 @@
                 <div class="card-stats">
                 <div class="stat">
                     <div class="type">시작가</div>
-                    <div class="value"><p class="price">{{ goods.goods_start_price }}</p></div>
+                    <div class="value"><p class="price">{{ formatPrice(goods.goods_start_price) }}</p></div>
                 </div>
                 <div class="stat border">
                     <div class="type">입찰가</div>
-                    <div class="value"><p class="sprice">{{ goods_succ_bid[i] }}</p></div>
+                    <div class="value"><p class="sprice">{{ formatPrice(goods_succ_bid[i]) }}</p></div>
                 </div>
                 <div class="stat">
                     <div class="type">경매 시간</div>
@@ -222,6 +222,16 @@ import axios from 'axios';
             },
             stopAutoTimer() {
                 clearInterval(this.timer);
+            },
+            formatPrice(price) {
+                if(price=='입찰 없음'){
+                    return price
+                }
+                if (price !== undefined && price !== null) {
+                    const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    return `${formattedPrice} 원`;
+                }
+                return "";
             },
             updateTimer(endTime) {
                 // 날짜를 초로 바꾸어 저장 후 계산
@@ -423,5 +433,9 @@ import axios from 'axios';
   color:#666;
   cursor: pointer;
 }
-
+.time,
+.price,
+.sprice {
+  font-weight: 800;
+}
 </style>

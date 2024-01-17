@@ -4,6 +4,10 @@
             <div class="myinfo">
                 <div class="buylist_title">
                     <span class="title">구매 상품 이력</span>
+                    <select class="form-select" v-model="sort" @change="getOrderList(sort,page)">
+                        <option value="DESC">최신순</option>
+                        <option value="ASC">오래된순</option>
+                    </select>
                 </div>
                 <div class="goods">
                     <table class="table" style="width: 100%;">
@@ -20,7 +24,7 @@
                         <tbody>
                             <tr v-for="(order, i) in orderList" :key="i">
                                 <td>
-                                    <p>{{ i+1 }}</p>
+                                    <p>{{ order.ORDER_NO }}</p>
                                 </td>
                                 <td>
                                     <img :width="70" style="border-radius: 10px;"
@@ -46,6 +50,11 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="page_container">
+                    <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
+                    <button v-for="(num, i) in pageCount" :key="i" class="pageNum" @click="getOrderList(sort,i)">{{i+1}}</button>
+                    <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
+                </div>
             </div>
         </div>
     </main>
@@ -62,6 +71,11 @@ import axios from 'axios'
                 succ_bidList: [],
                 goods_img_List: [],
                 goods_name_List: [],
+
+                page: 0,
+                pageCount: 0,
+
+                sort: 'DESC',
             }
         },
         computed: {
@@ -70,15 +84,24 @@ import axios from 'axios'
             },
         },
         created() {
-            this.getOrderList();
+            this.getOrderList(this.sort, this.page);
         },
         methods: {
             gotoProduct(index) {
                 this.$router.push(`/product/${index}`);
             },
-            async getOrderList() {
+            async getOrderCount() {
                 try {
-                    const response = await axios.get(`http://localhost:3000/goods/orderlist/${this.user.user_no}`);
+                    const response = await axios.get(`http://localhost:3000/mypage/orderlistCount/${this.user.user_no}`);
+                    this.pageCount = Math.ceil(response.data[0].count / 10);
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+            async getOrderList(sort, page) {
+                await this.getOrderCount()
+                try {
+                    const response = await axios.get(`http://localhost:3000/goods/orderlist/${this.user.user_no}/${sort}/${page}`);
                     this.orderList = response.data;
                 } catch (error) {
                     console.error(error);
@@ -88,6 +111,7 @@ import axios from 'axios'
                     this.goods_img_List.push(await this.getGoodsImg(this.orderList[i].GOODS_NO));
                     this.goods_name_List.push(await this.getGoodsName(this.orderList[i].GOODS_NO));
                 }
+                this.page=page;
             },
             async getTotalPrice(goods_no) {
                 var succ_bid = '';
@@ -146,7 +170,15 @@ import axios from 'axios'
             },
             gotoDetail(order_no) {
                 this.$router.push(`/paymentdetail/${order_no}`);
-            }
+            },
+            prev() {
+                this.page -= 1;
+                this.getOrderList(this.sort,this.page);
+                },
+            next(){
+                this.page += 1;
+                this.getOrderList(this.sort,this.page)
+            },
         }
     }
 </script>
@@ -285,5 +317,28 @@ th, td {
 
 tr {
     height: 80px;
+}
+.form-select {
+    width: 100px;
+    height: 30px;
+    margin-left: 20px;
+}
+.page_container {
+  width: 400px;
+  height: 100px;
+  margin-left: 50%;
+  margin-top: 20px;
+}
+.page_container button {
+  min-width:32px;
+  width: 50px;
+  height: 40px;
+  padding:2px 6px;
+  text-align:center;
+  margin:0 3px;
+  border-radius: 6px;
+  border:1px solid #eee;
+  color:#666;
+  cursor: pointer;
 }
 </style>

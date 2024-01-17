@@ -126,10 +126,10 @@ import axios from 'axios'
   margin-top: 35px;
   z-index: 1;
   background-color: white;
+  border-right: 1px solid #b3b3b3;
 }
 
 .m_container {
-  border-right: 1px solid #b3b3b3;
   height: 400px;
   overflow-y: scroll ;
   -ms-overflow-style: none; /* 인터넷 익스플로러 */

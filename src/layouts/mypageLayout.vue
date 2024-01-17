@@ -26,12 +26,11 @@ import mypageSideBar from './mypageLeftBar.vue'
   
   <style scoped>
 .mypage_container{
-    padding-left: 15%;
+    padding-left: 10%;
     margin: auto;
     width: 90%;
     max-height: 1900px;
     min-height: 900px;
-    width: 100%;
     min-width: 1280px;
   }
 
@@ -40,7 +39,6 @@ import mypageSideBar from './mypageLeftBar.vue'
 }
   .mypage_content {
     padding-top: 100px;
-    margin-left: 20px;
   }
 
   Footer {

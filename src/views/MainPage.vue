@@ -48,8 +48,8 @@
                 </div>
                 <div class="data-container">
                   <p class="slider-name">{{ goods.goods_nm }}</p>
-                  <p class="slider-startprice">시작가 : {{ goods.goods_start_price }}</p>
-                  <p class="slider-nowprice">입찰가 : {{ main_goods_succ_bid[i] }}</p>
+                  <p class="slider-startprice">시작가 : {{ formatPrice(goods.goods_start_price) }}</p>
+                  <p class="slider-nowprice">입찰가 : {{ formatPrice(main_goods_succ_bid[i]) }}</p>
                   <p class="slider-nowprice1" font-color:red v-if="goods.goods_timer">{{ eventGoodsTimer[i] }}</p>
                 </div>
               </div>
@@ -64,8 +64,8 @@
               </div>
               <div class="data-container">
               <p class="slider-name">{{ goods.goods_nm }}</p>
-              <p class="slider-startprice">시작가 : {{ goods.goods_start_price }}</p>
-              <p class="slider-nowprice">입찰가 : {{ goods_succ_bid[i] }}</p>
+              <p class="slider-startprice">시작가 : {{ formatPrice(goods.goods_start_price) }}</p>
+              <p class="slider-nowprice">입찰가 : {{ formatPrice(goods_succ_bid[i]) }}</p>
               <p class="slider-nowprice1" font-color:red v-if="goods.goods_timer">{{ defaultGoodsTimer[i] }}</p>
               </div>
             </div>
@@ -87,11 +87,11 @@
             <div class="card-stats">
               <div class="stat">
                 <div class="type">시작가</div>
-                <div class="value"><p class="price">{{ goods.goods_start_price }}</p></div>
+                <div class="value"><p class="price">{{ formatPrice(goods.goods_start_price) }}</p></div>
               </div>
               <div class="stat border">
                 <div class="type">입찰가</div>
-                <div class="value"><p class="sprice">{{ goods_succ_bid[i] }}</p></div>
+                <div class="value"><p class="sprice">{{ formatPrice(goods_succ_bid[i]) }}</p></div>
               </div>
               <div class="stat">
                 <div class="type">경매 시간</div>
@@ -207,6 +207,16 @@ export default {
     },
     gotoAuction(goods_no) {
       this.$router.push(`/product/${goods_no}`);
+    },
+    formatPrice(price) {
+      if(price=='입찰 없음'){
+        return price
+      }
+      if (price !== undefined && price !== null) {
+          const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          return `${formattedPrice} 원`;
+      }
+      return "";
     },
     moveToSlide(index) {
       const slides = this.$el.querySelectorAll('.slide');
@@ -525,5 +535,10 @@ export default {
   }
   .slider-startprice{
     text-align:start;
+  }
+  .time,
+  .price,
+  .sprice {
+    font-weight: 800;
   }
 </style>
