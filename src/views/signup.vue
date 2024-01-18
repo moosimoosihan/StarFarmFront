@@ -522,8 +522,8 @@ button{
 }
 .signUp input:hover {
     color: rgb(0, 0, 0);
-    border: 2px solid rgb(253, 217, 249);
-    background-color: rgb(255, 236, 253);
+    border: 2px solid rgb(0, 110, 33);
+    background-color: rgb(0, 110, 33);
     border-radius: 10px;
     cursor: pointer;
 }
