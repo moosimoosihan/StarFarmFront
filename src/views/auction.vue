@@ -43,19 +43,25 @@
   <!--경매시작을 보여주는 화면-->
   <div class="product-details6">
     <div class="product-details1">
-      <div class="timer">
-        <h1>{{ goods.goods_nm }}
-          <p :class="blinktime? 'blinktime' : 'time'">{{ currentTime }}</p></h1></div>
-        <p style="text-align: left; margin-left: 0;">시작가: {{ formatPrice(goods.goods_start_price) }}</p>
-        <p style="text-align: left; margin-left: 0;" v-if="goodsSuccBid != null">최고 입찰가: {{ formatPrice(goodsSuccBid) }}</p>
-        <p  style="text-align: left; margin-left: 0;" v-else>최고 입찰가: 입찰 없음</p>
-        <p class="description">
-        </p>
+      <div class="product_content">
+        <p :class="blinktime? 'blinktime' : 'time'">{{ currentTime }}</p>
         <!-- 관심 상품 버튼 -->
         <div class="like_container" v-if="user.user_no!==''">
           <div :class="likeGoods===0?'heart':'heart is-active'" @click="likeGoods===0?like_goods():likeDelete()"></div>
           <p>{{ likeCount }}</p>
         </div>
+        <div class="timer">
+          <h1>{{ goods.goods_nm }}
+          </h1>
+        </div>
+          <p style="text-align: left; margin-left: 0;">시작가: {{ formatPrice(goods.goods_start_price) }}</p>
+          <p style="text-align: left; margin-left: 0;" v-if="goodsSuccBid != null">최고 입찰가: {{ formatPrice(goodsSuccBid) }}</p>
+          <p  style="text-align: left; margin-left: 0;" v-else>최고 입찰가: 입찰 없음</p>
+          <p class="description">
+          </p>
+      </div>
+
+
         <div class="bid_container" id="scroll">
             <ul>
               <li v-for="(bidUser, i) in goodsBidList" :class="bidUser.user_no===user.user_no ? 'me_price' : 'price'" :id="bidUser===goodsBidList[goodsBidList.length-1]? 'last_price' : ''" :key="i">{{ bidUser.user_nick }}님이 {{ formatPrice(bidUser.bid_amount) }} 입찰하셨습니다.</li>
@@ -659,7 +665,7 @@ body {
     text-overflow: ellipsis;
     display: flex;
     justify-content: space-between;
-
+    padding-top: 20px;
 }
 
  .product-details1{
@@ -809,12 +815,14 @@ textarea {
   margin-top: 2px;
   min-width: 150px;
 }
-.time { 
+.time {
+  float: right;
   text-align: right;
   align-self: flex-end;
   font-size: 25px;
   margin-top: 2px;
   min-width: 150px;
+  height: 40px;
 }
 
 .blinktime { 
@@ -859,16 +867,21 @@ textarea {
   background-position: -2800px 0;
 }
 .like_container{
-  width: 300px;
-  position: absolute;
-  left: 1200px;
-  top: 350px;
+  width: 120px;
+  position: relative;
+  float: right;
+  margin-top: 20px;
+  left: 160px;
 }
 .like_container p {
-  position: relative;
-  top: 40px;
   font-size: 20px;
   font-weight: 700;
+  margin-top: 60px;
+  float:left;
+}
+.product_content {
+  width: 480px;
+  height: 200px;
 }
 #selectImg{
   background-color: #766800;
