@@ -137,7 +137,56 @@ export default {
                 }
                 
             },
-    }
+    },
+    mounted() {
+        // 해당 상품을 판 판매자인지 구매한 구매자인지 확인 후 리뷰 작성 아니라면 메인으로 이동
+        if(this.$route.params.sale==='sale'){
+            // 판매자의 경우 구매자에게 리뷰를 작성
+            try {
+                const goods_no = this.$route.params.id;
+                axios({
+                    url: `http://localhost:3000/goods/sale_review_check/${goods_no}/${this.user.user_no}`,
+                    method: "GET", 
+                })
+                .then((res) => {
+                    if(res.data.message=='review_no'){
+                        this.$router.push('/');
+                    } else if (res.data.message == 'review_ok'){
+                        console.log('리뷰 작성 가능');
+                    }
+                })
+                .catch(() => {
+                    this.$swal("오류 발생")
+                })
+            } catch(err){
+                console.log(err);
+            }
+        } else {
+            try {
+                const goods_no = this.$route.params.id;
+                axios({
+                    url: `http://localhost:3000/goods/review_check/${goods_no}/${this.user.user_no}`,
+                    method: "GET", 
+                })
+                .then((res) => {
+                    if(res.data.message=='review_no'){
+                        this.$router.push('/');
+                    } else {
+                        if(res.data.user_no == this.user.user_no){
+                            console.log('리뷰 작성 가능');
+                        } else {
+                            this.$router.push('/');
+                        }
+                    } 
+                })
+                .catch(() => {
+                    this.$swal("오류 발생")
+                })
+            } catch(err){
+                console.log(err);
+            }
+        }
+    },
 }
 
 </script>

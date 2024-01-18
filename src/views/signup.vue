@@ -106,6 +106,9 @@ export default {
       isDelete: true,
     }
   },
+  mounted() {
+    document.getElementById('id').focus();
+  },
   methods: {
     onSubmitForm() {
             if (!this.validationCheck()) {

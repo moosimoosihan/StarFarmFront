@@ -201,7 +201,7 @@ import axios from 'axios'
         },
     },
     mounted() {
-        console.log(this.naverLogin.user);
+        document.getElementById('username-field').focus();
         this.naverLogin = new window.naver.LoginWithNaverId({
             clientId: "DTZs9Sc_PhmpMYxpkUfD",
             callbackUrl: "http://localhost:8080/",
