@@ -330,6 +330,10 @@ methods: {
         return
       }
     }
+    // 100원 이하 단위로 입력할 수 없도록
+    if(this.bidAmount%100!==0){
+        return this.$swal('경매 입찰가는 100원 단위로 입력해주세요.')
+    }
     this.$swal.fire({
       title: '입찰하기',
       text: '입찰하시겠습니까?',
