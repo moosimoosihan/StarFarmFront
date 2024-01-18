@@ -29,7 +29,7 @@
         <div class="password">
           <span class="s">비밀번호</span>
           <input id="password" type="password"  v-model="user_pw" placeholder="비밀번호를 입력해 주세요.(6자리 이상)">
-          <p class="alert_font" v-if="user_pw.length < 6" style="color:red;">비밀번호는 6자리 이상으로 입력해주세요.</p>
+          <p class="alert_font" v-if="user_pw.length < 6 && user_pw.length!=0" style="color:red;">비밀번호는 6자리 이상으로 입력해주세요.</p>
           <p class="alert_font">&nbsp;</p>
         </div>
         <div class="passwordCheck">

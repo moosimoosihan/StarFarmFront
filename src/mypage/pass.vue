@@ -33,6 +33,8 @@
                     <button type="button" class="btn" @click="onSubmitForm">비밀번호 변경</button>
                 </div>
             </div>
+            <p v-if="user_npw.length<6 && user_npw.length>0" class="error">비밀번호는 6자리 이상입니다.</p>
+            <p v-else-if="user_npw!=user_pw_ck" class="error">비밀번호가 다릅니다.</p>
         </div>
     </main>
     </template>
@@ -61,51 +63,53 @@
                 this.$router.push({ path: '/login' });
             } else {
                 this.user_no = this.user.user_no; 
-
-
-                axios
-                    .get(`http://localhost:3000/mypage/getUserData/${this.user.user_no}`)
-                    .then((res) => {
-                        if (res.data.length > 0) {
-                            this.cat = res.data[0];
-                            console.log(this.cat)
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
+                axios.get(`http://localhost:3000/mypage/getUserData/${this.user.user_no}`)
+                .then((res) => {
+                    if (res.data.length > 0) {
+                        this.cat = res.data[0];
+                        console.log(this.cat)
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
             }
         },
         methods: {
             onSubmitForm() {
                 if (this.user_pw === "" || this.user_npw === "" || this.user_pw_ck === "") {
                     this.$swal("모든 항목을 입력해주세요");
-                } else if (this.user_npw !== this.user_pw_ck) {
+                    return
+                }
+                if (this.user_npw !== this.user_pw_ck) {
                     this.$swal("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-                } else {
-                    axios
-                        .post('http://localhost:3000/mypage/pass_process', {
-                            user_no: this.user_no,
-                            user_pw: this.user_pw,
-                            user_npw: this.user_npw,
-                            user_pw_ck: this.user_pw_ck
-                        })
-                        .then((res) => {
-                            if (res.data.message === 'pass_update') {
-                                this.$swal("수정이 완료되었습니다");
-                                this.$router.push({ path: '/mypage' });
-                            } else if (res.data.message === 'pw_ck') {
-                                this.$swal("비밀번호가 틀립니다.");
-                            } else {
-                                this.$swal("알 수 없는 오류가 발생했습니다.");
-                            }
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                            this.$swal("수정에 실패했습니다.");
-                        });
+                    return
+                }
+                if(this.user_npw.length < 6){
+                    this.$swal("비밀번호는 6자리 이상입니다.");
+                    return
+                }
+                axios.post('http://localhost:3000/mypage/pass_process', {
+                    user_no: this.user_no,
+                    user_pw: this.user_pw,
+                    user_npw: this.user_npw,
+                    user_pw_ck: this.user_pw_ck
+                })
+                .then((res) => {
+                    if (res.data.message === 'pass_update') {
+                        this.$swal("수정이 완료되었습니다");
+                        this.$router.push({ path: '/mypage' });
+                    } else if (res.data.message === 'pw_ck') {
+                        this.$swal("비밀번호가 틀립니다.");
+                    } else {
+                        this.$swal("알 수 없는 오류가 발생했습니다.");
                     }
-                },
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.$swal("수정에 실패했습니다.");
+                });
+            },
             // 키 아이콘
             oneyes(field) {   
                 const passwordInput = document.querySelector(`.${field} input`);
@@ -254,5 +258,10 @@ input:focus {
 
 .login-form .btn:hover {
     cursor: pointer;
+}
+.error {
+    color: red;
+    font-size: 12px;
+    text-align: center;
 }
 </style>
