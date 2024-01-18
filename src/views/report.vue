@@ -250,13 +250,14 @@ h1 {
     width: 80px;
     height: 30px;
     float: left;
-    margin-left: 40px;
+    margin-left: 20px;
     border: 2px solid rgb(221, 221, 221);
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-top: 7px;
     display: flex;
     color: rgb(137, 137, 137);
     border-radius: 10px;
+    text-align: center;
 }
 .report_title_box {
     width:100%;
@@ -282,10 +283,12 @@ h1 {
     resize: none;
     align-items: center;
     border: 2px solid rgb(221, 221, 221);
-    border-radius: 5px;
     display: flex;
     color: rgb(137, 137, 137);
     border-radius: 10px;
+    padding-left: 10px;
+    padding-top: 6px;
+
 }
 .report_file_box {
     width: 100%;
@@ -299,7 +302,7 @@ h1 {
 .report_file_name {
     width: 100px;
     height: 40px;
-    padding-top: 10px;
+    padding-top: 1px;
     float:left;
 }
 .report_content {
@@ -308,7 +311,6 @@ h1 {
     resize: none;
     margin: 30px 0;
     border: 2px solid rgb(221, 221, 221);
-    border-radius: 5px;
     margin-bottom: 10px;
     display: flex;
     color: rgb(137, 137, 137);
@@ -351,6 +353,8 @@ h1 {
     height: 100px;
     float:left;
     margin-left: 20px;
+    margin-bottom: 10px;
+    margin-top: 2px;
 }
 .img_view_container button {
     width: 20px;
@@ -359,7 +363,6 @@ h1 {
     color: rgb(255, 0, 0);
     border: 2px solid rgb(123, 123, 123);
     background-color: rgb(255, 255, 255);
-    border-radius: 10px;
     float: right;
   }
   input:focus {

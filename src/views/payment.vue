@@ -238,7 +238,7 @@ export default {
 }
 .payment_product {
   width: 100%;
-  height: 400px;
+  height: 150px;
   background-color: rgb(255, 255, 255);
   border-style: solid;
   border-width: 2px;
@@ -253,7 +253,7 @@ export default {
 }
 .payment_product_content {
     width: 100%;
-    height: 400px;
+    height: 150px;
     font-size:  16px;
     background-color:white;
     flex: 1;
@@ -276,6 +276,9 @@ export default {
   width: 500px;
    height: 30px;
   font-size:  17px;
+  border-radius: 7px;
+  padding-left: 10px;
+  border: 1px solid black;
 }
 .payment_phone input {
     width: 500px;
@@ -295,8 +298,12 @@ export default {
 }
 .payment_deliv input{
   font-size: 18px;
-   height: 34px;
-    width: 500px;
+  height: 34px;
+  width: 500px;
+  margin-bottom: 10px;
+  border-radius: 7px;
+  padding-left: 10px;
+  border: 1px solid black;
 }
 .payment_address_btn {
     width: 80px;
@@ -325,11 +332,11 @@ export default {
 }
 .payment_request textarea {
     width: 100%;
-    height: 250px;
+    height: 150px;
     resize: none;
     font-size: 18px;
-    line-height: 100px;
-    padding-left: 20%;
+    padding-top: 10px;
+    padding-left: 2%;
 }
 #payment_pay_btn {
     display: flex;
@@ -353,13 +360,12 @@ export default {
   margin-top: 10px;
 }
 .product-ima {
-  flex: 1; /* 남은 공간 모두 차지하도록 설정 */
   max-width: 100%; /* 이미지의 최대 너비 설정 */
   max-height: 100%; 
 }
 .product-image {
-  width: 100%; /* 이미지의 가로 너비 100%로 설정 */
-  height: 400px;
+  width: 150px; /* 이미지의 가로 너비 100%로 설정 */
+  height: 150px;
 }
 li {
     list-style-type: none;  
@@ -368,13 +374,13 @@ li {
   display: flex; 
   align-items: center;
   width: 100%;
+  height: 150px;
 }
 .profile_box {
   display: flex;
     width: 150px;
     height: 150px;
     float:right;
-    justify-content: center;
     align-items:center;
     background-color:white;
     text-align: center;
@@ -407,7 +413,7 @@ margin-bottom:10px;
 }
 .input{
   width:200px;
-  height: 100px;
+  height: 50px;
   font-size:100px;
 }
 </style>

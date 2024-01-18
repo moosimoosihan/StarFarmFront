@@ -454,6 +454,7 @@ select {
     display: flex;
     color: rgb(137, 137, 137);
     border-radius: 10px;
+    padding-left: 15px;
 }
 
 #store_timer_deliv div {
