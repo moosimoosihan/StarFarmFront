@@ -23,17 +23,21 @@
             <div class="form">
                 <label class="te">이메일</label>
                 <div class="in">
-                    <input type="email" class="form-control" placeholder="이메일" v-model="loginUser.user_email" />
-
+                    <input id="email" type="text"  v-model="user_email" placeholder="이메일을 입력해 주세요." @input="email_check()">
+          <p class="alert_font" v-if="email_check_bool==1" style="color:red;">사용할 수 없는 이메일입니다.</p>
+          <p class="alert_font" v-else-if="email_check_bool==2">사용 가능한 이메일입니다.</p>
+          <p class="alert_font" v-else >&nbsp;</p>
                 </div>
             </div>
 
             <div class="form">
                 <label class="te">휴대전화번호</label>
                 <div class="in">
-                    <input type="tel" class="form-control" placeholder="휴대전화번호" maxlength="11" @input="validatePhoneNumber" v-model="loginUser.user_mobile" />
-                    <button class="btn" @click="mobile_check()">중복확인</button>
-                   
+                    <input id="phone" type="text" placeholder="-를 뺀 전화번호를 입력해 주세요." v-model="user_mobile" maxlength="11" @input="validatePhoneNumber(), mobile_check()">
+                    <p class="alert_font" v-if="phone_check_bool==1" style="color:red;">사용할 수 없는 전화번호입니다.</p>
+                    <p class="alert_font" v-else-if="phone_check_bool==2" style="color:red;">DB 에러 발생</p>
+                    <p class="alert_font" v-else-if="phone_check_bool==3">사용 가능한 전화번호입니다.</p>
+                    <p class="alert_font" v-else >&nbsp;</p>
                 </div>
             </div>
 
@@ -68,6 +72,8 @@ export default {
         return {
             loginUser: {},
             profile_img_src : '',
+            phone_check_bool: 0,
+            email_check_bool: 0,
             
             // 이미지가 아직 업로드 중인지 확인할 변수
             isUploading: true,
@@ -234,33 +240,50 @@ export default {
         },
         mobile_check() {
                 if(this.user_mobile == "") {
-                    this.$swal("전화번호를 입력하세요.");
-                    return false;
+                    this.phone_check_bool = 0;
+                    return;
                 }
                 axios({
                     url: "http://localhost:3000/auth/mobile_check2",
                     method: "POST",
                     data: {
-                        user_mobile: this.loginUser.user_mobile,
                         user_no: this.user.user_no,
+                        user_mobile: this.user_mobile,
                     },
                 })
                     .then(res => {
                         console.log(res.data.message);
                         if (res.data.message == 'already_exist_phone') {
-                            this.$swal("이미 존재하는 전화번호입니다.")
+                            this.phone_check_bool = 1;
+                            return;
                         }
                         else if (res.data.message == 'DB_error') {
-                            this.$swal("DB 에러 발생")
+                            this.phone_check_bool = 2;
+                            return;
                         }
                         else {
-                            this.$swal("사용 가능한 전화번호입니다.")
+                            this.phone_check_bool = 3;
+                            return;
                         }
                     })
                     .catch(err => {
                         console.log(err);
                     
                 })
+            },
+            email_check() {
+                if(this.user_email == "") {
+                    this.email_check_bool = 0;
+                    return;
+                }
+                // 이메일에  @와 .을 제외한 특수문자, 공백, 한글 입력 불가
+                this.user_email = this.user_email.replace(/[^a-z0-9@.]/gi,'');
+                // 이메일이 영어@영어.영어 가 아닌 경우
+                if(!/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/.test(this.user_email)) {
+                    this.email_check_bool = 1;
+                    return;
+                }
+                this.email_check_bool = 2;
             },
         goToPass() {
             this.$router.push({ path: '/mypage/pass' });
@@ -343,6 +366,11 @@ h2 {
     margin-bottom: 20px;
     display: flex;
     width: 100%;
+}
+.alert_font{
+    font-size: 15px;
+    margin-top: 15px;
+    margin-left: 10px;
 }
 
 .form .te {
@@ -497,4 +525,6 @@ input:focus {
     margin-top: 50px;
     margin-left: 5px;
 }
+
+
 </style>
