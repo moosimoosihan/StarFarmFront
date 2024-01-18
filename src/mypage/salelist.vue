@@ -65,7 +65,7 @@
                 </div>
                 <div class="page_container">
                     <button v-if="page>0" class="pageNum" @click="prev()">이전</button>
-                    <button v-for="(num, i) in pageCount" :key="i" class="pageNum" :id="num==page? 'select':''" @click="getSaleList(sort,i)">{{i+1}}</button>
+                    <button v-for="num in getPageNumbers()" :key="num" class="pageNum" :id="num==page? 'select':''" @click="getSaleList(sort,num)">{{num+1}}</button>
                     <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
                 </div>
             </div>
@@ -98,6 +98,13 @@ import axios from 'axios';
             },
         },
         methods: {
+            getPageNumbers() {
+                const groupSize = 5; // 페이지 그룹 크기
+                const groupIndex = Math.floor(this.page / groupSize); // 현재 페이지 그룹 인덱스
+                const start = groupIndex * groupSize; // 현재 페이지 그룹의 시작 페이지 번호
+                const end = Math.min(start + groupSize, this.pageCount); // 현재 페이지 그룹의 마지막 페이지 번호
+                return Array.from({length: end - start}, (v, i) => start + i); // 페이지 번호 배열 생성
+            },
             async getSalePage() {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/salelistCount/${this.user.user_no}/${this.sort}`);
