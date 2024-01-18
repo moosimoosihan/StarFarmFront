@@ -824,17 +824,17 @@ textarea {
   text-align: right;
   align-self: flex-end;
   font-size: 25px;
-  margin-top: 2px;
   min-width: 150px;
   height: 40px;
 }
 
 .blinktime { 
+  float: right;
   text-align: right;
   align-self: flex-end;
   font-size: 25px;
-  margin-top: 2px;
   min-width: 150px;
+  height: 40px;
   -webkit-animation: blink 0.5s ease-in-out infinite alternate;
   -moz-animation: blink 0.5s ease-in-out infinite alternate;
   animation: blink 0.5s ease-in-out infinite alternate;
