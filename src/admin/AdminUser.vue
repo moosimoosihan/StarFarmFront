@@ -129,13 +129,13 @@ export default {
       try {
         const response = await axios({
           url:`http://localhost:3000/auth/admin/ban`,
-          method: 'put',
+          method: 'post',
           data: {
             user_no: no,
             user_ban: this.userList[index].USER_BAN === 0 ? 1 : 0,
           },
         });
-        this.fetchUserData();
+        this.fetchUserData(this.sort, this.page);
       } catch (error) {
         console.log(error);
       }

@@ -77,7 +77,6 @@
       };
     },
     created() {
-      this.getAdd();
       this.getAddPage(this.sort, this.page);
     },
     computed:{
@@ -102,7 +101,7 @@
       } catch (error) {
         console.log('상품 삭제 에러:', error);
       }
-      await this.getAdd()
+      await this.getAddPage(this.sort, this.page)
     },
     async getAddPage(sort, num) {
         try {
@@ -159,7 +158,7 @@
       } catch (error) {
         console.log(error);
       }
-      await this.getAdd()
+      await this.getAddPage(this.sort, this.page)
     },
     gotoPage(index) {
       this.$router.push(`/admin/deal/${index}`);
