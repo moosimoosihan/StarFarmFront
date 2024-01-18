@@ -7,14 +7,14 @@
                 <label class="te">닉네임</label>
                 <div class="in">
                     <input type="text" class="form-control" placeholder="닉네임" v-model="loginUser.user_nick" />
-
                 <div class="profile-upload-content upload-img">
-                <div class="profile-img">
-                    <img v-if="profile_img_src != ''" id="img-preview" :width="200" :src="profile_img_src"
-                            alt="프로필 사진 미리보기" />
-                    <img v-else-if="!loginUser.user_img" id="img-preview" :width="200" src="../assets/profile.png" alt="프로필 사진 미리보기" />
-                    <img v-else id="img-preview" :width="200" :src="require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`)" >
-                </div>
+                    <div class="profile-img">
+                        <button v-if="profile_img_src!='' || loginUser.user_img" @click="deleteImage()">X</button>
+                        <img v-if="profile_img_src != ''" id="img-preview" :width="200" :src="profile_img_src"
+                                alt="프로필 사진 미리보기" />
+                        <img v-else-if="!loginUser.user_img" id="img-preview" :width="200" src="../assets/profile.png" alt="프로필 사진 미리보기" />
+                        <img v-else id="img-preview" :width="200" :src="require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`)" >
+                    </div>
                     <input id="profile-img" type="file" placeholder="이미지" @change="uploadFile($event.target.files)">
                 </div>
                 </div>
@@ -107,8 +107,14 @@ export default {
                     })
                     .then((res) => {
                         if (res.data.message === 'mypage_update') {
-                            this.$swal("수정을 완료했습니다.");
-                            this.$router.push({ path: '/mypage' });
+                            this.$swal.fire({
+                                title: '수정되었습니다.',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            .then(
+                                window.location.href="http://localhost:8080/mypage/"
+                            )
                         } else if (res.data.message == 'already_exist_phone') {
                             this.$swal("이미 존재하는 전화번호입니다.")
                         } else {
@@ -200,7 +206,7 @@ export default {
                     return this.isUploading;
                 }
             },
-            deleteImage(id,name){
+            deleteImage(){
                 this.$swal.fire({
                     title:'정말 삭제하시겠습니까?',
                     showCancelButton: true,
@@ -208,12 +214,14 @@ export default {
                     cancelButtonText: `취소`
                 }).then(async (result) => {
                     if(result.isConfirmed){
+                      const img = this.loginUser.user_img
+                      this.loginUser.user_img = null
+                      this.profile_img_src = ''
                       await axios({
-                            url:'/auth/imageDelete',
+                            url:'http://localhost:3000/auth/delete_img',
                             method:'POST',
                             data:{
-                                id:id,
-                                name:name
+                                pastname:img
                             }
                         })
                         this.$swal.fire('삭제되었습니다.','','success')
@@ -461,7 +469,18 @@ input:focus {
   margin-left: 300px;
   margin-bottom: 20px;
 }
-
+.profile-img button {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    color: rgb(255, 0, 0);
+    border: 2px solid rgb(123, 123, 123);
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    margin-left: -10px;
+    margin-top: -10px;
+}
 #profile-img {
     margin-left: 280px;
     border:none;
