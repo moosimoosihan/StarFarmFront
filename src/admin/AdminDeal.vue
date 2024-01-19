@@ -38,7 +38,7 @@
               <td>{{ product.GOODS_SUCC_PRICE }}</td>
               <td>
                 <button v-if="!product.DELETE_TIME" class="view-button" @click="deleteItem(product.GOODS_NO)">
-                  삭제
+                  삭제                        
                 </button>
                 <button v-else class="view-button" @click="restoreGoods(product.GOODS_NO)">
                   보기
@@ -81,18 +81,18 @@
     },
     computed:{
       user(){
-        return this.$store.state.user;
+        return this.$store.state.user;     //스토어에서 받아서뿌림
       },
     },
     methods: {
-      getPageNumbers() {
+      getPageNumbers() {      
           const groupSize = 5; // 페이지 그룹 크기
           const groupIndex = Math.floor(this.page / groupSize); // 현재 페이지 그룹 인덱스
           const start = groupIndex * groupSize; // 현재 페이지 그룹의 시작 페이지 번호
           const end = Math.min(start + groupSize, this.pageCount); // 현재 페이지 그룹의 마지막 페이지 번호
           return Array.from({length: end - start}, (v, i) => start + i); // 페이지 번호 배열 생성
       },
-    async deleteItem(no) {
+    async deleteItem(no) {    //관리자 상품 삭제하는 삭제버튼누르면
      try {
         await axios({
           url: `http://localhost:3000/goods/delete_goods/${no}`, 
@@ -113,7 +113,7 @@
           console.log(error);
         }
     },
-    async searchGoods(sort, num) {
+    async searchGoods(sort, num) {     
       if(this.search_title==''){
         return this.$swal({
           title: '검색어를 입력해주세요',
@@ -149,7 +149,7 @@
           }
         }
       },
-    async restoreGoods(no) {
+    async restoreGoods(no) {                  //보기버튼 누르면 다시 복구
       try {
         const response = await axios.post(`http://localhost:3000/goods/restoreGoods/${no}`)
         if(response.data.message=='restore_complete'){
@@ -161,7 +161,7 @@
       await this.getAddPage(this.sort, this.page)
     },
     gotoPage(index) {
-      this.$router.push(`/admin/deal/${index}`);
+      this.$router.push(`/admin/deal/${index}`);  
     },
     prev() {
       this.page += 5;
@@ -187,7 +187,7 @@
         this.getAddPage(this.sort,this.page);
       }
     },
-    formatDateTime(dateTime) {
+    formatDateTime(dateTime) {   //시간이 컴퓨터시간으로 나오게
         const date = new Date(dateTime);
         const options = {
             year: "numeric",

@@ -8,33 +8,33 @@
           <input type="text" placeholder="신고제목을 입력하세요" v-model="search_report" />
           <button @click="searchReport(sort, page)">검색</button>
           <select v-model="sort" @change="search_report!='' ? searchReport(sort, page) : getReport(sort,page)">
-            <option value="DESC">최신순</option>
-            <option value="ASC">오래된순</option>
+          <option value="DESC">최신순</option>
+          <option value="ASC">오래된순</option>
           </select>
         </div>
-        <table class="rwd-table">
-          <thead>
-            <tr>
-              <th>신고번호</th>
-              <th>신고제목</th>
-              <th>신고자</th>
-              <th>피신고자</th>
-              <th>신고날짜</th>
-              <th>상세보기</th>
-            </tr>
+         <table class="rwd-table">
+        <thead>
+        <tr>
+           <th>신고번호</th>
+           <th>신고제목</th>
+           <th>신고자</th>
+           <th>피신고자</th>
+           <th>신고날짜</th>
+           <th>상세보기</th>
+           </tr>
           </thead>
           <tbody>
-            <tr v-for="(report, index) in reports" :key="index">
-              <td>{{ report.REPORT_NO }}</td>
-              <td>{{ report.REPORT_TITLE }}</td>
-              <td>{{ reported_userNames[index] }}</td>
-              <td>{{ report_userNames[index] }}</td>
-              <td>{{ formatDateTime(report.REPORT_DATE) }}</td>
-              <td><button class="view-button" @click="viewReport(report.REPORT_NO)">보기</button></td>
-            </tr>
-            <tr v-if="reports.length === 0">
-              <td colspan="6">신고된 내역이 없습니다.</td>
-            </tr>
+          <tr v-for="(report, index) in reports" :key="index">
+          <td>{{ report.REPORT_NO }}</td>
+          <td>{{ report.REPORT_TITLE }}</td>
+          <td>{{ reported_userNames[index] }}</td>
+          <td>{{ report_userNames[index] }}</td>
+          <td>{{ formatDateTime(report.REPORT_DATE) }}</td>   //신고날짜
+          <td><button class="view-button" @click="viewReport(report.REPORT_NO)">보기</button></td> //신고내용상세보기
+          </tr>
+          <tr v-if="reports.length === 0">
+          <td colspan="6">신고된 내역이 없습니다.</td>
+          </tr>
           </tbody>
         </table>
       </div>
@@ -43,8 +43,8 @@
         <button v-for="num in getPageNumbers()" :key="num" class="pageNum" :id="num==page? 'select':''" @click="search_report!='' ? searchReport(sort, num) : getReport(sort,num)">{{num+1}}</button>
         <button v-if="page<(pageCount-1)" class="pageNum" @click="next()">다음</button>
       </div>
-    </div>
-   </div>
+      </div>
+      </div>
  </template>
 <script>
 import axios from 'axios';
@@ -52,38 +52,36 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      reports: [],
-      reported_userNames: [],
-      report_userNames: [],
-
+      reports: [],                 //신고제목
+      reported_userNames: [],      //신고자
+      report_userNames: [],        //피신고자
       page: 0,
       pageCount: 0,
-      itemCount: 0,
-
-      sort: 'DESC',
-      search_report: '',
+      itemCount: 0,               
+      sort: 'DESC',               //정렬
+      search_report: '',          //검색할 신고제목
     }
   },
   mounted() {
-    this.getReportCount()
-    this.getReport(this.sort, this.page);
+    this.getReportCount()                //신고횟수
+    this.getReport(this.sort, this.page);//신고정보 나열 페이지되서 나오게
   },
   methods: {
     getPageNumbers() {
-        const groupSize = 5; // 페이지 그룹 크기
+        const groupSize = 5;            // 페이지 그룹 크기
         const groupIndex = Math.floor(this.page / groupSize); // 현재 페이지 그룹 인덱스
         const start = groupIndex * groupSize; // 현재 페이지 그룹의 시작 페이지 번호
         const end = Math.min(start + groupSize, this.pageCount); // 현재 페이지 그룹의 마지막 페이지 번호
         return Array.from({length: end - start}, (v, i) => start + i); // 페이지 번호 배열 생성
     },
-    viewReport(report_no) {
+  viewReport(report_no) {                //신고내용상세보기
       let popupWindow = window.open(`http://localhost:8080/reportDetail/${report_no}`, '_blank', 'width=800', 'height=620', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
         popupWindow.resizeTo(800, 620)
         popupWindow.onresize = (_=>{
-          popupWindow.resizeTo(800, 620)
+        popupWindow.resizeTo(800, 620)
         })
-    },
-    async getReportCount() {
+    }, 
+  async getReportCount() {               //신고 갯수 가져오기
       if(this.search_report == ''){
         try{
           const res = await axios.get(`http://localhost:3000/auth/admin/reportlist/none`);
@@ -93,7 +91,7 @@ export default {
           console.log(err);
         }
       } else {
-        try{
+        try{                             //신고 검색
           const res = await axios.get(`http://localhost:3000/auth/admin/reportlist/${this.search_report}`);
           this.itemCount = res.data[0].count;
           this.pageCount = Math.ceil(this.itemCount / 10);
@@ -101,8 +99,8 @@ export default {
           console.log(err);
         }
       }
-    },
-    async getReport(sort, num) {
+    }, 
+  async getReport(sort, num) {      //모든신고 가져오기
       try{
         const res = await axios.get(`http://localhost:3000/auth/admin/reportlistInfo/none/${sort}/${num}`);
         this.reports = res.data;
@@ -113,7 +111,7 @@ export default {
       await this.getReportedUserNames()
       await this.getReportUserNames()
     },
-    async getReportedUserNames(){
+  async getReportedUserNames(){     //바로위 신고 가져오기
       try{
         for(let i=0; i<this.reports.length; i++){
           const res = await axios.get(`http://localhost:3000/mypage/mypage/${this.reports[i].USER_NO}`);
@@ -123,7 +121,7 @@ export default {
         console.log(err);
       }
     },
-    async getReportUserNames(){
+    async getReportUserNames(){     //바로위 신고 가져오기
       try{
         for(let i=0; i<this.reports.length; i++){
           const res = await axios.get(`http://localhost:3000/mypage/mypage/${this.reports[i].REPORT_USER_NO}`);

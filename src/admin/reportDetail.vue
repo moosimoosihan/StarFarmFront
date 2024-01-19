@@ -29,13 +29,13 @@ import axios from 'axios';
 export default {
     data () {
         return {
-            report: {},
-            user_id: '',
-            reportUser_id: '',
+            report: {},            //신고정보가져오기
+            user_id: '',           //신고자
+            reportUser_id: '',     //신고대상
         }
     },
     mounted() {
-        this.getReport();
+        this.getReport();          
     },
     methods: {
         async getReport() {
@@ -64,9 +64,9 @@ export default {
             }
         },
         closeWindow() {
-            window.close();
+            window.close();  //끄기
         },
-        formatDateTime(dateTime) {
+        formatDateTime(dateTime) {  //컴퓨터시간
             const date = new Date(dateTime);
             const options = {
                 year: "numeric",
@@ -79,12 +79,12 @@ export default {
             const formattedDateTime = date.toLocaleDateString("ko-KR", options);
             return formattedDateTime;
         },
-        gotoProfile(user_no) {
+        gotoProfile(user_no) {  //유저페이지로
             window.open(`/userpage/${user_no}`);
         }
     }
 }
-
+``
 </script>
 <style scoped>
 .report_img{

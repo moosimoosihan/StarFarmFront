@@ -27,7 +27,7 @@
           </thead>
           <tbody>
             <tr v-for="(us, index) in userList" :key="index">
-              <td>{{ us.USER_NO }}</td>
+              <td>{{ us.USER_NO }}</td> 
               <td>{{ us.USER_ID }}</td>
               <td>{{ us.USER_NICK }}</td>
               <td>{{ us.USER_EMAIL }}</td>
@@ -61,34 +61,34 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      reportUserCount: [],
+      reportUserCount: [], //신고당한횟수 세줌
       userList: [], // 추가: 데이터를 저장할 배열
 
-      page: 0,
+      page: 0,             
       pageCount: 0,
-
-      search_id: '',
-      sort: 'DESC',
-    };
-  },
-  created() {
-    this.fetchUserData(this.sort, this.page); // 추가: 데이터를 불러오는 메서드 호출
-    this.getUserPage()
-  },
-  computed: {
-    user() {
-      return this.$store.state.user;
+  
+      search_id: '',     
+      sort: 'DESC',     //정렬
+     };
     },
-  },
-  methods: {
+   created() {
+     this.fetchUserData(this.sort, this.page); // 추가: 데이터를 불러오는 메서드 호출
+     this.getUserPage()                        //유저들의 정보들이
+    },
+   computed: {
+     user() {
+       return this.$store.state.user;          //스토어에 인덱스에서 유저상태 가져옴
+     },
+     },
+    methods: {
     getPageNumbers() {
-        const groupSize = 5; // 페이지 그룹 크기
+        const groupSize = 5;                   // 페이징 페이지 그룹 크기 
         const groupIndex = Math.floor(this.page / groupSize); // 현재 페이지 그룹 인덱스
-        const start = groupIndex * groupSize; // 현재 페이지 그룹의 시작 페이지 번호
+        const start = groupIndex * groupSize;  // 현재 페이지 그룹의 시작 페이지 번호
         const end = Math.min(start + groupSize, this.pageCount); // 현재 페이지 그룹의 마지막 페이지 번호
         return Array.from({length: end - start}, (v, i) => start + i); // 페이지 번호 배열 생성
-    },
-    async fetchUserData(sort, num) {
+     },
+    async fetchUserData(sort, num) {           //userlist/:keyword/:sort/:num'으로 되어잇고 가입일로 orderby 되어있음
       await axios
         .get(`http://localhost:3000/auth/admin/userlist/none/${sort}/${num}`)
         .then((response) => {
@@ -107,7 +107,7 @@ export default {
           }
         } 
     },
-    // 유저 총 수
+    // 유저 총 수  
     async getUserPage() {
       if(this.search_id==''){
         try {
@@ -124,7 +124,7 @@ export default {
           console.log(error);
         }
       }
-    },
+    },  //유저 정지  벤 :0,1
     async userStateChange(index,no) {
       try {
         const response = await axios({
@@ -139,7 +139,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
+    },  //시간이 컴퓨터시간으로
     formatDateTime(dateTime) {
         const date = new Date(dateTime);
         const options = {
@@ -149,7 +149,7 @@ export default {
         };
         const formattedDateTime = date.toLocaleDateString("ko-KR", options);
         return formattedDateTime;
-    },
+    },  //ID검색
     async searchID(sort, num){
       if(this.search_id == ''){
         return this.$swal({
@@ -177,7 +177,7 @@ export default {
       }
       this.getUserPage()
     },
-    prev() {
+    prev() {      //이전 다음 페이징
       this.page -= 1;
       if(this.search_id == ''){
         this.fetchUserData(this.sort, this.page);
