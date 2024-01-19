@@ -91,6 +91,7 @@ import axios from 'axios';
         },
         created() {
             this.getSaleList(this.sort, this.page);
+            this.checkAlram();
         },
         computed: {
             user() {
@@ -175,7 +176,7 @@ import axios from 'axios';
             },
             async getSuccBid(goods_no) {
                 try {
-                    const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goods_no}`);
+                    const response = await axios.get(`http://localhost:3000/mypage/goodsSuccBid/${goods_no}`);
                     return response.data[0].succ_bid;
                 } catch (error) {
                     console.error(error);
@@ -211,6 +212,14 @@ import axios from 'axios';
                 this.page += 1;
                 this.getSaleList(this.sort,this.page)
             },
+            async checkAlram(){
+                const user_no = this.user.user_no;
+                try {
+                    await axios.post(`http://localhost:3000/goods/auction_delete_alram/${user_no}`);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
         }
     }
 </script>

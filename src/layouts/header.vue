@@ -13,6 +13,7 @@
                 <ul class="mymenu">
                   <li>
                     <a1>
+                      <div v-if="alram>0" class="alarm">{{ alram }}</div>
                       <img style="border-radius: 70px; border: solid 2px #0d4608;" class="myPage"
                       :src="loginUser.user_img ? require(`../../../StarFarmBack/uploads/userImg/${loginUser.user_no}/${loginUser.user_img}`) : require(`../assets/profile.png`)"
                       alt="프로필 이미지"/></a1>
@@ -103,6 +104,7 @@ export default {
         loginUser: {},
         searchKeyword: '',
         url: '',
+        alram: 0,
       }
     },
     computed: {
@@ -140,6 +142,7 @@ export default {
                 window.location.href="http://localhost:8080";
               })
             }
+            await this.getAlarm()
           }
         },
         gotoMain () {
@@ -198,6 +201,15 @@ export default {
         },
         gotoCate(cate, cate2) {
           window.location.href=`http://localhost:8080/search_goodslist/cate/${cate}/${cate2}`
+        },
+        // 알람 가져오기
+        async getAlarm() {
+          try {
+            const response = await axios.get(`http://localhost:3000/auth/check_alram/${this.user.user_no}`);
+            this.alram = response.data[0].count;
+          } catch (error) {
+            console.error(error);
+          }
         },
     },
 }
@@ -509,5 +521,21 @@ a {
 .hvr-rectangle-out:hover:before, .hvr-rectangle-out:focus:before, .hvr-rectangle-out:active:before {
   -webkit-transform: scale(1);
   transform: scale(1);
+}
+.alarm{
+  margin-top: 10px;
+  margin-right: 30px;
+  position: absolute;
+  top: 1;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+  color: white;
+  text-align: center;
+  line-height: 20px;
+  font-size: 12px;
+  font-weight: 700;
 }
 </style>

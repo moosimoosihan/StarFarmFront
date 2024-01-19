@@ -272,7 +272,7 @@ import axios from 'axios';
                 }
               }
             }, 1000);
-          }
+          },
         },
         unmounted() {
           this.stopAutoTimer(); // 페이지가 파괴될 때 타이머 정지

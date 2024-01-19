@@ -70,6 +70,7 @@ import axios from 'axios'
         },
         created() {
             this.getRoomList(this.page);
+            this.checkAlram();
         },
         methods: {
             getPageNumbers() {
@@ -175,6 +176,14 @@ import axios from 'axios'
                 this.page += 1;
                 this.getRoomList(this.page)
             },
+            async checkAlram(){
+                const user_no = this.user.user_no;
+                try {
+                    await axios.post(`http://localhost:3000/chat/chat_delete_alram/${user_no}`);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
         }
     }
 </script>
