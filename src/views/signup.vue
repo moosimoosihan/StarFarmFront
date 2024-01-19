@@ -83,17 +83,17 @@ import axios from 'axios';
 export default {
   data () {
     return{
-      user_id: '',
-      user_nick: '',
-      user_email: '',
-      user_pw: '',
-      user_img: '',
-      user_mobile: '',
-      user_zipcode: '',
-      user_adr1: '',
-      user_adr2: '',
+      user_id: '', //아이디
+      user_nick: '', //닉네임
+      user_email: '', //이메일
+      user_pw: '', //비밀번호
+      user_img: '', //프로필사진
+      user_mobile: '', //전화번호
+      user_zipcode: '', //주소
+      user_adr1: '', //상세주소1
+      user_adr2: '', //상제주소2
 
-      user_pw_ck: '',
+      user_pw_ck: '', //비밀번호확인
       zipinput: false,
 
       user_img_src: '',
@@ -102,7 +102,7 @@ export default {
       id_check_bool: 0,
       email_check_bool: 0,
       phone_check_bool: 0,
-
+      
       isUploading: true,
       isDelete: true,
     }
@@ -111,6 +111,7 @@ export default {
     document.getElementById('id').focus();
   },
   methods: {
+    //로컬로그인 정보
     onSubmitForm() {
             if (!this.validationCheck()) {
                 return;
@@ -134,6 +135,7 @@ export default {
                     user_img: this.user_img,
                 },
             })
+            //유효성검사
                 .then(res => {
                     if (res.data.message == 'already_exist_id') {
                         this.$swal("이미 존재하는 아이디입니다.")
@@ -192,9 +194,11 @@ export default {
                 }
             }).open();
         },
+        //메인페이지로 이동
         gotoMain() {
           this.$router.push('/')
         },
+        //유효성검사
         validationCheck() {
             if (this.user_id == "") {
                 this.$swal("아이디를 입력하세요.");
@@ -245,12 +249,14 @@ export default {
             }
             return true;
         },
+        //전화번호 양식
         validatePhoneNumber() {
             this.user_mobile = this.user_mobile.replace(/\D/g, ''); // 숫자 이외의 문자 제거
         },
         gotoLogin() {
           this.$router.back();
         },
+        //사진등록
         async uploadFile(file) {
                 let name = "";
                 if (file.length>0) {
@@ -336,6 +342,7 @@ export default {
                     }
                 })
             },
+            //아이디 유효성검사
             id_check() {
                 if(this.user_id == "") {
                     this.id_check_bool = 0;
@@ -370,6 +377,7 @@ export default {
                     
                 })
             },
+            //이메일 유효성 검사
             email_check() {
                 if(this.user_email == "") {
                     this.email_check_bool = 0;
@@ -384,6 +392,7 @@ export default {
                 }
                 this.email_check_bool = 2;
             },
+            //전화번호 유효성 검사
             mobile_check() {
                 if(this.user_mobile == "") {
                     this.phone_check_bool = 0;
@@ -580,6 +589,7 @@ button{
   height: 400px;
   float: right;
 }
+/* 버튼컨테이너 */
 #box3 {
   margin-top: 50px;
   width: 1000px;

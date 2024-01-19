@@ -57,6 +57,7 @@ import axios from 'axios';
         name : 'search_goodslist',
         data() {
             return {
+                //상품정보
                 keyword : '',
                 goodsList : [],
                 goods_succ_bid: [],
@@ -77,6 +78,7 @@ import axios from 'axios';
         beforeDestroy() {
             this.stopAutoTimer(); // 페이지가 파괴될 때 타이머 정지
         },
+        //카테고리별 분류
         mounted() {
             if(this.$route.params.cate=='cate'){
                 this.category = this.$route.params.keyword;
@@ -141,6 +143,7 @@ import axios from 'axios';
             this.allGoodsTimer();
         },
         methods: {
+            //페이징
             getPageNumbers() {
                 const groupSize = 5; // 페이지 그룹 크기
                 const groupIndex = Math.floor(this.page / groupSize); // 현재 페이지 그룹 인덱스

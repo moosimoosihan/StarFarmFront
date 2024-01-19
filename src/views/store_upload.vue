@@ -114,6 +114,7 @@ import moment from 'moment'
     export default {
         data() {
             return {
+                //상품정보
                 productImage: [],
                 product_name: '',
                 product_category1: '의류',
@@ -142,6 +143,7 @@ import moment from 'moment'
             }
         },
         created () {
+            //유저상태확인
             if(!this.user.user_no){
                 this.$swal({
                     title: '로그인이 필요합니다.',
@@ -159,6 +161,7 @@ import moment from 'moment'
             }
         },
         methods: {
+            //상품등록상세
             async product_add() {
                 if(this.product_name===''){
                     return this.$swal('상품명을 입력해주세요.')
@@ -275,6 +278,7 @@ import moment from 'moment'
                     console.log(err);
                 }
             },
+            //상품등록조건
             validateNumber(val) {
                 switch(val){
                     case 'price_trade':
@@ -285,6 +289,7 @@ import moment from 'moment'
                         break
                 }
             },
+            //사진업로드
             async multiUploadFile(files) {
                 if (files.length <= 0 || !this.isUploading || !this.isDelete) {
                     this.$swal("파일이 없거나 현재 파일을 업로드 중입니다.")
@@ -343,6 +348,7 @@ import moment from 'moment'
                     return isUploading;
                 }
             },
+            //사진삭제하기
             async deleteImage(index){
                 this.$swal.fire({
                     title:'정말 삭제하시겠습니까?',
@@ -369,6 +375,7 @@ import moment from 'moment'
                     }
                 })
             },
+            //카테고리등록
             cate2Change() {
                 switch(this.product_category1){
                     case '의류':

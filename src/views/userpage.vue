@@ -84,28 +84,31 @@ import axios from 'axios';
             { name: "판매 리스트" },
             { name: "판매자 리뷰" },
         ],
+        //유저정보
         userInfo: [],
         userReviewList: [],
         userProductList: [],
         userFr: 0,
+        //상품정보
         goods_succ_bid: [],
         goodsTimer: [],
         timer: null,
         userNo: this.$route.params.id
         };
-    },
-    computed: {
-      user() {
-        return this.$store.state.user;
-      }
-    },
-    created() {
-        this.getUserInfo();
-        this.getReviewList();
-        this.getProductList();
-        this.allGoodsTimer()
-    },
-    methods: {
+      },
+        computed: {
+          user() {
+            return this.$store.state.user;
+          }
+        },
+        created() {
+            this.getUserInfo();
+            this.getReviewList();
+            this.getProductList();
+            this.allGoodsTimer()
+        },
+        methods: {
+        //유저정보
         async getUserInfo() {
             try {
                 const user_no = this.$route.params.id;
@@ -116,6 +119,7 @@ import axios from 'axios';
                 console.error(error);
             }
         },
+        //상품정보
         async getProductList() {
             try {
                 const user_no = this.$route.params.id;
@@ -139,6 +143,7 @@ import axios from 'axios';
             }) 
           }
         },
+        //리뷰정보
         async getReviewList() {
             try {
                 const user_no = this.$route.params.id;
@@ -148,9 +153,11 @@ import axios from 'axios';
                 console.error(error);
             }
         },
+        //상품바로가기
         gotoAuction(goods_no) {
             this.$router.push(`/product/${goods_no}`);
         },
+        //신고버튼
         reportBtn() {
           this.$swal.fire({
             title: '신고하기',
@@ -165,6 +172,7 @@ import axios from 'axios';
             }
           });
         },
+        //1대1 채팅하기
         async createChatRoom() {
           try {
             if (this.user.user_no == this.userNo) {
@@ -183,6 +191,7 @@ import axios from 'axios';
             console.error(error);
           }
         },
+        //채팅방
         gotoChatRoom(index) {
             let popupWindow = window.open(`/chatroom/${index}`, '_blank', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
             popupWindow.resizeTo(800, 650)
@@ -190,6 +199,7 @@ import axios from 'axios';
                 popupWindow.resizeTo(800, 650)
             })
         },
+        //경매시간
         stopAutoTimer() {
             clearInterval(this.timer);
         },
@@ -230,47 +240,49 @@ import axios from 'axios';
         }
         // 00일 남음을 표시
         return daysStr;
-    },
-    allGoodsTimer(){
-      this.timer = setInterval(()=>{
-        if(this.userProductList.length>0){
-          for(let i=0; i<this.userProductList.length; i++){
-            if(this.goodsTimer[i]!='경매가 종료되었습니다.')
-              this.goodsTimer[i] = this.updateTimer(this.userProductList[i].goods_timer);
-          }
+        },
+        allGoodsTimer(){
+          this.timer = setInterval(()=>{
+            if(this.userProductList.length>0){
+              for(let i=0; i<this.userProductList.length; i++){
+                if(this.goodsTimer[i]!='경매가 종료되었습니다.')
+                  this.goodsTimer[i] = this.updateTimer(this.userProductList[i].goods_timer);
+              }
+            }
+          }, 1000);
+        },
+        //경매종료
+        stopAutoTimer() {
+          clearInterval(this.timer);
+        },
+        //경매시간표기
+        formatDateTime(dateTime) {
+              const date = new Date(dateTime);
+              const options = {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+              };
+              const formattedDateTime = date.toLocaleDateString("ko-KR", options);
+              return formattedDateTime;
+          },
+          formatPrice(price) {
+            if (price !== undefined && price !== null) {
+                const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                return `${formattedPrice} 원`;
+            }
+            return "";
+        },
+        },
+        computed: {
+          user() {
+            return this.$store.state.user;
+          },
+        },
+        destroyed(){
+          this.stopAutoTimer()
         }
-      }, 1000);
-    },
-  stopAutoTimer() {
-    clearInterval(this.timer);
-  },
-  formatDateTime(dateTime) {
-        const date = new Date(dateTime);
-        const options = {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        };
-        const formattedDateTime = date.toLocaleDateString("ko-KR", options);
-        return formattedDateTime;
-    },
-    formatPrice(price) {
-      if (price !== undefined && price !== null) {
-          const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-          return `${formattedPrice} 원`;
       }
-      return "";
-  },
-  },
-  computed: {
-    user() {
-      return this.$store.state.user;
-    },
-  },
-  destroyed(){
-    this.stopAutoTimer()
-  }
-}
 </script>
 <style scoped>
 * {
@@ -455,7 +467,6 @@ import axios from 'axios';
 li {
   list-style:none;
 }
-
 #userpage_review_list {
     width: 100%;
     height: 150px;
