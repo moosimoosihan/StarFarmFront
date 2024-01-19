@@ -27,7 +27,7 @@ import axios from 'axios'
       }
     },
     methods: {
-      gotoSignUp() {
+      gotoSignUp() {//회원가입
         this.$router.push('/login/signup')
       },
       goToFind() {
@@ -176,14 +176,14 @@ import axios from 'axios'
                 .catch(err => {
                     console.log(err);
                 })
-        },
+        },//메인페이지 이동
         gotoMain() {
           this.$router.push('/')
-        },
+        },//네이버 페이지 버튼
         naverBtnClick(){
           var btnNaverLogin = document.getElementById("naverIdLogin").firstChild;
           btnNaverLogin.click();
-        },
+        },//소켓
         formatDateTime(dateTime) {
           const date = new Date(dateTime);
           const options = {

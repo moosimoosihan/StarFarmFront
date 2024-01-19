@@ -34,6 +34,7 @@
 </template>
 <script>
 import axios from 'axios';
+//부트페이 코드 데이터 가져올때 필요함
 import { Bootpay } from '@bootpay/client-js'
 
 
@@ -138,7 +139,7 @@ methods: {
             break
           }
         }
-      },
+      },//사용자 정보 가져오기
       getUser() {
         this.loginUser.user_id = this.$route.params.user_id
         this.loginUser.user_mobile = this.$route.params.user_mobile
@@ -147,7 +148,7 @@ methods: {
         this.loginUser.user_adr1 = this.$route.params.user_adr1
         this.loginUser.user_adr2 = this.$route.params.user_adr2
         this.order_content = this.$route.params.order_content
-      },
+      },//판매자 정보가져오기
       async getGoods() {
         try {
           const goodsno = this.$route.params.goods_no;
@@ -161,7 +162,7 @@ methods: {
         } catch (error) {
           console.error(error);
         }
-      },
+      },//뒤로가기
       gotoBack() {
         this.$router.back();
       },

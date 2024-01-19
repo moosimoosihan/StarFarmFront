@@ -42,6 +42,7 @@ import axios from 'axios'
 export default {
     data() {
         return {
+            //신고하기
             loginUser: {},
             reportUser: {},
             reportUserNo: '',
@@ -65,7 +66,7 @@ export default {
             return this.$store.state.user;
         },
     },
-    methods: {
+    methods: {//신고할 유저의 정보 가져오기
         async getReportUser() {
             this.reportUserNo = this.$route.params.id;
             try{
@@ -74,7 +75,7 @@ export default {
             } catch (error) {
                 console.log(error)
             }
-        },
+        },//판매자 정보 가져오기
         async getUser() {
             const user_no = this.user.user_no
             try{
@@ -84,6 +85,7 @@ export default {
                 console.log(error)
             }
         },
+        //신고하기
         async reportSubmit() {
             if(this.reportTitle == ''){
                 this.$swal("제목을 입력해주세요")
@@ -118,6 +120,7 @@ export default {
                 console.log(error)
             }
         },
+        //신고하기 파일에 있는 이미지 업로드
         async uploadFile(file) {
             let name = "";
             if (file.length>0) {
@@ -175,10 +178,11 @@ export default {
                 this.isUploading = false;
                 return isUploading;
             }
-        },
+        },//뒤로가기
         gotoBack() {
             this.$router.push(`/product/${this.$route.params.id}`)
         },
+        //이미지 삭제하기
         deleteImage(){
                 this.$swal.fire({
                     title:'정말 삭제하시겠습니까?',

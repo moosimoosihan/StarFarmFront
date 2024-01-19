@@ -71,6 +71,7 @@ export default {
             orderUser:{},
             products: {},
             order_content:'',
+            //최종가격
             totalPrice:'',
           };
         },
@@ -90,6 +91,7 @@ export default {
             }
         },
         methods: {
+          //판매자 정보 가져오기
           async getUser() {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
@@ -100,7 +102,7 @@ export default {
                 this.order_zipcode = this.loginUser.user_zipcode;
                 this.order_adr1 = this.loginUser.user_adr1;
                 this.order_adr2 = this.loginUser.user_adr2;
-            },
+            },//구매자 정보 가져오기
             async getOrderUser() {
               try {
                 const order_user_no = this.products.user_no;
@@ -121,6 +123,7 @@ export default {
               }
               this.getOrderUser()
             },
+            //paymentCheck로 데이터 전송
         sendDataToBackend() {
           if(this.order_content==''){
             this.order_content='없음'
@@ -174,20 +177,9 @@ export default {
             }).open();
          },gotoProduct(){
           this.$router.back();
-          
          },
-         handlePostcodeResult(data) {
-    
-        this.$nextTick(() => {
-        
-        document.getElementById('sample6_postcode').value = data.zonecode;
-        document.getElementById('sample6_address').value = data.address;
-        document.getElementById('sample6_detailAddress').value = ''; // 상세주소 초기화
-        document.getElementById('sample6_extraAddress').value = ''; // 참고항목 초기화
-      });
-      },
       }
-      };
+    }
 </script>
 
 <style scoped>

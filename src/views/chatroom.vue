@@ -39,6 +39,7 @@
 </template>
 <script>
 import axios from "axios"
+//소켓 클라이언트
 import io from 'socket.io-client'
 
     export default {
@@ -54,7 +55,7 @@ import io from 'socket.io-client'
             socket: io('http://localhost:3001')
         }
       },
-      created() {
+      created() {//
         this.socket.on('chat', async (data) => {
             if(data.chatroom_no === this.chatroom.CHATROOM_NO) {
                 console.log('채팅방 번호 일치');
@@ -80,7 +81,7 @@ import io from 'socket.io-client'
                 const scroll = document.getElementById('scroll');
                 scroll.scrollTop = scroll.scrollHeight;
             }, 100);
-        },
+        },//채팅방 소켓 및 데이터베이스
         async getChatRoom() {
             this.socket.on('connect', () => {
                 this.connected = true;
@@ -103,7 +104,7 @@ import io from 'socket.io-client'
           await this.getChat()
           await this.getUser()
           await this.getAnothorUser()
-        },
+        },//사용자 가져오기
         async getUser() {
           try {
             const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
@@ -120,7 +121,7 @@ import io from 'socket.io-client'
             } catch (error) {
                 console.error(error);
             }
-        },
+        },//채팅룸
         async getChat() {
           try {
             const chatroom_no = this.chatroom.CHATROOM_NO;
@@ -130,7 +131,7 @@ import io from 'socket.io-client'
             console.error(error);
           }
           this.scroll()
-        },
+        },//채팅룸 데이터베이스 보내기
         async send() {
             if(this.content==''){
                 this.$swal('메시지를 입력하세요.')
@@ -160,7 +161,7 @@ import io from 'socket.io-client'
             } catch (error) {
                 console.error(error);
             }
-        },
+        },//시간 포멧
         formatDateTime(dateTime) {
             const date = new Date(dateTime);
             const now = new Date();
@@ -181,7 +182,7 @@ import io from 'socket.io-client'
 
             const formattedDateTime = date.toLocaleDateString("ko-KR", options);
             return formattedDateTime;
-        },
+        },//채팅 끝내기
         exitChat() {
             window.close();
         },
