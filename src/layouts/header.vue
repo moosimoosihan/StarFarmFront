@@ -116,6 +116,7 @@ export default {
       this.getUser();
     },
     methods: {
+        // 로그인한 유저 정보 가져오기
         async getUser() {
           if(this.user.user_no!=''){
             try {
@@ -145,24 +146,31 @@ export default {
             await this.getAlarm()
           }
         },
+        // 메인으로 이동
         gotoMain () {
           this.$router.push('/')
         },
+        // 로그인으로 이동
         gotoLogin () {
           this.$router.push('/login')
         },
+        // 상품등록으로 이동
         gotoUpload () {
           this.$router.push('/store_upload')
         },
+        // 채팅으로 이동
         gotoMyChat() {
           this.$router.push('/mypage/mychat')
         },
+        // 마이페이지로 이동
         gotoMypage() {
           this.$router.push('/mypage')
         },
+        // 관리자페이지로 이동
         gotoAdmin() {
           this.$router.push('/admin')
         },
+        // 로그아웃
         logout() {
           if(this.loginUser.length!=0){
             if(this.loginUser.user_social_tp==1){
@@ -183,9 +191,7 @@ export default {
             })
           })
         },
-        changeUrl() {
-          this.url = `/search_goodslist/all/${this.searchKeyword}/1`
-        },
+        // 검색으로 이동
         gotoSearch() {
           if(this.searchKeyword==''){
             this.$swal({

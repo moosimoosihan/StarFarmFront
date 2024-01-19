@@ -84,15 +84,18 @@ import axios from 'axios'
         name: "buylist",
         data() {
             return {
+                // 상품 정보 데이터
                 orderList: [],
                 succ_bidList: [],
                 succ_bid_user_no: [],
                 review_count: [],
                 order_count: [],
 
+                // 페이지네이션
                 page: 0,
                 pageCount: 0,
 
+                // 정렬
                 sort: 'none',
             }
         },
@@ -105,6 +108,7 @@ import axios from 'axios'
             this.getOrderList(this.sort, this.page)
         },
         methods: {
+            // 페이지네이션 리밋 5페이지
             getPageNumbers() {
                 const groupSize = 5; // 페이지 그룹 크기
                 const groupIndex = Math.floor(this.page / groupSize); // 현재 페이지 그룹 인덱스
@@ -112,9 +116,11 @@ import axios from 'axios'
                 const end = Math.min(start + groupSize, this.pageCount); // 현재 페이지 그룹의 마지막 페이지 번호
                 return Array.from({length: end - start}, (v, i) => start + i); // 페이지 번호 배열 생성
             },
+            // 상품 상세 페이지로 이동
             gotoProduct(index) {
                 this.$router.push(`/product/${index}`);
             },
+            // 상품 총 갯수
             async getBuyCount() {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/orderCount/${this.user.user_no}/${this.sort}`);
@@ -123,6 +129,7 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
+            // 상품 정보 가져오기
             async getOrderList(sort, page) {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/orderlist/${this.user.user_no}/${sort}/${page}`);
@@ -136,6 +143,7 @@ import axios from 'axios'
                 await this.getBuyCount()
                 await this.getOrderCount()
             },
+            // 낙찰가 가져오기
             async getSuccBid() {
                 for(let i=0; i<this.orderList.length; i++){
                     try {
@@ -147,6 +155,7 @@ import axios from 'axios'
                     }
                 }
             },
+            // 리뷰 갯수 가져오기
             async getReviewCount() {
                 for(let i=0; i<this.orderList.length; i++){
                     try {
@@ -157,6 +166,7 @@ import axios from 'axios'
                     }
                 }
             },
+            // 주문 갯수 가져오기
             async getOrderCount() {
                 for(let i=0; i<this.orderList.length; i++){
                     try {
@@ -167,6 +177,7 @@ import axios from 'axios'
                     }
                 }
             },
+            // 가격 콤마 찍기
             formatPrice(price) {
                 if (price !== undefined) {
                     const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -174,6 +185,7 @@ import axios from 'axios'
                 }
                 return "";
             },
+            // 날짜 포맷
             formatDateTime(dateTime) {
                 const date = new Date(dateTime);
                 const options = {
@@ -185,6 +197,7 @@ import axios from 'axios'
 
                 return formattedDateTime;
             },
+            // 상품 상태 텍스트
             getOrderStatusText(status) {
                 switch (status) {
                     case 0:
@@ -201,9 +214,11 @@ import axios from 'axios'
                         return "";
                 }
             },
+            // 리뷰 작성 페이지 이동
             writeReview(goods_no) {
                 this.$router.push(`/review/${goods_no}/none`);
             },
+            // 거래 완료 처리
             async saleComp(i){
                 this.$swal.fire({
                     title: '거래 완료 처리 하시겠습니까?',
@@ -237,13 +252,16 @@ import axios from 'axios'
                     }
                 })
             },
+            // 결제 페이지 이동
             gotoPay(index) {
                 this.$router.push(`/payment/${this.orderList[index].goods_no}`);
             },
+            // 이전 페이지 이동 버튼
             prev() {
                 this.page -= 1;
                 this.getOrderList(this.sort,this.page);
-                },
+            },
+            // 다음 페이지 이동 버튼
             next(){
                 this.page += 1;
                 this.getOrderList(this.sort,this.page)

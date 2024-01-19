@@ -208,7 +208,7 @@ const router = createRouter({
 });
 
 const app = createApp(App)
-app.use(router)
-app.use(store)
-app.use(VueSweetalert2)
+app.use(router) // 페이지 라우터
+app.use(store) // id와 token을 저장하는 store
+app.use(VueSweetalert2) // alert
 app.mount('#app')

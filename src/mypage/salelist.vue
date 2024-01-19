@@ -79,13 +79,16 @@ import axios from 'axios';
         name: 'salelist',
         data () {
             return {
+                // 판매 상품 관리
                 saleList: [],
                 succ_bidList: [],
                 review_count: [],
 
+                // 페이지
                 page: 0,
                 pageCount: 0,
 
+                // 정렬
                 sort: 'none',
             }
         },
@@ -99,6 +102,7 @@ import axios from 'axios';
             },
         },
         methods: {
+            // 페이지 리밋 5페이지
             getPageNumbers() {
                 const groupSize = 5; // 페이지 그룹 크기
                 const groupIndex = Math.floor(this.page / groupSize); // 현재 페이지 그룹 인덱스
@@ -106,6 +110,7 @@ import axios from 'axios';
                 const end = Math.min(start + groupSize, this.pageCount); // 현재 페이지 그룹의 마지막 페이지 번호
                 return Array.from({length: end - start}, (v, i) => start + i); // 페이지 번호 배열 생성
             },
+            // 판매 총 상품 갯수 가져와 페이지 수 계산
             async getSalePage() {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/salelistCount/${this.user.user_no}/${this.sort}`);
@@ -114,6 +119,7 @@ import axios from 'axios';
                     console.error(error);
                 }
             },
+            // 판매 상품 리스트 가져오기
             async getSaleList(sort, page) {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/salelist/${this.user.user_no}/${sort}/${page}`);
@@ -134,6 +140,7 @@ import axios from 'axios';
                 }
                 await this.getSalePage()
             },
+            // 리뷰 갯수 가져오기
             async getReviewCount(goods_no) {
                 try {
                     const response = await axios.get(`http://localhost:3000/goods/getReviewCount/${goods_no}/${this.user.user_no}`);
@@ -142,9 +149,11 @@ import axios from 'axios';
                     console.error(error);
                 }
             },
+            // 리뷰 작성
             writeReview(goods_no) {
                 this.$router.push(`/review/${goods_no}/sale`);
             },
+            // 상품 상태 텍스트
             getOrderStatusText(status) {
                 switch (status) {
                     case 0:
@@ -161,9 +170,11 @@ import axios from 'axios';
                         return "";
                 }
             },
+            // 상품 상세페이지로 이동
             gotoProduct(index) {
                 this.$router.push(`/product/${index}`);
             },
+            // 날짜 포맷
             formatDateTime(dateTime) {
                 const date = new Date(dateTime);
                 const options = {
@@ -174,6 +185,7 @@ import axios from 'axios';
                 const formattedDateTime = date.toLocaleDateString("ko-KR", options);
                 return formattedDateTime;
             },
+            // 낙찰가 가져오기
             async getSuccBid(goods_no) {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/goodsSuccBid/${goods_no}`);
@@ -182,6 +194,7 @@ import axios from 'axios';
                     console.error(error);
                 }
             },
+            // 가격 포맷
             formatPrice(price) {
                 if(price === '입찰없음'){
                     return price
@@ -192,6 +205,7 @@ import axios from 'axios';
                 }
                 return "";
             },
+            // 상품 삭제
             async deleteItem(goods_no) {
                 if (confirm("정말 삭제하시겠습니까?")) {
                     await axios.post(`http://localhost:3000/goods/delete_goods/${goods_no}`)
@@ -204,14 +218,17 @@ import axios from 'axios';
                 }
                 this.getSaleList(this.sort, this.page);
             },
+            // 이전 페이지
             prev() {
                 this.page -= 1;
                 this.getSaleList(this.sort,this.page);
             },
+            // 다음 페이지
             next(){
                 this.page += 1;
                 this.getSaleList(this.sort,this.page)
             },
+            // 알람 확인 후 알람 삭제
             async checkAlram(){
                 const user_no = this.user.user_no;
                 try {

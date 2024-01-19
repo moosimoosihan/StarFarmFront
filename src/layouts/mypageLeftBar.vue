@@ -87,6 +87,7 @@ import axios from 'axios'
       this.getUser();
     },
     methods: {
+      // 로그인한 유저 정보 가져오기
       async getUser() {
         try {
           const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
@@ -95,6 +96,7 @@ import axios from 'axios'
           console.error(error);
         }
       },
+      // 프로필 사진 클릭시 유저페이지로 이동
       profileImgClick() {
         this.$router.push(`/userpage/${this.user.user_no}`);
       }

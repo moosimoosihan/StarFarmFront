@@ -54,6 +54,7 @@ export default {
       this.getUser();
     },
     methods: {
+        // 로그인한 유저 정보 가져오기
         async getUser() {
           if(this.user.user_no!=''){
             try {
@@ -72,6 +73,7 @@ export default {
             this.$router.push('/');
           }
         },
+        // 메인으로 이동
         gotoHome() {
             this.$router.push('/');
         }

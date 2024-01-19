@@ -100,14 +100,17 @@ import axios from 'axios';
         name : 'mypage',
         data() {
             return {
+                // 상품 리스트
                 likeList: [],
                 orderList: [],
                 saleList: [],
                 
+                // 상품 리스트의 입찰가
                 like_goods_succ_bid: [],
                 order_goods_succ_bid: [],
                 sale_goods_succ_bid: [],
 
+                // 상품 리스트의 타이머
                 like_goods_timer: [],
                 order_goods_timer: [],
                 sale_goods_timer: [],
@@ -125,21 +128,27 @@ import axios from 'axios';
             this.allGoodsTimer();
         },
         methods: {
+            // 경매 상품 상세 페이지로 이동
             gotoAuction(goods_no) {
                     this.$router.push(`/product/${goods_no}`);
             },
+            // 찜한 상품 페이지로 이동
             gotoLike() {
                     this.$router.push(`/mypage/likelist`);
             },
+            // 입찰 상품 페이지로 이동
             gotoBuylist() {
                     this.$router.push(`/mypage/buylist`);
             },
+            // 판매 상품 페이지로 이동
             gotoSalelist() {
                     this.$router.push(`/mypage/Salelist`);
             },
+            // 타이머 정지
             stopAutoTimer() {
               clearInterval(this.timer);
             },
+            // 찜 상품 리스트 가져오기
             async getLikelist() {
               const user_no = this.user.user_no;
               try {
@@ -161,6 +170,7 @@ import axios from 'axios';
                 }
               }
             },
+            // 입찰 상품 리스트 가져오기
           async getOrderlist() {
               const user_no = this.user.user_no;
               try {
@@ -182,6 +192,7 @@ import axios from 'axios';
                     }
                 }
           },
+          // 판매 상품 리스트 가져오기
           async getSalelist() {
               const user_no = this.user.user_no;
               try {
@@ -203,6 +214,7 @@ import axios from 'axios';
                     }
                 }
           },
+          // 경매 마감 시간 계산
           updateTimer(endTime) {
             // 날짜를 초로 바꾸어 저장 후 계산
             let countDownDate = new Date(endTime).getTime();
@@ -241,6 +253,7 @@ import axios from 'axios';
             // 00일 남음을 표시
             return daysStr;
           },
+          // 가격 포맷
           formatPrice(price) {
             if(price=='입찰 없음'){
               return price
@@ -251,6 +264,7 @@ import axios from 'axios';
             }
             return "";
           },
+          // 타이머 업데이트
           allGoodsTimer(){
             this.timer = setInterval(()=>{
               if(this.likeList.length>0){

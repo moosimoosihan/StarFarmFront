@@ -66,15 +66,18 @@ import axios from 'axios'
         name: "orderlist",
         data() {
             return {
+                // 주문 내역
                 loginUser: {},
                 orderList: [],
                 succ_bidList: [],
                 goods_img_List: [],
                 goods_name_List: [],
 
+                // 페이지네이션
                 page: 0,
                 pageCount: 0,
 
+                // 정렬
                 sort: 'DESC',
             }
         },
@@ -87,6 +90,7 @@ import axios from 'axios'
             this.getOrderList(this.sort, this.page);
         },
         methods: {
+            // 페이지네이션 리밋 5페이지
             getPageNumbers() {
                 const groupSize = 5; // 페이지 그룹 크기
                 const groupIndex = Math.floor(this.page / groupSize); // 현재 페이지 그룹 인덱스
@@ -94,9 +98,11 @@ import axios from 'axios'
                 const end = Math.min(start + groupSize, this.pageCount); // 현재 페이지 그룹의 마지막 페이지 번호
                 return Array.from({length: end - start}, (v, i) => start + i); // 페이지 번호 배열 생성
             },
+            // 상품 상세페이지로 이동
             gotoProduct(index) {
                 this.$router.push(`/product/${index}`);
             },
+            // 주문 내역 총 갯수
             async getOrderCount() {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/orderlistCount/${this.user.user_no}`);
@@ -105,6 +111,7 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
+            // 주문 내역 가져오기
             async getOrderList(sort, page) {
                 await this.getOrderCount()
                 try {
@@ -120,6 +127,7 @@ import axios from 'axios'
                 }
                 this.page=page;
             },
+            // 총 결제 금액
             async getTotalPrice(goods_no) {
                 var succ_bid = '';
                 var deliv_price = '';
@@ -142,6 +150,7 @@ import axios from 'axios'
                 }
                 return Number(succ_bid) + Number(deliv_price);
             },
+            // 상품 이미지 가져오기
             async getGoodsImg(goods_no) {
                 try {
                     const response = await axios.get(`http://localhost:3000/goods/goodsInfo/${goods_no}`);
@@ -150,6 +159,7 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
+            // 상품 이름 가져오기
             async getGoodsName(goods_no) {
                 try {
                     const response = await axios.get(`http://localhost:3000/goods/goodsInfo/${goods_no}`);
@@ -158,6 +168,7 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
+            // 가격 포맷
             formatPrice(price) {
                 if (price !== undefined) {
                     const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -165,6 +176,7 @@ import axios from 'axios'
                 }
                 return "";
             },
+            // 날짜 포맷
             formatDateTime(dateTime) {
                 const date = new Date(dateTime);
                 const options = {
@@ -175,13 +187,16 @@ import axios from 'axios'
                 const formattedDateTime = date.toLocaleDateString("ko-KR", options);
                 return formattedDateTime;
             },
+            // 주문 상세페이지로 이동
             gotoDetail(order_no) {
                 this.$router.push(`/paymentdetail/${order_no}`);
             },
+            // 이전 페이지
             prev() {
                 this.page -= 1;
                 this.getOrderList(this.sort,this.page);
-                },
+            },
+            // 다음 페이지
             next(){
                 this.page += 1;
                 this.getOrderList(this.sort,this.page)

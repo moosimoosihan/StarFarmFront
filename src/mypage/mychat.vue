@@ -54,11 +54,13 @@ import axios from 'axios'
         name: 'mychat',
         data() {
             return {
+                // 채팅방 리스트
                 roomList: [],
                 commentList: [],
                 userImgList: [],
                 userNickList: [],
 
+                // 페이징 처리
                 page: 0,
                 pageCount: 0,
             }
@@ -73,6 +75,7 @@ import axios from 'axios'
             this.checkAlram();
         },
         methods: {
+            // 페이징 처리 리밋 5페이지
             getPageNumbers() {
                 const groupSize = 5; // 페이지 그룹 크기
                 const groupIndex = Math.floor(this.page / groupSize); // 현재 페이지 그룹 인덱스
@@ -80,6 +83,7 @@ import axios from 'axios'
                 const end = Math.min(start + groupSize, this.pageCount); // 현재 페이지 그룹의 마지막 페이지 번호
                 return Array.from({length: end - start}, (v, i) => start + i); // 페이지 번호 배열 생성
             },
+            // 채팅방으로 이동
             gotoChatRoom(index) {
                 let popupWindow = window.open(`/chatroom/${index}`, '_blank', 'left=100', 'top=50', 'scrollbars=no', 'resizable=no', 'toolbars=no', 'menubar=no');
                     popupWindow.resizeTo(800, 650)
@@ -87,6 +91,7 @@ import axios from 'axios'
                     popupWindow.resizeTo(800, 650)
                 })
             },
+            // 채팅방 리스트 갯수 가져오기
             async getChatRoomCount(){
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/getChatRoomCount/${this.user.user_no}`);
@@ -95,6 +100,7 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
+            // 채팅방 리스트 가져오기
             async getRoomList(page) {
                 await this.getChatRoomCount();
                 try {
@@ -119,6 +125,7 @@ import axios from 'axios'
                 }
                 this.page = page;
             },
+            // 채팅방 대화 내용 가져오기
             async getComment(room_no) {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/chatroomcomment/${room_no}`);
@@ -127,6 +134,7 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
+            // 채팅방 유저 정보 가져오기
             async getChatUser(user_no){
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/mypage/${user_no}`);
@@ -136,6 +144,7 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
+            // 채팅방 나가기
             outChatRoom(room_no) {
                 // 채팅방에서 나가시겠습니까? 확인 후 삭제
                 this.$swal.fire({
@@ -168,14 +177,17 @@ import axios from 'axios'
                     }
                 });
             },
+            // 페이징 처리
             prev() {
                 this.page -= 1;
                 this.getRoomList(this.page);
-                },
+            },
+            // 페이징 처리
             next(){
                 this.page += 1;
                 this.getRoomList(this.page)
             },
+            // 채팅방 확인시 알람 삭제
             async checkAlram(){
                 const user_no = this.user.user_no;
                 try {

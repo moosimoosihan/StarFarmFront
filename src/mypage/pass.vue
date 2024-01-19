@@ -56,26 +56,8 @@
                 return this.$store.state.user;
             }
         },
-        mounted() {
-
-            if (this.user.user_no === '') {
-                this.$swal('로그인해주세요');
-                this.$router.push({ path: '/login' });
-            } else {
-                this.user_no = this.user.user_no; 
-                axios.get(`http://localhost:3000/mypage/getUserData/${this.user.user_no}`)
-                .then((res) => {
-                    if (res.data.length > 0) {
-                        this.cat = res.data[0];
-                        console.log(this.cat)
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            }
-        },
         methods: {
+            // 비밀번호 변경
             onSubmitForm() {
                 if (this.user_pw === "" || this.user_npw === "" || this.user_pw_ck === "") {
                     this.$swal("모든 항목을 입력해주세요");
@@ -110,50 +92,12 @@
                     this.$swal("수정에 실패했습니다.");
                 });
             },
-            // 키 아이콘
-            oneyes(field) {   
-                const passwordInput = document.querySelector(`.${field} input`);
-                let isMouseDown = false;
-
-                eyeIcon.addEventListener('mousedown', () => {
-                    passwordInput.type = 'text';
-                    isMouseDown = true;
-                });
-
-                document.addEventListener('mouseup', () => {
-                    passwordInput.type = 'password';
-                    isMouseDown = false;
-                });
-
-                passwordInput.addEventListener('blur', () => {
-                    passwordInput.type = 'password';
-                    isMouseDown = false;
-                });
-
-                passwordInput.addEventListener('focus', () => {
-                    if (isMouseDown) {
-                        passwordInput.type = 'text';
-                    }
-                });
-            }
         }
     };
 </script>
 
 
 <style scoped>
-@font-face {
-    font-family: 'GmarketSansMedium';
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff") format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-* {
-    padding: 0;
-    margin: 0;
-}
-
 .logo img {
     width: auto;
     height: auto;
@@ -183,7 +127,6 @@
     border-radius: 8px;
     position: relative;
     top: 90px;
-    font-family: 'GmarketSansMedium';
 }
 
 input:focus {
@@ -253,7 +196,6 @@ input:focus {
     background-color: rgb(0, 104, 26);
     position: relative;
     top: 110px;
-    font-family: 'GmarketSansMedium';
 }
 
 .login-form .btn:hover {

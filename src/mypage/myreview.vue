@@ -73,8 +73,10 @@ import axios from 'axios'
         name: 'myreview',
         data() {
             return {
+                // 리뷰 리스트
                 reviewList: [],
 
+                // 페이지
                 page: 0,
                 pageCount: 0,
             }
@@ -88,6 +90,7 @@ import axios from 'axios'
             this.getReviewList(this.page);
         },
         methods: {
+            // 페이징 처리 리밋 5페이지
             getPageNumbers() {
                 const groupSize = 5; // 페이지 그룹 크기
                 const groupIndex = Math.floor(this.page / groupSize); // 현재 페이지 그룹 인덱스
@@ -95,6 +98,7 @@ import axios from 'axios'
                 const end = Math.min(start + groupSize, this.pageCount); // 현재 페이지 그룹의 마지막 페이지 번호
                 return Array.from({length: end - start}, (v, i) => start + i); // 페이지 번호 배열 생성
             },
+            // 리뷰 갯수 가져오기
             async getReviewCount() {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/myreviewCount/${this.user.user_no}`);
@@ -103,6 +107,7 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
+            // 리뷰 리스트 가져오기
             async getReviewList(page) {
                 this.getReviewCount()
                 try {
@@ -113,6 +118,7 @@ import axios from 'axios'
                 }
                 this.page=page;
             },
+            // 가격 포맷
             formatPrice(price) {
                 if (price !== undefined) {
                     const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -120,6 +126,7 @@ import axios from 'axios'
                 }
                 return "";
             },
+            // 날짜 포맷
             formatDateTime(dateTime) {
                 const date = new Date(dateTime);
                 const options = {
@@ -130,17 +137,20 @@ import axios from 'axios'
                 const formattedDateTime = date.toLocaleDateString("ko-KR", options);
                 return formattedDateTime;
             },
-          gotoProduct(goods_no) {
-            this.$router.push(`/product/${goods_no}`);
-          },
-          prev() {
-            this.page -= 1;
-            this.getReviewList(this.page);
+            // 상품 상세페이지로 이동
+            gotoProduct(goods_no) {
+                this.$router.push(`/product/${goods_no}`);
             },
-          next(){
-            this.page += 1;
-            this.getReviewList(this.page)
-          },
+            // 이전 페이지
+            prev() {
+                this.page -= 1;
+                this.getReviewList(this.page);
+            },
+            // 다음 페이지
+            next(){
+                this.page += 1;
+                this.getReviewList(this.page)
+            },
         }
     }
 </script>

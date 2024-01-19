@@ -70,6 +70,7 @@ export default {
     name: 'mypageeditUser',
     data() {
         return {
+            // 로그인한 유저 정보
             loginUser: {},
             profile_img_src : '',
             phone_check_bool: 0,
@@ -88,10 +89,8 @@ export default {
     created() {
         this.getUser()
     },
-    mounted() {
-        
-    },
     methods: {
+        // 수정하기
         onSubmitForm() {
             if (this.loginUser.user_nick === "" || this.loginUser.user_email === "" || this.loginUser.user_mobile === "" || this.loginUser.user_phone === "" || this.loginUser.user_zipcode === "" || this.loginUser.user_adr1 === "" || this.loginUser.user_adr2 === "") {
                 this.$swal("모든 항목을 입력해주세요");
@@ -131,48 +130,49 @@ export default {
                         console.log(err);
                         this.$swal("수정에 실패했습니다.");
                     });
-            }
-        },
-        zipload() {
-            new window.daum.Postcode({
-                oncomplete: (data) => {
-                    // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-                    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-                    var addr = ''; // 주소 변수
-                    var extraAddr = '';
-                    //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-                    if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-                        addr = data.roadAddress;
-                    } else { // 사용자가 지번 주소를 선택했을 경우(J)
-                        addr = data.jibunAddress;
-                    }
-                    // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-                    if (data.userSelectedType === 'R') {
-                        // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-                        // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-                        if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-                            // addr += ' ';
-                            extraAddr += data.bname;
-                        }
-                        // 건물명이 있고, 공동주택일 경우 추가한다.
-                        if (data.buildingName !== '' && data.apartment === 'Y') {
-                            // addr += ' ';
-                            extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                        }
-                    }
-                    this.loginUser.user_zipcode = data.zonecode;
-                    this.loginUser.user_adr1 = addr;
-                    this.loginUser.user_adr2 = extraAddr;
-                    this.loginUser.zipinput = true;
                 }
-            }).open();
-        },
-        async uploadFile(file) {
+            },
+            // 우편번호 찾기
+            zipload() {
+                new window.daum.Postcode({
+                    oncomplete: (data) => {
+                        // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                        // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                        var addr = ''; // 주소 변수
+                        var extraAddr = '';
+                        //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                        if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                            addr = data.roadAddress;
+                        } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                            addr = data.jibunAddress;
+                        }
+                        // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                        if (data.userSelectedType === 'R') {
+                            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                            // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                                // addr += ' ';
+                                extraAddr += data.bname;
+                            }
+                            // 건물명이 있고, 공동주택일 경우 추가한다.
+                            if (data.buildingName !== '' && data.apartment === 'Y') {
+                                // addr += ' ';
+                                extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                            }
+                        }
+                        this.loginUser.user_zipcode = data.zonecode;
+                        this.loginUser.user_adr1 = addr;
+                        this.loginUser.user_adr2 = extraAddr;
+                        this.loginUser.zipinput = true;
+                    }
+                }).open();
+            },
+            // 이미지 업로드
+            async uploadFile(file) {
                 let name = "";
                 if (file) {
                     name = file[0].name;
-                }
-                else {
+                } else {
                     return;     // 파일 미선택 시 반환
                 }
                 this.isUploading = false;
@@ -192,26 +192,26 @@ export default {
                         headers: {'Content-Type': 'multipart/form-data'},
                         data: formData
                     })
-                        .then ((res) => {
-                            if (res.data.message == 'success'){
-                                this.loginUser.user_img = name;
-                            }
-                            else {
-                                this.$swal("DB 에러");
-                            }
-                        })
-                        .catch(e => {
-                            console.log(e);
-                        })
-                        this.isUploading = true;
+                    .then ((res) => {
+                        if (res.data.message == 'success'){
+                            this.loginUser.user_img = name;
+                        }
+                        else {
+                            this.$swal("DB 에러");
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    })
+                    this.isUploading = true;
                     return this.isUploading;
-
                 } catch(err){
                     console.log(err);
                     this.isUploading = false;
                     return this.isUploading;
                 }
             },
+            // 이미지 삭제
             deleteImage(){
                 this.$swal.fire({
                     title:'정말 삭제하시겠습니까?',
@@ -234,60 +234,63 @@ export default {
                     }
                 })
             },
-
-        validatePhoneNumber() {
-            this.loginUser.user_mobile = this.loginUser.user_mobile.replace(/\D/g, ''); // 숫자 이외의 문자 제거
+            // 전화번호 유효성 검사
+            validatePhoneNumber() {
+                this.loginUser.user_mobile = this.loginUser.user_mobile.replace(/\D/g, ''); // 숫자 이외의 문자 제거
+            },
+            // 전화번호 유효성 검사
+            mobile_check() {
+            if(this.user_mobile == "") {
+                this.phone_check_bool = 0;
+                return;
+            }
+            axios({
+                url: "http://localhost:3000/auth/mobile_check2",
+                method: "POST",
+                data: {
+                    user_no: this.user.user_no,
+                    user_mobile: this.user_mobile,
+                },
+            })
+            .then(res => {
+                console.log(res.data.message);
+                if (res.data.message == 'already_exist_phone') {
+                    this.phone_check_bool = 1;
+                    return;
+                }
+                else if (res.data.message == 'DB_error') {
+                    this.phone_check_bool = 2;
+                    return;
+                }
+                else {
+                    this.phone_check_bool = 3;
+                    return;
+                }
+            })
+            .catch(
+                err => {console.log(err);
+            })
         },
-        mobile_check() {
-                if(this.user_mobile == "") {
-                    this.phone_check_bool = 0;
-                    return;
-                }
-                axios({
-                    url: "http://localhost:3000/auth/mobile_check2",
-                    method: "POST",
-                    data: {
-                        user_no: this.user.user_no,
-                        user_mobile: this.user_mobile,
-                    },
-                })
-                    .then(res => {
-                        console.log(res.data.message);
-                        if (res.data.message == 'already_exist_phone') {
-                            this.phone_check_bool = 1;
-                            return;
-                        }
-                        else if (res.data.message == 'DB_error') {
-                            this.phone_check_bool = 2;
-                            return;
-                        }
-                        else {
-                            this.phone_check_bool = 3;
-                            return;
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    
-                })
-            },
-            email_check() {
-                if(this.user_email == "") {
-                    this.email_check_bool = 0;
-                    return;
-                }
-                // 이메일에  @와 .을 제외한 특수문자, 공백, 한글 입력 불가
-                this.user_email = this.user_email.replace(/[^a-z0-9@.]/gi,'');
-                // 이메일이 영어@영어.영어 가 아닌 경우
-                if(!/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/.test(this.user_email)) {
-                    this.email_check_bool = 1;
-                    return;
-                }
-                this.email_check_bool = 2;
-            },
+        // 이메일 유효성 검사
+        email_check() {
+            if(this.user_email == "") {
+                this.email_check_bool = 0;
+                return;
+            }
+            // 이메일에  @와 .을 제외한 특수문자, 공백, 한글 입력 불가
+            this.user_email = this.user_email.replace(/[^a-z0-9@.]/gi,'');
+            // 이메일이 영어@영어.영어 가 아닌 경우
+            if(!/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/.test(this.user_email)) {
+                this.email_check_bool = 1;
+                return;
+            }
+            this.email_check_bool = 2;
+        },
+        // 비밀번호 수정 페이지로 이동
         goToPass() {
             this.$router.push({ path: '/mypage/pass' });
         },
+        // 로그인한 유저 정보 가져오기
         async getUser() {    
             try {
                 const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
@@ -296,6 +299,7 @@ export default {
                 console.error(error);
             }
         },
+        // 회원탈퇴
         async userDelete() {
             this.$swal.fire({
                 title: '정말 탈퇴하시겠습니까?',

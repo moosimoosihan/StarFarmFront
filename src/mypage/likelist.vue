@@ -66,13 +66,16 @@ import axios from 'axios'
         name: 'likelist',
         data() {
             return {
+                // 관심 상품 정보 리스트
                 likeList: [],
                 succ_bidList: [],
                 likeGoodsUserNick: [],
                 
+                // 페이지네이션
                 page: 0,
                 pageCount: 0,
 
+                // 정렬
                 sort: 'none',
             }
         },
@@ -85,6 +88,7 @@ import axios from 'axios'
             this.getLikeGoods(this.sort, this.page)
         },
         methods: {
+            // 페이지 번호 배열을 반환하는 메서드
             getPageNumbers() {
                 const groupSize = 5; // 페이지 그룹 크기
                 const groupIndex = Math.floor(this.page / groupSize); // 현재 페이지 그룹 인덱스
@@ -92,9 +96,11 @@ import axios from 'axios'
                 const end = Math.min(start + groupSize, this.pageCount); // 현재 페이지 그룹의 마지막 페이지 번호
                 return Array.from({length: end - start}, (v, i) => start + i); // 페이지 번호 배열 생성
             },
+            // 페이지 번호 클릭 시 호출되는 메서드
             gotoProduct(index) {
                 this.$router.push(`/product/${index}`)
             },
+            // 관심 상품 총 갯수 구하는 메서드
             async getLikeCount(sort) {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/likecount/${this.user.user_no}/${sort}`);
@@ -103,6 +109,7 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
+            // 관심 상품 리스트 구하는 메서드
             async getLikeGoods(sort, page) {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/likelist/${this.user.user_no}/${sort}/${page}`);
@@ -120,6 +127,7 @@ import axios from 'axios'
                 }
                 await this.getLikeCount(sort)
             },
+            // 가격 포맷팅 메서드
             formatPrice(price) {
                 if (price !== undefined) {
                     const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -127,6 +135,7 @@ import axios from 'axios'
                 }
                 return "";
             },
+            // 날짜 포맷팅 메서드
             formatDateTime(dateTime) {
                 const date = new Date(dateTime);
                 const options = {
@@ -137,6 +146,7 @@ import axios from 'axios'
                 const formattedDateTime = date.toLocaleDateString("ko-KR", options);
                 return formattedDateTime;
             },
+            // 상품의 최고 입찰가 구하는 메서드
             async getSuccBid(goods_no) {
                 try {
                     const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goods_no}`);
@@ -148,6 +158,7 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
+            // 상품의 판매자 닉네임 구하는 메서드
             async getUserNick(user_no) {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/mypage/${user_no}`);
@@ -156,6 +167,7 @@ import axios from 'axios'
                     console.error(error);
                 }
             },
+            // 상품 상태 텍스트로 변환하는 메서드
             getOrderStatusText(status) {
                 switch (status) {
                     case 0:
@@ -172,10 +184,12 @@ import axios from 'axios'
                         return "";
                 }
             },
+            // 이전 페이지로 이동하는 메서드
             prev() {
                 this.page -= 1;
                 this.getLikeGoods(this.sort,this.page);
             },
+            // 다음 페이지로 이동하는 메서드
             next(){
                 this.page += 1;
                 this.getLikeGoods(this.sort,this.page)
