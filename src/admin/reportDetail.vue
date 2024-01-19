@@ -84,7 +84,6 @@ export default {
         }
     }
 }
-``
 </script>
 <style scoped>
 .report_img{
