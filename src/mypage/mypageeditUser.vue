@@ -330,6 +330,9 @@ export default {
                 }
             })
         }
+    },
+    unmounted() {
+        this.deleteImage()
     }
 }
 </script>
