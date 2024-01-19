@@ -186,7 +186,7 @@ import moment from 'moment'
                     return this.$swal('마감 시간을 입력해주세요.')
                 }
                 // 테스트를 할때는 주석처리
-                if(this.product_content.length<10){
+                /*if(this.product_content.length<10){
                     return this.$swal('상품 설명은 최소 10글자 이상 입력해주세요.')
                 }
                 if(this.price_trade<1000){
@@ -201,7 +201,7 @@ import moment from 'moment'
                 }
                 if(moment(this.goods_timer).isAfter(moment().add(1, 'months'))){
                     return this.$swal('한 달 이상의 시간은 입력할 수 없습니다.')
-                }
+                }*/
                 if(moment(this.goods_timer).isBefore(moment().format())){
                     return this.$swal('현재 시간보다 이전 시간은 입력할 수 없습니다.')
                 }

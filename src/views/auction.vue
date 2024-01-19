@@ -64,7 +64,7 @@
 
         <div class="bid_container" id="scroll">
             <ul>
-              <li v-for="(bidUser, i) in goodsBidList" :class="bidUser.user_no===user.user_no ? 'me_price' : 'price'" :id="bidUser===goodsBidList[goodsBidList.length-1]? 'last_price' : ''" :key="i">{{ bidUser.user_nick }}님이 {{ formatPrice(bidUser.bid_amount) }} 입찰하셨습니다.</li>
+              <li v-for="(bidUser, i) in goodsBidList" :class="bidUser.user_no==user.user_no ? 'me_price' : 'price'" :id="bidUser===goodsBidList[goodsBidList.length-1]? 'last_price' : ''" :key="i">{{ bidUser.user_nick }}님이 {{ formatPrice(bidUser.bid_amount) }} 입찰하셨습니다.</li>
             </ul>
 
         </div>
@@ -73,15 +73,15 @@
               <!--1:1 채팅버튼-->
               <button class="chatroom_container" @click="gotoChatRoom(goodsUser.user_no)">1:1 채팅</button>
               <!--결제페이지 이동버튼-->
-              <button v-if="buyUser && goods.state===0" class="button" @click="gotoPayment()">결제</button>
+              <button v-if="buyUser && goods.goods_state==1" class="button" @click="gotoPayment()">결제</button>
               <!--금액창-->
-              <input v-if="goods.goods_state===0 && this.currentTime !== '경매가 종료되었습니다.'" type="text" id="searchInput" autocomplete="off" size="50" name="bid_value" v-model="bidAmount" @input="validateNumber()"  @keyup.enter="postBidding()">
+              <input v-if="goods.goods_state==0 && this.currentTime !== '경매가 종료되었습니다.'" type="text" id="searchInput" autocomplete="off" size="50" name="bid_value" v-model="bidAmount" @input="validateNumber()"  @keyup.enter="postBidding()">
               <!--입찰버튼-->
-              <input v-if="goods.goods_state===0 && this.currentTime !== '경매가 종료되었습니다.'" type="button" id="submit_button" value="입찰" @click="postBidding">
+              <input v-if="goods.goods_state==0 && this.currentTime !== '경매가 종료되었습니다.'" type="button" id="submit_button" value="입찰" @click="postBidding">
               <!-- 신고버튼 -->
               <button class="button" @click="reportBtn()">신고</button>
             </div>
-            <div class="btn_container" v-else-if="user.user_no===goodsUser.user_no">
+            <div class="btn_container" v-else-if="user.user_no==goodsUser.user_no">
               <h1>내 상품 입니다.</h1>
             </div>
         </div>
@@ -141,23 +141,6 @@ computed: {
 },
 created() {
   this.getGoods();
-  this.getGoodsUser();
-  this.getSuccBid();
-  this.getBidList();
-  this.checkLikeGoods();
-  this.updateTimer();
-  this.startAutoSlide(); // 페이지가 생성될 때 자동 슬라이드 시작
-  this.scroll();
-  this.likeCountAPI();
-},
-//경매 시작전 
-beforeUpdate() {
-  if(this.currentTime !== '경매가 종료되었습니다.'){
-    this.getBidList()
-    this.getSuccBid()
-  } else {
-    this.checkBuyUser();
-  }
 },
 methods: {
   //택배거래 선택
@@ -209,7 +192,6 @@ methods: {
     try {
       const goods_no = this.$route.params.id;
       const response = await axios.get(`http://localhost:3000/goods/likeCounts/${goods_no}`);
-      console.log(response)
       this.likeCount = response.data[0].like_count;
     } catch (error) {
       console.error(error);
@@ -280,6 +262,15 @@ methods: {
       } catch (error) {
         console.error(error);
       }
+      this.updateTimer();
+      this.startAutoSlide(); // 페이지가 생성될 때 자동 슬라이드 시작
+      this.scroll();
+      await this.getGoodsUser();
+      await this.getSuccBid();
+      await this.getBidList();
+      await this.checkLikeGoods();
+      await this.likeCountAPI();
+      await this.checkBuyUser();
   },//판매자 정보 가져오기
   async getGoodsUser() {
     try {
@@ -449,13 +440,26 @@ methods: {
     },
   async checkBuyUser() {
     // 경매가 종료되었는지 확인, 로그인 되어있는지, 상품 상태가 경매중인지
-    if(this.currentTime === '경매가 종료되었습니다.' && this.user.user_no !== '' && this.buyUser == false && this.goods.goods_state===1){
+    // 결제한 내역이 있는지 확인
+    var buy = false;
+    try{
+      const response = await axios.get(`http://localhost:3000/goods/orderCount/${this.goods.goods_no}/${this.user.user_no}`)
+      if(response.data[0].count>0){
+        buy = true;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    if(buy)
+      return
+
+    if(this.user.user_no != '' && !this.buyUser && this.goods.goods_state==1){
       // 로그인 한 유저가 최고가 입찰자인지 확인
       const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${this.goods.goods_no}`)
-
       const buyU = response.data[0].user_no
       const logU = this.user.user_no
-      if(buyU === logU){
+      if(buyU == logU){
         this.buyUser = true;
       }
     }
