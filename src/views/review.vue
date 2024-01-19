@@ -28,6 +28,7 @@ import axios from 'axios'
 export default {
     data() {
         return {
+            //리뷰
             review_con: '',
             review_score: 2,
             review_info: [],
@@ -42,6 +43,7 @@ export default {
         }
     },
     created() {
+        //리뷰작성
         this.getGoodsInfo();
     },
     methods: {
@@ -91,7 +93,7 @@ export default {
                 } catch(err){
                     console.log(err);
                 }
-            },
+            },//좋아요
             score_click_good() {
                 this.review_score = 0;
                 if(!this.isClicked_good){
@@ -99,7 +101,7 @@ export default {
                 }
                 this.isClicked_bad = false;
                 this.isClicked_normal = false;
-            },
+            },//싫어요
             score_click_bad() {
                 this.review_score = 1;
                 if(!this.isClicked_bad){
@@ -107,7 +109,7 @@ export default {
                 }
                 this.isClicked_good = false;
                 this.isClicked_normal = false;
-            },
+            },//보통
             score_click_normal() {
                 this.review_score = 2;
                 if(!this.isClicked_normal){

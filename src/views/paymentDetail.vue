@@ -67,9 +67,9 @@ export default {
   },
   created() {
     this.getUser()
-    this.getOrder()
+    this.getOrder() //구매자 정보
   },
-  methods: {
+  methods: {//판매자 정보 가져오기
     async getUser() {
       try {
         const response = await axios.get(`http://localhost:3000/mypage/mypage/${this.user.user_no}`);
@@ -77,7 +77,7 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    },
+    },//구매자 정보가져오기
     async getProduct() {
        try {
           const goodsno = this.Order.GOODS_NO;
@@ -85,7 +85,7 @@ export default {
           this.products = response.data[0];
         } catch (error) {
           console.error(error);
-        }
+        }//총 가격 가져오기
         this.getTotalPrice()
     },
     async getOrder() {
@@ -106,6 +106,7 @@ export default {
     gotoHome() {
       this.$router.push('/');
     },
+    //총 구매 가격 가져오기
     getTotalPrice(){
       if(this.products.goods_trade==0){
         return Number(this.products.goods_succ_price) + Number(this.products.goods_deliv_price)

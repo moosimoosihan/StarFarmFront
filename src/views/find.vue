@@ -73,7 +73,7 @@ export default {
             return this.$store.state.user;
         }
     },
-    methods: {
+    methods: {//로그인페이지
         goToLogin() {
             this.$router.push({ path: '/login' });
         },
@@ -112,7 +112,7 @@ export default {
                     });
             }
         },
-
+        //비밀번호 찾기
         findPW() {
             if (this.user_id === '' || this.user_email === '') {
                 this.$swal('아이디와 이메일을 입력해주세요');

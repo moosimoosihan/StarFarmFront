@@ -108,23 +108,26 @@ data() {
     currentIndex: 0,
     bidAmount: '', // 사용자가 입력한 입찰 값
     displayBidAmount: '', // 화면에 표시될 입찰 값
-    startPrice: '',
-    goods: {},
+    startPrice: '', 
+    //입찰된 상품 및 가격
+    goods: {},  
     goodsUser: {},
     goodsSuccBid: 0,
-    goodsBidList: {},
-    good_img : [],
+    goodsBidList: {}, 
+    good_img : [], 
     userFr: 0,
-
-    likeGoods: 0,
-    likeCount: 0,
-
+    //좋아요 수 상품 및 숫자
+    likeGoods: 0, 
+    likeCount: 0, 
+    
+    //타이머 
     currentTime: '',
     endTime: Date.now(),
+    //채팅룸
     chatRoomNo: '',
     buyUser: false,
-
     timer: null,
+
     intervalId: null, // 자동 슬라이드를 위한 인터벌 ID
     currentIndex: 0,
 
@@ -147,6 +150,7 @@ created() {
   this.scroll();
   this.likeCountAPI();
 },
+//경매 시작전 
 beforeUpdate() {
   if(this.currentTime !== '경매가 종료되었습니다.'){
     this.getBidList()
@@ -156,6 +160,7 @@ beforeUpdate() {
   }
 },
 methods: {
+  //택배거래 선택
   goods_trade_(goods_trade){
     if (goods_trade===0){
         return '택배거래'
@@ -163,6 +168,7 @@ methods: {
         return '직거래'
     }
   },
+  //슬라이드 이동
   startAutoSlide() {
     var nextIndex = 0;
     this.intervalId = setInterval(() => {
@@ -172,6 +178,7 @@ methods: {
       this.moveToSlideAuction(nextIndex);
     }, 4000); // 4초마다 슬라이드 이동
   },
+  //가격 포맷 정리
   formatPrice(price) {
       if (price !== undefined && price !== null) {
           const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -179,6 +186,7 @@ methods: {
       }
       return "";
   },
+  //좋아요 상품
   async like_goods() {
     try {
       const goodsno = this.$route.params.id;
@@ -196,6 +204,7 @@ methods: {
     }
     await this.likeCountAPI()
   },
+  //좋아요 수 카운트 API
   async likeCountAPI() {
     try {
       const goods_no = this.$route.params.id;
@@ -206,6 +215,7 @@ methods: {
       console.error(error);
     }
   },
+  //좋아요 상품 체크
   async checkLikeGoods() {
     try {
       const goodsno = this.$route.params.id;
@@ -219,6 +229,7 @@ methods: {
       console.error(error);
     }
   },
+  //좋아요 삭제
   async likeDelete() {
     try {
       const goodsno = this.$route.params.id;
@@ -236,12 +247,14 @@ methods: {
     }
     await this.likeCountAPI()
   },
+  //스크롤
   scroll() {
       setTimeout(() => {
           const scroll = document.getElementById('scroll');
           scroll.scrollTop = scroll.scrollHeight;
       }, 100);
   },
+  //슬라이드 움직이기
   moveToSlideAuction(index) {
     const slidesAuction = document.querySelectorAll('.slide');
     const slideWidthAuction = slidesAuction[0].clientWidth;
@@ -256,6 +269,7 @@ methods: {
           popupWindow.resizeTo(800, 650)
       })
   },
+  // 상품 가져오기
   async getGoods() {
     try {
       const goodsno = this.$route.params.id;
@@ -266,7 +280,7 @@ methods: {
       } catch (error) {
         console.error(error);
       }
-  },
+  },//판매자 정보 가져오기
   async getGoodsUser() {
     try {
       const goodsno = this.$route.params.id;
@@ -275,7 +289,7 @@ methods: {
     } catch (error) {
       console.error(error);
     }
-  },
+  },// 가격 가져오기
   async getSuccBid() {
     try {
       const goodsno = this.$route.params.id;
@@ -284,7 +298,7 @@ methods: {
     } catch (error) {
       console.error(error);
     }
-  },
+  },//상품 리스트 가져오기
   async getBidList() {
     try {
       const goodsno = this.$route.params.id;
@@ -293,7 +307,7 @@ methods: {
     } catch (error) {
       console.error(error);
     }
-  },
+  },//입찰하기
   async postBidding() {
     if(this.goods.goods_start_price>=this.bidAmount){
       this.$swal.fire({
@@ -380,10 +394,10 @@ methods: {
         this.getSuccBid();
       }
     });
-  },
+  }, // 숫자 이외의 문자 제거
   validateNumber() {
-      this.bidAmount = this.bidAmount.replace(/\D/g, ''); // 숫자 이외의 문자 제거
-  },
+      this.bidAmount = this.bidAmount.replace(/\D/g, ''); 
+  },//신고하기
   reportBtn() {
     this.$swal.fire({
       title: '신고하기',
@@ -397,7 +411,7 @@ methods: {
         this.$router.push(`/report/${this.goodsUser.user_no}`);
       }
     });
-  },
+  },//타이머 계산
   updateTimer() {
     this.timer = setInterval(()=>{
       // 날짜를 초로 바꾸어 저장 후 계산
@@ -445,13 +459,13 @@ methods: {
         this.buyUser = true;
       }
     }
-  },
+  },//결제버튼 연결
   async gotoPayment() {
     this.$router.push(`/payment/${this.goods.goods_no}`);
-  },
+  },//사용자페이지 연결
   gotoUserpage(user_no) {
     this.$router.push(`/userpage/${user_no}`);
-  },
+  },//카테고리 디테일
   categoryDetail(cate,cate2){
     if(cate=='의류'){
        if(cate2==1){
@@ -655,9 +669,9 @@ body {
     float: left;
     width: 500px;
     height: 600px;
-    /*border-radius: 20px;*/
-    /*border: 2px rgba(24, 204, 0, 0.1) ;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+    /*border-radius: 20px; 모서리 둥글게 하기*/
+    /*border: 2px rgba(24, 204, 0, 0.1) 테두리 2px로 두껍게 만들기;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 그림자 만들기*/
     margin-left: 10px;
     margin-bottom: 10px;
     border-bottom:2px solid rgb(128, 128, 128);
@@ -827,7 +841,7 @@ textarea {
   min-width: 150px;
   height: 40px;
 }
-
+/*타이머 깜빡이게 하는 CSS 코드*/ 
 .blinktime { 
   float: right;
   text-align: right;

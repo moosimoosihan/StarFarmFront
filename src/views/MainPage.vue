@@ -113,6 +113,7 @@ export default {
   name: 'MainPage',
   data() {
     return {
+      //슬라이더
       eventImageList: ['1-1.jpg','1-2.jpg','1-3.jpg','1-4.jpg'],
       mainEventGoods: [],
       mainDefaultGoods: [],
@@ -121,7 +122,7 @@ export default {
       goods_succ_bid: [],
       intervalId: null, // 자동 슬라이드를 위한 인터벌 ID
       main_goods_succ_bid: [],
-
+      //타이머
       eventGoodsTimer: [],
       defaultGoodsTimer: [],
       goodsTimer: [],
@@ -139,6 +140,7 @@ export default {
     this.stopAutoTimer(); // 페이지가 파괴될 때 타이머 정지
   },
   methods: {
+   //상품 가져오기
     async getGoods(){
       await axios.get('http://localhost:3000/goods/maingoods')
         .then((res) => {
