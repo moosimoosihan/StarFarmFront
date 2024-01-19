@@ -169,7 +169,7 @@ const routes = [
           component: chatroom
         },
         {
-          path: '/find',
+          path: 'find',
           component: FindPage,
         },
       ]

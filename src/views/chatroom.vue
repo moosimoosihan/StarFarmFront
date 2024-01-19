@@ -186,7 +186,7 @@ import io from 'socket.io-client'
             window.close();
         },
       },
-      destroyed() {
+      unmounted() {
         this.socket.off('chat')
         this.socket.on('disconnect', () => {
             this.connected = false;
