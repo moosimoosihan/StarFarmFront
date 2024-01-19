@@ -11,6 +11,12 @@
           </li>
           <li><div class="management-box ">
             <router-link to="/admin/">
+              <h3>관리자 메인 페이지</h3>
+            </router-link>
+            </div>
+          </li>
+          <li><div class="management-box ">
+            <router-link to="/admin/user">
               <h3>회원관리</h3>
             </router-link>
             </div>

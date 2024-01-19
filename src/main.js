@@ -41,6 +41,7 @@ import orderlist from './mypage/orderlist.vue'
 import adminDeal from './admin/AdminDeal.vue'
 import adminReport from './admin/AdminReport.vue'
 import adminUser from './admin/AdminUser.vue'
+import adminMain from './admin/adminMain.vue'
 
 // 채팅 페이지
 import chatroom from './views/chatroom.vue'
@@ -181,6 +182,10 @@ const routes = [
       children: [
         {
           path: '',
+          component: adminMain,
+        },
+        {
+          path: 'user',
           component: adminUser,
         },
         {
@@ -190,7 +195,7 @@ const routes = [
         {
           path: 'deal/:id',
           component: adminDeal,
-        }
+        },
       ]
     },
     {
