@@ -532,7 +532,6 @@ a {
   margin-top: 10px;
   margin-right: 30px;
   position: absolute;
-  top: 1;
   right: 0;
   width: 20px;
   height: 20px;
