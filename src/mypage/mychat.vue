@@ -19,7 +19,6 @@
                         <tr v-for="(chatroom, i) in roomList" :key="i">
                             <td>{{ chatroom.CHATROOM_NO }}</td>
                             <td @click="gotoChatRoom(chatroom.CHATROOM_USER1 === user.user_no? chatroom.CHATROOM_USER2:chatroom.CHATROOM_USER1)">
-                                <div v-if="alram[i]>0" class="alarm">{{ alram[i] }}</div>
                                 <img :width="70" style="border-radius: 70px;"
                                     :src="user.user_no!='' ? userImgList[i] ? require(`../../../StarFarmBack/uploads/userImg/${chatroom.CHATROOM_USER1 === user.user_no? chatroom.CHATROOM_USER2:chatroom.CHATROOM_USER1}/${userImgList[i]}`) : require(`../assets/profile.png`):require(`../assets/profile.png`)"
                                     alt="프로필 이미지" />
@@ -64,9 +63,6 @@ import axios from 'axios'
                 // 페이징 처리
                 page: 0,
                 pageCount: 0,
-
-                // 알람
-                alram: [],
             }
         },
         computed: {
@@ -76,6 +72,7 @@ import axios from 'axios'
         },
         created() {
             this.getRoomList(this.page);
+            this.checkAlram();
         },
         methods: {
             // 페이징 처리 리밋 5페이지
@@ -114,9 +111,6 @@ import axios from 'axios'
                 }
                 this.commentList = [];
                 this.userImgList = [];
-                this.userNickList = [];
-                this.alram = [];
-
                 for(var i = 0; i < this.roomList.length; i++) {
                     if(this.roomList[i].CHATROOM_USER1===this.user.user_no && this.roomList[i].CHATROOM_OUT1 === 1){
                         console.log(`${this.roomList[i].CHATROOM_NO}번 채팅방 나감`)
@@ -127,7 +121,6 @@ import axios from 'axios'
                     } else {
                         await this.getComment(this.roomList[i].CHATROOM_NO)
                         await this.getChatUser(this.roomList[i].CHATROOM_USER1 === this.user.user_no? this.roomList[i].CHATROOM_USER2:this.roomList[i].CHATROOM_USER1)
-                        await this.getAlarm(this.roomList[i].CHATROOM_NO)
                     }
                 }
                 this.page = page;
@@ -136,11 +129,7 @@ import axios from 'axios'
             async getComment(room_no) {
                 try {
                     const response = await axios.get(`http://localhost:3000/mypage/chatroomcomment/${room_no}`);
-                    if(response.data.length == 0){
-                        this.commentList.push('대화 없음')
-                    } else {
-                        this.commentList.push(response.data[0].CHAT_CONTENT);
-                    }
+                    this.commentList.push(response.data[0].CHAT_CONTENT);
                 } catch (error) {
                     console.error(error);
                 }
@@ -179,7 +168,7 @@ import axios from 'axios'
                                 .then((res)=>{
                                     if(res.data.message === 'success') {
                                     this.$swal('채팅방에서 나갔습니다.');
-                                    this.getRoomList(this.pageCount<this.page ? this.page-1 : this.page);
+                                    this.getRoomList(this.pageCount<page ? page-1 : page);
                                 }
                             })
                         } catch(error) {
@@ -198,15 +187,15 @@ import axios from 'axios'
                 this.page += 1;
                 this.getRoomList(this.page)
             },
-            // 알람 가져오기
-            async getAlarm(room_no) {
-              try {
-                const response = await axios.get(`http://localhost:3000/auth/chat_check_alram/${this.user.user_no}/${room_no}`);
-                this.alram.push(response.data[0].count);
-              } catch (error) {
-                console.error(error);
-              }
-            },
+            // 채팅방 확인시 알람 삭제
+            async checkAlram(){
+                const user_no = this.user.user_no;
+                try {
+                    await axios.post(`http://localhost:3000/chat/chat_delete_alram/${user_no}`);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
         }
     }
 </script>
@@ -350,19 +339,5 @@ tr {
 #select {
     font-weight: bold;
     font-size: 15px;
-}
-.alarm{
-  margin-right: 70px;
-  margin-left: -90px;
-  float: right;
-  width: 20px;
-  height: 20px;
-  background-color: red;
-  border-radius: 50%;
-  color: white;
-  text-align: center;
-  line-height: 20px;
-  font-size: 12px;
-  font-weight: 700;
 }
 </style>

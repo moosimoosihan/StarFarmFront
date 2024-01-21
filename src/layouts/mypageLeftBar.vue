@@ -43,7 +43,6 @@
             </router-link>
             <router-link class="m" to="/mypage/salelist">
                 <p><i class="fas fa-solid fa-money-bill"></i> 판매 상품 관리</p>
-                <div v-if="auction_alram>0" class="alarm">{{ auction_alram }}</div>
             </router-link>
             <router-link class="m" to="/mypage/likelist">
                 <p><i class="fas fa-solid fa-star"></i> 관심 상품 목록</p>
@@ -56,7 +55,6 @@
             </router-link>
             <router-link class="m" to="/mypage/mychat">
                 <p><i class="fas fa-solid fa-comments"></i> 나의 채팅방</p>
-                <div v-if="chat_alram>0" class="alarm">{{ chat_alram }}</div>
             </router-link>
           </div>
           </div>
@@ -75,9 +73,6 @@ import axios from 'axios'
     data() {
       return {
         loginUser: {},
-
-        auction_alram : 0,
-        chat_alram : 0
       }
     },
     components: {
@@ -89,8 +84,7 @@ import axios from 'axios'
       }
     },
     created() {
-      this.getUser()
-      this.getAlarm()
+      this.getUser();
     },
     methods: {
       // 로그인한 유저 정보 가져오기
@@ -105,17 +99,6 @@ import axios from 'axios'
       // 프로필 사진 클릭시 유저페이지로 이동
       profileImgClick() {
         this.$router.push(`/userpage/${this.user.user_no}`);
-      },
-      // 경매 알림과 채팅 알림을 불러오기
-      async getAlarm() {
-        try {
-          const response = await axios.get(`http://localhost:3000/mypage/getAuctionAlram/${this.user.user_no}`);
-          const response2 = await axios.get(`http://localhost:3000/mypage/getChatAlram/${this.user.user_no}`);
-          this.auction_alram = response.data[0].count;
-          this.chat_alram = response2.data[0].count;
-        } catch (error) {
-          console.error(error);
-        }
       }
     }
 
@@ -230,18 +213,5 @@ Footer {
 .profile_img_box :hover {
   transform: scale(1.15);
 }
-.alarm{
-  float: right;
-  margin-right: 40px;
-  margin-top: -18px;
-  width: 20px;
-  height: 20px;
-  background-color: red;
-  border-radius: 50%;
-  color: white;
-  text-align: center;
-  line-height: 20px;
-  font-size: 12px;
-  font-weight: 700;
-}
+
   </style>

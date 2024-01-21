@@ -31,11 +31,9 @@
                                     <p>{{ goodslist.GOODS_NO }}</p>
                                 </td>
                                 <td>
-                                    <div v-if="alram[i]>0" class="alarm">{{ alram[i] }}</div>
-                                    <img :width="70" :height="70" style="border-radius: 10px;"
+                                    <img :width="70" style="border-radius: 10px;"
                                         :src="goodslist.GOODS_IMG ? require(`../../../StarFarmBack/uploads/uploadGoods/${goodslist.GOODS_NO}/${goodslist.GOODS_IMG.split(',')[0]}`) : require(`../assets/2-1.png`)"
                                         alt="상품 이미지" @click="gotoProduct(goodslist.GOODS_NO)" />
-
                                 </td>
                                 <td>
                                     <p>{{ goodslist.GOODS_NM }}</p>
@@ -92,13 +90,11 @@ import axios from 'axios';
 
                 // 정렬
                 sort: 'none',
-
-                // 알람
-                alram: [],
             }
         },
         created() {
             this.getSaleList(this.sort, this.page);
+            this.checkAlram();
         },
         computed: {
             user() {
@@ -131,20 +127,16 @@ import axios from 'axios';
                 } catch (error) {
                     console.error(error);
                 }
-                this.succ_bidList = []
-                this.review_count = []
-                this.alram = []
                 for(let i=0; i<this.saleList.length; i++){
                     let val = await this.getSuccBid(this.saleList[i].GOODS_NO)
                     if(val === undefined || val === null){
                         val = '입찰없음';
                     }
                     this.succ_bidList.push(val)
-
-                    let val2 = await this.getReviewCount(this.saleList[i].GOODS_NO)
-                    this.review_count.push(val2)
-
-                    await this.getAlram(this.saleList[i].GOODS_NO)
+                }
+                for(let i=0; i<this.saleList.length; i++){
+                    let val = await this.getReviewCount(this.saleList[i].GOODS_NO)
+                    this.review_count.push(val)
                 }
                 await this.getSalePage()
             },
@@ -196,7 +188,7 @@ import axios from 'axios';
             // 낙찰가 가져오기
             async getSuccBid(goods_no) {
                 try {
-                    const response = await axios.get(`http://localhost:3000/goods/goodsSuccBid/${goods_no}`);
+                    const response = await axios.get(`http://localhost:3000/mypage/goodsSuccBid/${goods_no}`);
                     return response.data[0].succ_bid;
                 } catch (error) {
                     console.error(error);
@@ -236,15 +228,15 @@ import axios from 'axios';
                 this.page += 1;
                 this.getSaleList(this.sort,this.page)
             },
-            // 알람 가져오기
-            async getAlram(goods_no) {
-              try {
-                const response = await axios.get(`http://localhost:3000/auth/auction_check_alram/${this.user.user_no}/${goods_no}`);
-                this.alram.push(response.data[0].count)
-              } catch (error) {
-                console.error(error);
-              }
-            },
+            // 알람 확인 후 알람 삭제
+            async checkAlram(){
+                const user_no = this.user.user_no;
+                try {
+                    await axios.post(`http://localhost:3000/goods/auction_delete_alram/${user_no}`);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
         }
     }
 </script>
@@ -419,19 +411,5 @@ tr {
 #select {
     font-weight: bold;
     font-size: 15px;
-}
-.alarm{
-  margin-right: -10px;
-  margin-left: -10px;
-  float: right;
-  width: 20px;
-  height: 20px;
-  background-color: red;
-  border-radius: 50%;
-  color: white;
-  text-align: center;
-  line-height: 20px;
-  font-size: 12px;
-  font-weight: 700;
 }
 </style>
