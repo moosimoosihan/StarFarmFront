@@ -101,11 +101,12 @@
 </template>
 <script>
 import axios from 'axios';
+//소켓 클라이언트
+import io from 'socket.io-client'
 
 export default {
 data() {
   return {
-    currentIndex: 0,
     bidAmount: '', // 사용자가 입력한 입찰 값
     displayBidAmount: '', // 화면에 표시될 입찰 값
     startPrice: '', 
@@ -132,6 +133,8 @@ data() {
     currentIndex: 0,
 
     blinktime : false,
+
+    socket: io('http://localhost:3002')
   };
 },
 computed: {
@@ -141,6 +144,17 @@ computed: {
 },
 created() {
   this.getGoods();
+  this.socket.on('connect', () => {
+    this.connected = true;
+    console.log('경매 연결됨');
+  })
+  this.socket.on('auction', async (data) => {
+    if(data.goods_no === this.$route.params.id) {
+      console.log('경매 번호 일치');
+      await this.getBidList();
+      this.scroll();
+    }
+  })
 },
 methods: {
   //택배거래 선택
@@ -271,6 +285,10 @@ methods: {
       await this.checkLikeGoods();
       await this.likeCountAPI();
       await this.checkBuyUser();
+
+      if(this.user.user_no==this.goods.user_no){
+        this.checkAlram();
+      }
   },//판매자 정보 가져오기
   async getGoodsUser() {
     try {
@@ -298,7 +316,19 @@ methods: {
     } catch (error) {
       console.error(error);
     }
-  },//입찰하기
+  },
+  // 알람 확인 후 알람 삭제
+  async checkAlram(){
+    try {
+      await axios.post(`http://localhost:3000/goods/auction_delete_alram`,{
+        user_no : this.user.user_no,
+        goods_no : this.$route.params.id
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  //입찰하기
   async postBidding() {
     if(this.goods.goods_start_price>=this.bidAmount){
       this.$swal.fire({
@@ -370,13 +400,20 @@ methods: {
           .then(res => {
             if(res.data.message == 'bidding_fail'){
               this.$swal("경매가 마감되었습니다.")
+            } else {
+              this.$swal.fire({
+                icon: 'success',
+                title: '입찰 성공',
+                text: '입찰에 성공하였습니다.',
+              })
+              this.socket.timeout(5000).emit('auction', {
+                bid_amount: this.bidAmount,
+                goods_no: this.$route.params.id,
+                user_no: this.user.user_no
+              })
+              this.getBidList();
+              this.scroll();
             }
-            this.$swal.fire({
-              icon: 'success',
-              title: '입찰 성공',
-              text: '입찰에 성공하였습니다.',
-            })
-            this.scroll()
           })
           this.bidAmount = ''
         } catch (error) {
@@ -529,6 +566,11 @@ methods: {
   unmounted() {
     this.stopAutoSlide(); // 페이지가 파괴될 때 자동 슬라이드 정지
     this.stopAutoTimer(); // 페이지가 파괴될 때 타이머 정지
+    this.socket.off('auction')
+    this.socket.on('disconnect', () => {
+      this.connected = false;
+      console.log('경매 연결 끊김');
+    })
   },
 };
 

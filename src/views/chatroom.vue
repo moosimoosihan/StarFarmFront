@@ -104,6 +104,7 @@ import io from 'socket.io-client'
           await this.getChat()
           await this.getUser()
           await this.getAnothorUser()
+          await this.checkAlram()
         },//사용자 가져오기
         async getUser() {
           try {
@@ -186,6 +187,17 @@ import io from 'socket.io-client'
         exitChat() {
             window.close();
         },
+        // 채팅방 확인시 알람 삭제
+        async checkAlram(){
+          try {
+            await axios.post(`http://localhost:3000/chat/chat_delete_alram`,{
+              user_no: this.user.user_no,
+              chat_room_num: this.chatroom.CHATROOM_NO
+            })
+          } catch (error) {
+            console.error(error);
+          }
+        }
       },
       unmounted() {
         this.socket.off('chat')
