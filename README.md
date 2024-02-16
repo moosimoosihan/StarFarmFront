@@ -1,24 +1,7 @@
-# vue
+실시간 중고 경매 사이트 Vue.js
 
-## Project setup
-```
-npm install
-```
+제작인원 : 6명
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+설치 : npm i
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+실행 : npm run serve
